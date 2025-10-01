@@ -1,5 +1,5 @@
-﻿using System.Diagnostics;
-using Duel.Core.Games.Muffs.AST;
+﻿using Duel.Core.Games.Muffs.AST;
+using Duel.Core.Shared;
 
 namespace Duel.Core.Games.Muffs.Evaluating;
 
@@ -15,6 +15,9 @@ public static class ExpressionEvaluator
     /// <param name="expression">
     ///     Server-side generated <see cref="Expression"/> to be evaluated.
     /// </param>
+    /// <returns>
+    ///     The computed value of the given expression.
+    /// </returns> 
     public static int Evaluate(Expression expression)
     {
         return expression switch
@@ -25,7 +28,7 @@ public static class ExpressionEvaluator
             Multiplication node => Multiply(node),
             Division node => Divide(node),
             Power node => Power(node),
-            _ => Unreachable()
+            _ => Situation.Unreachable<int>()
         };
 
         int Add(Binary node)
@@ -55,11 +58,6 @@ public static class ExpressionEvaluator
             var rhs = Evaluate(node.Right);
             
             return (int) Math.Pow(lhs, rhs);
-        }
-
-        int Unreachable()
-        {
-            throw new UnreachableException();
         }
     }
 }

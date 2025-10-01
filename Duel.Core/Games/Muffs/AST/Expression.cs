@@ -12,26 +12,25 @@ public abstract record Expression;
 /// <param name="Value">
 ///     The integer value of the literal.
 /// </param>
-public sealed record Constant(int Value) : Expression;
+public sealed record Constant(int Value) : Expression
+{
+    public static Constant From(int value)
+    {
+        return new Constant(value);
+    }
+}
 
 /// <summary>
 ///     A binary operator application with a left and right operand.
 ///     Serves as the base type for concrete operator nodes.
 /// </summary>
-/// <param name="Code">
-///     The operator to apply (e.g., <see cref="OperatorCode.Add"/>).
-/// </param>
 /// <param name="Left">
 ///     The left-hand side operand. Must not be <c>null</c>.
 /// </param>
 /// <param name="Right">
 ///     The right-hand side operand. Must not be <c>null</c>.
 /// </param>
-/// <remarks>
-///     The meaning of <see cref="Code"/> (precedence and associativity) is defined by
-///     <see cref="Operator"/>. This type does not perform evaluation — it only models structure.
-/// </remarks>
-public abstract record Binary(OperatorCode Code, Expression Left, Expression Right) : Expression;
+public abstract record Binary(Expression Left, Expression Right) : Expression;
 
 /// <summary>
 ///     Represents an addition operation (<c>a + b</c>).
@@ -42,7 +41,13 @@ public abstract record Binary(OperatorCode Code, Expression Left, Expression Rig
 /// <param name="Right">
 ///     The right-hand side operand.
 /// </param>
-public sealed record Addition(Expression Left, Expression Right) : Binary(OperatorCode.Add, Left, Right);
+public sealed record Addition(Expression Left, Expression Right) : Binary(Left, Right)
+{
+    public static Addition From(Expression left, Expression right)
+    {
+        return new Addition(left, right);
+    }
+}
 
 /// <summary>
 ///     Represents a subtraction operation (<c>a - b</c>).
@@ -53,7 +58,13 @@ public sealed record Addition(Expression Left, Expression Right) : Binary(Operat
 /// <param name="Right">
 ///     The right-hand side operand.
 /// </param>
-public sealed record Subtraction(Expression Left, Expression Right) : Binary(OperatorCode.Subtract, Left, Right);
+public sealed record Subtraction(Expression Left, Expression Right) : Binary(Left, Right)
+{
+    public static Subtraction From(Expression left, Expression right)
+    {
+        return new Subtraction(left, right);
+    }   
+}
 
 /// <summary>
 ///     Represents a multiplication operation (<c>a * b</c>).
@@ -64,7 +75,13 @@ public sealed record Subtraction(Expression Left, Expression Right) : Binary(Ope
 /// <param name="Right">
 ///     The right-hand side operand.
 /// </param>
-public sealed record Multiplication(Expression Left, Expression Right) : Binary(OperatorCode.Multiply, Left, Right);
+public sealed record Multiplication(Expression Left, Expression Right) : Binary(Left, Right)
+{
+    public static Multiplication From(Expression left, Expression right)
+    {
+        return new Multiplication(left, right);
+    }   
+}
 
 /// <summary>
 ///     Represents a division operation (<c>a / b</c>).
@@ -79,7 +96,13 @@ public sealed record Multiplication(Expression Left, Expression Right) : Binary(
 ///     Division is integer division. Division by zero is not allowed and
 ///     should be detected during evaluation.
 /// </remarks>
-public sealed record Division(Expression Left, Expression Right) : Binary(OperatorCode.Divide, Left, Right);
+public sealed record Division(Expression Left, Expression Right) : Binary(Left, Right)
+{
+    public static Division From(Expression left, Expression right)
+    {
+        return new Division(left, right);
+    }   
+}
 
 /// <summary>
 ///     Represents an exponentiation operation (<c>a ^ b</c>).
@@ -94,4 +117,10 @@ public sealed record Division(Expression Left, Expression Right) : Binary(Operat
 ///     Exponentiation is right-associative. For example, <c>2 ^ 3 ^ 2</c>
 ///     is parsed as <c>2 ^ (3 ^ 2)</c>.
 /// </remarks>
-public sealed record Power(Expression Left, Expression Right) : Binary(OperatorCode.Power, Left, Right);
+public sealed record Power(Expression Left, Expression Right) : Binary(Left, Right)
+{
+    public static Power From(Expression left, Expression right)
+    {
+        return new Power(left, right);
+    }
+}

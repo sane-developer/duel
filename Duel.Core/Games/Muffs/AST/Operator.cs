@@ -1,19 +1,19 @@
 ﻿namespace Duel.Core.Games.Muffs.AST;
 
 /// <summary>
-///     The set of supported infix operators for arithmetic expressions.
-/// </summary>
-public enum OperatorCode
-{
-    Add, Subtract, Multiply, Divide, Power
-}
-
-/// <summary>
 ///     Provides algebraic properties of operators (associativity and precedence)
 ///     used by parsing, serialization, and evaluation components.
 /// </summary>
 internal static class Operator
 {
+    /// <summary>
+    ///     The set of supported infix operators for arithmetic expressions.
+    /// </summary>
+    public enum Code
+    {
+        Add, Subtract, Multiply, Divide, Power
+    }
+    
     /// <summary>
     ///     Determines whether the specified operator is right-associative.
     /// </summary>
@@ -24,12 +24,12 @@ internal static class Operator
     ///     <c>true</c> if the operator associates to the right; otherwise, <c>false</c>.
     /// </returns>
     /// <remarks>
-    ///     In this model, only <see cref="OperatorCode.Power"/> is right-associative
+    ///     In this model, only <see cref="Code.Power"/> is right-associative
     ///     (e.g., <c>a ^ b ^ c</c> parses as <c>a ^ (b ^ c)</c>).
     /// </remarks>
-    public static bool IsRightAssociative(OperatorCode code)
+    public static bool IsRightAssociative(Code code)
     {
-        return code is OperatorCode.Power;
+        return code is Code.Power;
     }
 
     /// <summary>
@@ -45,17 +45,17 @@ internal static class Operator
     /// </returns>
     /// <remarks>
     ///     Current levels: <br/>
-    ///     1 — <see cref="OperatorCode.Add"/>, <see cref="OperatorCode.Subtract"/><br/>
-    ///     2 — <see cref="OperatorCode.Multiply"/>, <see cref="OperatorCode.Divide"/><br/>
-    ///     3 — <see cref="OperatorCode.Power"/>
+    ///     1 — <see cref="Code.Add"/>, <see cref="Code.Subtract"/><br/>
+    ///     2 — <see cref="Code.Multiply"/>, <see cref="Code.Divide"/><br/>
+    ///     3 — <see cref="Code.Power"/>
     /// </remarks>
-    public static int Precedence(OperatorCode code)
+    public static int Precedence(Code code)
     {
         return code switch
         {
-            OperatorCode.Add or OperatorCode.Subtract => 1,
-            OperatorCode.Multiply or OperatorCode.Divide => 2,
-            OperatorCode.Power => 3,
+            Code.Add or Code.Subtract => 1,
+            Code.Multiply or Code.Divide => 2,
+            Code.Power => 3,
             _ => 0
         };
     }
