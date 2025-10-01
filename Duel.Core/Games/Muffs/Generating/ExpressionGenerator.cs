@@ -67,24 +67,24 @@ public static class ExpressionGenerator
 
     private static Operator.Code GetRandomOperatorCode(Random rng)
     {
-        var r = rng.NextDouble() * TotalWeightValue;
+        var randomOperatorWeight = rng.NextDouble() * TotalWeightValue;
 
-        if ((r -= AddOperatorWeight) < 0)
+        if ((randomOperatorWeight -= AddOperatorWeight) < 0)
         {
             return Operator.Code.Add;
         }
 
-        if ((r -= SubtractOperatorWeight) < 0)
+        if ((randomOperatorWeight -= SubtractOperatorWeight) < 0)
         {
             return Operator.Code.Subtract;
         }
 
-        if ((r -= MultiplyOperatorWeight) < 0)
+        if ((randomOperatorWeight -= MultiplyOperatorWeight) < 0)
         {
             return Operator.Code.Multiply;
         }
 
-        return r - DivideOperatorWeight < 0 
+        return randomOperatorWeight - DivideOperatorWeight < 0 
             ? Operator.Code.Divide 
             : Operator.Code.Power;
     }
