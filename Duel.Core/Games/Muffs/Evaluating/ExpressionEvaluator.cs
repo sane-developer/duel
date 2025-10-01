@@ -3,24 +3,16 @@ using Duel.Core.Shared;
 
 namespace Duel.Core.Games.Muffs.Evaluating;
 
-/// <summary>
-///     Evaluates arithmetic <see cref="Expression"/> trees to a 32-bit integer result.
-///     Uses explicit operator node types (<see cref="Addition"/>, <see cref="Division"/>, etc.).
-/// </summary>
-public static class ExpressionEvaluator
+public sealed class ExpressionEvaluator(Expression expression)
 {
-    /// <summary>
-    ///     Computes the integer value of given expression.
-    /// </summary>
-    /// <param name="expression">
-    ///     Server-side generated <see cref="Expression"/> to be evaluated.
-    /// </param>
-    /// <returns>
-    ///     The computed value of the given expression.
-    /// </returns> 
-    public static int Evaluate(Expression expression)
+    public int Evaluate()
     {
-        return expression switch
+        return Evaluate(expression);
+    }
+
+    private static int Evaluate(Expression root)
+    {
+        return root switch
         {
             Constant node => node.Value,
             Addition node => Add(node),

@@ -3,7 +3,7 @@ using Duel.Core.Shared;
 
 namespace Duel.Core.Games.Muffs.Generating;
 
-public static class ExpressionGenerator
+public sealed class ExpressionGenerator(Random rng)
 {
     private const int DefaultDepth = 1;
 
@@ -32,12 +32,12 @@ public static class ExpressionGenerator
         DivideOperatorWeight + 
         PowerOperatorWeight;
     
-    public static Expression Generate(Random rng)
+    public Expression Generate()
     {
-        return GetRandomNode(DefaultDepth, rng);
+        return GetRandomNode(DefaultDepth);
     }
 
-    private static Expression GetRandomNode(int depth, Random rng)
+    private Expression GetRandomNode(int depth)
     {
         var hasExceededMaxDepth = depth >= MaximumDepth;
         
@@ -45,14 +45,14 @@ public static class ExpressionGenerator
 
         if (hasExceededMaxDepth || hasDrawnLuckyNumber)
         {
-            return GetRandomConstant(rng);
+            return GetRandomConstant();
         }
 
-        var code = GetRandomOperatorCode(rng);
+        var code = GetRandomOperatorCode();
 
-        var lhs = GetRandomNode(depth + 1, rng);
+        var lhs = GetRandomNode(depth + 1);
         
-        var rhs = GetRightOperand(code, depth + 1, rng);
+        var rhs = GetRightOperand(code, depth + 1);
         
         return code switch
         {
@@ -65,7 +65,7 @@ public static class ExpressionGenerator
         };
     }
 
-    private static Operator.Code GetRandomOperatorCode(Random rng)
+    private Operator.Code GetRandomOperatorCode()
     {
         var randomOperatorWeight = rng.NextDouble() * TotalWeightValue;
 
@@ -89,54 +89,54 @@ public static class ExpressionGenerator
             : Operator.Code.Power;
     }
     
-    private static Expression GetRightOperand(Operator.Code op, int depth, Random rng)
+    private Expression GetRightOperand(Operator.Code op, int depth)
     {
         return op switch
         {
-            Operator.Code.Divide => GetDivisorConstant(rng),
-            Operator.Code.Power => GetExponentConstant(rng),
-            _ => GetRandomNode(depth, rng)
+            Operator.Code.Divide => GetDivisorConstant(),
+            Operator.Code.Power => GetExponentConstant(),
+            _ => GetRandomNode(depth)
         };
     }
 
-    private static Constant GetDivisorConstant(Random rng)
+    private Constant GetDivisorConstant()
     {
-        var dividend = GetRandomNumber(rng);
+        var dividend = GetRandomNumber();
 
         var divisors = GetNumberDivisors(dividend);
         
-        var divisor = GetRestrictedRandomNumber(rng, in divisors);
+        var divisor = GetRestrictedRandomNumber(in divisors);
         
         return Constant.From(divisor);
     }
     
-    private static Constant GetExponentConstant(Random rng)
+    private Constant GetExponentConstant()
     {
-        var value = GetRestrictedRandomNumber(rng, MaximumExponent);
+        var value = GetRestrictedRandomNumber(MaximumExponent);
         
         return Constant.From(value);
     }
     
-    private static Constant GetRandomConstant(Random rng)
+    private Constant GetRandomConstant()
     {
-        var value = GetRandomNumber(rng);
+        var value = GetRandomNumber();
 
         return Constant.From(value);
     }
 
-    private static int GetRestrictedRandomNumber(Random rng, in List<int> numbers)
+    private int GetRestrictedRandomNumber(in List<int> numbers)
     {
         var index = rng.Next(numbers.Count);
         
         return numbers[index];
     }
     
-    private static int GetRestrictedRandomNumber(Random rng, int limit)
+    private int GetRestrictedRandomNumber(int limit)
     {
         return rng.Next(MinimumComponentValue, limit + 1);
     }
     
-    private static int GetRandomNumber(Random rng)
+    private int GetRandomNumber()
     {
         return rng.Next(MinimumComponentValue, MaximumComponentValue + 1);
     }
