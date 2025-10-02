@@ -68,7 +68,7 @@ public sealed class ExpressionParser(List<ExpressionToken> tokens)
 
         if (token.Type is TokenType.LeftParen)
         {
-            _state.Advance(); // '('
+            _state.Advance();
             
             var inner = ParseExpression(minimumPrecedence: 0);
             

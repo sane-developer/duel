@@ -21,7 +21,7 @@ public sealed record ExpressionToken(TokenType Type, string Value)
     }
 }
 
-public static class ExpressionTokenRegistry
+internal static class ExpressionTokenRegistry
 {
     public static readonly ExpressionToken Plus = ExpressionToken.From(TokenType.Plus, "+");
     

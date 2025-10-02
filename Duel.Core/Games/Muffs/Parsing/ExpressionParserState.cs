@@ -2,7 +2,7 @@
 
 namespace Duel.Core.Games.Muffs.Parsing;
 
-public sealed class ExpressionParserState(List<ExpressionToken> tokens)
+internal sealed class ExpressionParserState(List<ExpressionToken> tokens)
 {
     private int _position;
     
