@@ -2,7 +2,8 @@
 
 namespace Duel.Core.Tests.Muffs.Parsing.Suites;
 
-public class ParenthesesTestSuite : ExpressionParserTestSuite
+[TestFixture]
+public sealed class ParenthesesTestSuite : ExpressionParserTestSuite
 {
     [Test]
     public void Parentheses_ForceAdditionBeforeMultiplication()
