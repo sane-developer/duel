@@ -1,6 +1,22 @@
-﻿namespace Duel.Core.Games.Muffs.AST;
+﻿using Duel.Core.Shared;
 
-public abstract record Expression;
+namespace Duel.Core.Games.Muffs.AST;
+
+public abstract record Expression
+{
+    public static Expression From(Operator.Code code, Expression lhs, Expression rhs) 
+    {
+        return code switch
+        {
+            Operator.Code.Add => Addition.From(lhs, rhs),
+            Operator.Code.Subtract => Subtraction.From(lhs, rhs),
+            Operator.Code.Multiply => Multiplication.From(lhs, rhs),
+            Operator.Code.Divide => Division.From(lhs, rhs),
+            Operator.Code.Power => Power.From(lhs, rhs),
+            _ => Situation.Unreachable<Expression>()
+        };
+    }
+}
 
 public abstract record Binary(Expression Left, Expression Right) : Expression;
 

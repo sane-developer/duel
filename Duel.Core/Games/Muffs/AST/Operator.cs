@@ -1,6 +1,6 @@
 ﻿namespace Duel.Core.Games.Muffs.AST;
 
-internal static class Operator
+public static class Operator
 {
     public enum Code
     {
