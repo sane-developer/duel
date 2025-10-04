@@ -44,24 +44,24 @@ public sealed class RandomExpressionStrategy(Random rng) : IExpressionStrategy
 
     public Operator.Code GetOperatorCode()
     {
-        var rand = rng.NextDouble() * TotalWeight;
+        var value = rng.NextDouble() * TotalWeight;
         
-        if ((rand -= AddWeight) < 0) 
+        if ((value -= AddWeight) < 0) 
         {
             return Operator.Code.Add;
         }
         
-        if ((rand -= SubtractWeight) < 0)
+        if ((value -= SubtractWeight) < 0)
         {
             return Operator.Code.Subtract;
         }
 
-        if ((rand -= MultiplyWeight) < 0)
+        if ((value -= MultiplyWeight) < 0)
         {
             return Operator.Code.Multiply;
         }
         
-        if (rand - DivideWeight < 0)
+        if (value - DivideWeight < 0)
         {
             return Operator.Code.Divide;
         }
@@ -94,29 +94,29 @@ public sealed class RandomExpressionStrategy(Random rng) : IExpressionStrategy
 
         Span<int> divisors = stackalloc int[abs * 2];
         
-        for (var i = 1; i <= limit; i++)
+        for (var divisor = 1; divisor <= limit; divisor++)
         {
-            if (abs % i != 0)
+            if (abs % divisor != 0)
             {
                 continue;
             }
 
-            divisors[cursor++] = i;
+            divisors[cursor++] = divisor;
             
-            var other = abs / i;
+            var other = abs / divisor;
             
-            if (other != i)
+            if (other != divisor)
             {
                 divisors[cursor++] = other;
             }
         }
 
+        var inverse = rng.NextDouble() < 0.5d; 
+
         var index = rng.Next(cursor);
 
-        var useInversion = rng.NextDouble() < 0.5d; 
+        var value = divisors[index];
 
-        var divisor = divisors[index];
-
-        return useInversion ? -divisor : divisor;
+        return inverse ? -value : value;
     }
 }
