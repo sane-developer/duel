@@ -4,6 +4,18 @@ namespace Duel.Core.Tests.Muffs.Evaluating.Suites;
 public sealed class SingleOperationsTestSuite : ExpressionEvaluatorTestSuite
 {
     [Test]
+    public void Evaluate_Constant_Positive()
+    {
+        AssertEvaluation("5", 5);
+    }
+
+    [Test]
+    public void Evaluate_Constant_Negative_ShouldThrow()
+    {
+        Assert.Throws<FormatException>(() => AssertEvaluation("-5", -5), "Currently unsupported.");
+    }
+
+    [Test]
     public void Evaluate_Addition_Exact()
     {
         AssertEvaluation("100 + 200", expected: 300);
