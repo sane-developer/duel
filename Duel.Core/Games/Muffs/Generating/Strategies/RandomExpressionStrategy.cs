@@ -91,11 +91,11 @@ public sealed class RandomExpressionStrategy(ExpressionSettings settings, Random
 
             divisors[cursor++] = divisor;
             
-            var other = abs / divisor;
+            var complementary = abs / divisor;
             
-            if (other != divisor)
+            if (complementary != divisor)
             {
-                divisors[cursor++] = other;
+                divisors[cursor++] = complementary;
             }
         }
 

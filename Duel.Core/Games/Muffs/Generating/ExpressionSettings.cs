@@ -1,10 +1,20 @@
-using Duel.Core.Games.Muffs.AST;
-
 namespace Duel.Core.Games.Muffs.Generating;
 
-public readonly record struct ConstantSettings(int Minimum, int Maximum);
+public readonly record struct ConstantSettings(int Minimum, int Maximum)
+{
+    public static ConstantSettings From(int minimum, int maximum)
+    {
+        return new ConstantSettings(minimum, maximum);
+    }
+}
 
-public readonly record struct OperatorSettings(Operator.Code Code, float Weight);
+public readonly record struct OperatorSettings(float Weight)
+{
+    public static OperatorSettings From(float weight)
+    {
+        return new OperatorSettings(weight);
+    }
+}
 
 public readonly record struct ExpressionSettings(
     ConstantSettings Depth,
@@ -17,38 +27,38 @@ public readonly record struct ExpressionSettings(
     OperatorSettings Power
 );
 
-public static class ExpressionSettingsRegistry
+internal static class ExpressionSettingsRegistry
 {
     public static readonly ExpressionSettings Easy = new(
-        Depth: new(Minimum: 1, Maximum: 2),
-        Constant: new(Minimum: 1, Maximum: 10),
-        Exponent: new(Minimum: 2, Maximum: 3),
-        Add: new(Operator.Code.Add, Weight: 1.0f),
-        Subtract: new(Operator.Code.Subtract, Weight: 1.0f),
-        Multiply: new(Operator.Code.Multiply, Weight: 0.5f),
-        Divide: new(Operator.Code.Divide, Weight: 0.3f),
-        Power: new(Operator.Code.Power, Weight: 0.1f)
+        Depth: ConstantSettings.From(minimum: 1, maximum: 2),
+        Constant: ConstantSettings.From(minimum: 1, maximum: 10),
+        Exponent: ConstantSettings.From(minimum: 2, maximum: 3),
+        Add: OperatorSettings.From(weight: 1.0f),
+        Subtract: OperatorSettings.From(weight: 1.0f),
+        Multiply: OperatorSettings.From(weight: 0.5f),
+        Divide: OperatorSettings.From(weight: 0.3f),
+        Power: OperatorSettings.From(weight: 0.1f)
     );
 
     public static readonly ExpressionSettings Medium = new(
-        Depth: new(Minimum: 2, Maximum: 3),
-        Constant: new(Minimum: 1, Maximum: 15),
-        Exponent: new(Minimum: 2, Maximum: 4),
-        Add: new(Operator.Code.Add, Weight: 1.0f),
-        Subtract: new(Operator.Code.Subtract, Weight: 1.0f),
-        Multiply: new(Operator.Code.Multiply, Weight: 0.8f),
-        Divide: new(Operator.Code.Divide, Weight: 0.6f),
-        Power: new(Operator.Code.Power, Weight: 0.3f)
+        Depth: ConstantSettings.From(minimum: 2, maximum: 3),
+        Constant: ConstantSettings.From(minimum: 1, maximum: 15),
+        Exponent: ConstantSettings.From(minimum: 2, maximum: 4),
+        Add: OperatorSettings.From(weight: 1.0f),
+        Subtract: OperatorSettings.From(weight: 1.0f),
+        Multiply: OperatorSettings.From(weight: 0.8f),
+        Divide: OperatorSettings.From(weight: 0.6f),
+        Power: OperatorSettings.From(weight: 0.3f)
     );
 
     public static readonly ExpressionSettings Hard = new(
-        Depth: new(Minimum: 3, Maximum: 4),
-        Constant: new(Minimum: 1, Maximum: 20),
-        Exponent: new(Minimum: 2, Maximum: 5),
-        Add: new(Operator.Code.Add, Weight: 1.0f),
-        Subtract: new(Operator.Code.Subtract, Weight: 1.0f),
-        Multiply: new(Operator.Code.Multiply, Weight: 1.0f),
-        Divide: new(Operator.Code.Divide, Weight: 0.8f),
-        Power: new(Operator.Code.Power, Weight: 0.5f)
+        Depth: ConstantSettings.From(minimum: 3, maximum: 4),
+        Constant: ConstantSettings.From(minimum: 1, maximum: 20),
+        Exponent: ConstantSettings.From(minimum: 2, maximum: 5),
+        Add: OperatorSettings.From(weight: 1.0f),
+        Subtract: OperatorSettings.From(weight: 1.0f),
+        Multiply: OperatorSettings.From(weight: 1.0f),
+        Divide: OperatorSettings.From(weight: 0.8f),
+        Power: OperatorSettings.From(weight: 0.5f)
     );
 }

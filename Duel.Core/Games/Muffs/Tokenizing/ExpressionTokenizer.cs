@@ -8,24 +8,24 @@ public sealed class ExpressionTokenizer(string text)
     {
         var tokens = new List<ExpressionToken>();
         
-        var cursorIndex = 0;
+        var cursor = 0;
 
-        while (cursorIndex < text.Length)
+        while (cursor < text.Length)
         {
-            cursorIndex = GetNextNonWhitespaceCharacterIndex(text, cursorIndex);
+            cursor = GetNextNonWhitespaceCharacterIndex(text, cursor);
 
-            if (cursorIndex >= text.Length)
+            if (cursor >= text.Length)
             {
                 break;
             }
 
-            var character = text[cursorIndex];
+            var character = text[cursor];
 
             if (char.IsDigit(character))
             {
-                var (numberToken, nextCharacterIndex) = GetNumberToken(text, cursorIndex);
+                var (numberToken, nextCharacterIndex) = GetNumberToken(text, cursor);
 
-                cursorIndex = nextCharacterIndex;
+                cursor = nextCharacterIndex;
 
                 tokens.Add(numberToken);
 
@@ -36,7 +36,7 @@ public sealed class ExpressionTokenizer(string text)
             
             tokens.Add(operatorToken);
 
-            cursorIndex++;
+            cursor++;
         }
 
         tokens.Add(ExpressionTokenRegistry.EndOfInput);
@@ -46,44 +46,44 @@ public sealed class ExpressionTokenizer(string text)
 
     private static int GetNextNonWhitespaceCharacterIndex(string expression, int startIndex)
     {
-        var cursorIndex = startIndex;
+        var cursor = startIndex;
         
-        while (cursorIndex < expression.Length)
+        while (cursor < expression.Length)
         {
-            var character = expression[cursorIndex];
+            var character = expression[cursor];
 
             if (!char.IsWhiteSpace(character))
             {
                 break;
             }
             
-            cursorIndex++;
+            cursor++;
         }
 
-        return cursorIndex;
+        return cursor;
     }
 
     private static (ExpressionToken token, int nextCharacterIndex) GetNumberToken(string expression, int startIndex)
     {
-        var cursorIndex = startIndex;
+        var cursor = startIndex;
         
-        while (cursorIndex < expression.Length)
+        while (cursor < expression.Length)
         {
-            var character = expression[cursorIndex];
+            var character = expression[cursor];
 
             if (!char.IsDigit(character))
             {
                 break;
             }
             
-            cursorIndex++;
+            cursor++;
         }
 
-        var slice = expression[startIndex..cursorIndex];
+        var slice = expression[startIndex..cursor];
         
         var token = ExpressionToken.From(TokenType.Number, slice);
         
-        return (token, cursorIndex);
+        return (token, cursor);
     }
     
     private static ExpressionToken GetOperatorToken(char character)

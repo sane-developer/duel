@@ -2,9 +2,11 @@
 
 namespace Duel.Core.Games.Muffs.AST;
 
-public abstract record Expression
+public abstract record Expression;
+
+public abstract record Binary(Expression Left, Expression Right) : Expression
 {
-    public static Expression From(Operator.Code code, Expression lhs, Expression rhs) 
+    public static Binary From(Operator.Code code, Expression lhs, Expression rhs) 
     {
         return code switch
         {
@@ -13,12 +15,10 @@ public abstract record Expression
             Operator.Code.Multiply => Multiplication.From(lhs, rhs),
             Operator.Code.Divide => Division.From(lhs, rhs),
             Operator.Code.Power => Power.From(lhs, rhs),
-            _ => Situation.Unreachable<Expression>()
+            _ => Situation.Unreachable<Binary>()
         };
     }
 }
-
-public abstract record Binary(Expression Left, Expression Right) : Expression;
 
 public sealed record Constant(int Value) : Expression
 {
@@ -30,40 +30,40 @@ public sealed record Constant(int Value) : Expression
 
 public sealed record Addition(Expression Left, Expression Right) : Binary(Left, Right)
 {
-    public static Addition From(Expression left, Expression right)
+    public static Addition From(Expression lhs, Expression rhs)
     {
-        return new Addition(left, right);
+        return new Addition(lhs, rhs);
     }
 }
 
 public sealed record Subtraction(Expression Left, Expression Right) : Binary(Left, Right)
 {
-    public static Subtraction From(Expression left, Expression right)
+    public static Subtraction From(Expression lhs, Expression rhs)
     {
-        return new Subtraction(left, right);
+        return new Subtraction(lhs, rhs);
     }   
 }
 
 public sealed record Multiplication(Expression Left, Expression Right) : Binary(Left, Right)
 {
-    public static Multiplication From(Expression left, Expression right)
+    public static Multiplication From(Expression lhs, Expression rhs)
     {
-        return new Multiplication(left, right);
+        return new Multiplication(lhs, rhs);
     }   
 }
 
 public sealed record Division(Expression Left, Expression Right) : Binary(Left, Right)
 {
-    public static Division From(Expression left, Expression right)
+    public static Division From(Expression lhs, Expression rhs)
     {
-        return new Division(left, right);
+        return new Division(lhs, rhs);
     }   
 }
 
 public sealed record Power(Expression Left, Expression Right) : Binary(Left, Right)
 {
-    public static Power From(Expression left, Expression right)
+    public static Power From(Expression lhs, Expression rhs)
     {
-        return new Power(left, right);
+        return new Power(lhs, rhs);
     }
 }

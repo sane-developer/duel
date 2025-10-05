@@ -1,4 +1,4 @@
-namespace Duel.Core.Tests.Muffs.Generating.Suite;
+namespace Duel.Core.Tests.Muffs.Generating.Suites;
 
 public sealed class NestedOperationsTestSuite : ExpressionGeneratorTestSuite
 {

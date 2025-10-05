@@ -13,18 +13,6 @@ internal sealed class ExpressionParserState(List<ExpressionToken> tokens)
         _position++;
     }
 
-    public bool Match(TokenType type)
-    {
-        if (Current.Type != type)
-        {
-            return false;
-        }
-        
-        Advance();
-        
-        return true;
-    }
-
     public void Expect(TokenType type)
     {
         if (Current.Type != type)
