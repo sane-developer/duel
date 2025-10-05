@@ -23,14 +23,8 @@ public sealed class RandomExpressionStrategy(ExpressionSettings settings, Random
     }
 
     public Operator.Code GetOperatorCode()
-    {
-        var randomOperatorWeight = rng.NextDouble() * (
-            settings.Add.GetWeight() + 
-            settings.Subtract.GetWeight() + 
-            settings.Multiply.GetWeight() + 
-            settings.Divide.GetWeight() + 
-            settings.Power.GetWeight()
-        );
+    {        
+        var randomOperatorWeight = rng.NextDouble() * GetTotalWeight();
         
         if ((randomOperatorWeight -= settings.Add.GetWeight()) < 0) 
         {
@@ -62,7 +56,14 @@ public sealed class RandomExpressionStrategy(ExpressionSettings settings, Random
 
     public int GetDivisor(int dividend)
     {
-        return GetRandomDivisor(dividend);
+        var divisor = GetRandomDivisor(dividend);
+        
+        if (ShouldInverseDivisor(divisor))
+        {
+            return -divisor;
+        }
+        
+        return divisor;
     }
 
     public int GetExponent()
@@ -101,10 +102,32 @@ public sealed class RandomExpressionStrategy(ExpressionSettings settings, Random
 
         var index = rng.Next(cursor);
 
-        var value = divisors[index];
-        
+        return divisors[index];
+    }
+
+    private bool ShouldInverseDivisor(int divisor)
+    {
         var inverse = rng.NextDouble() < 0.5d;
 
-        return inverse ? -value : value;
+        return IsDivisorInversionAllowed() && IsDivisorInRange(divisor) && inverse;
+    }
+
+    private bool IsDivisorInRange(int divisor)
+    {
+        return -divisor >= settings.Constant.Minimum;
+    }
+
+    private bool IsDivisorInversionAllowed()
+    {
+        return settings.Constant.Minimum < 0;
+    }
+
+    private double GetTotalWeight()
+    {
+        return settings.Add.GetWeight() + 
+               settings.Subtract.GetWeight() + 
+               settings.Multiply.GetWeight() + 
+               settings.Divide.GetWeight() + 
+               settings.Power.GetWeight();
     }
 }

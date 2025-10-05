@@ -2,7 +2,13 @@
 
 namespace Duel.Core.Games.Muffs.AST;
 
-public abstract record Expression;
+public abstract record Expression
+{
+    public T As<T>() where T : Expression
+    {
+        return (T) this;
+    }
+}
 
 public abstract record Binary(Expression Left, Expression Right) : Expression
 {
