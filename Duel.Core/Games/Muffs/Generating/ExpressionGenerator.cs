@@ -33,9 +33,9 @@ public sealed class ExpressionGenerator(IExpressionStrategy strategy)
             return GetPowerNode(lhs);
         }
 
-        var rhs = GetNode(depth);
+        var rhs = GetNode(depth + 1);
         
-        return Expression.From(code, lhs, rhs);
+        return Binary.From(code, lhs, rhs);
     }
 
     private Division GetDivisionNode(Expression lhs)

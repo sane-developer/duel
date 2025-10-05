@@ -2,31 +2,11 @@ using Duel.Core.Games.Muffs.AST;
 
 namespace Duel.Core.Games.Muffs.Generating.Strategies;
 
-public sealed class RandomExpressionStrategy(Random rng) : IExpressionStrategy
+public sealed class RandomExpressionStrategy(ExpressionSettings settings, Random rng) : IExpressionStrategy
 {
-    private const int MaximumDepth = 4;
-    
-    private const int MaximumExponent = 4;
-    
-    private const int MinimumValue = 1;
-    
-    private const int MaximumValue = 12;
-    
-    private const double AddWeight = 1.0;
-    
-    private const double SubtractWeight = 1.0;
-    
-    private const double MultiplyWeight = 0.8;
-    
-    private const double DivideWeight = 0.6;
-    
-    private const double PowerWeight = 0.2;
-    
-    private const double TotalWeight = AddWeight + SubtractWeight + MultiplyWeight + DivideWeight + PowerWeight;
-
     public bool IsReady(int depth)
     {
-        if (depth >= MaximumDepth)
+        if (depth >= settings.Depth.Maximum)
         {
             return true;
         }
@@ -44,24 +24,30 @@ public sealed class RandomExpressionStrategy(Random rng) : IExpressionStrategy
 
     public Operator.Code GetOperatorCode()
     {
-        var value = rng.NextDouble() * TotalWeight;
+        var randomOperatorWeight = rng.NextDouble() * (
+            settings.Add.Weight + 
+            settings.Subtract.Weight + 
+            settings.Multiply.Weight + 
+            settings.Divide.Weight + 
+            settings.Power.Weight
+        );
         
-        if ((value -= AddWeight) < 0) 
+        if ((randomOperatorWeight -= settings.Add.Weight) < 0) 
         {
             return Operator.Code.Add;
         }
         
-        if ((value -= SubtractWeight) < 0)
+        if ((randomOperatorWeight -= settings.Subtract.Weight) < 0)
         {
             return Operator.Code.Subtract;
         }
 
-        if ((value -= MultiplyWeight) < 0)
+        if ((randomOperatorWeight -= settings.Multiply.Weight) < 0)
         {
             return Operator.Code.Multiply;
         }
         
-        if (value - DivideWeight < 0)
+        if (randomOperatorWeight - settings.Divide.Weight < 0)
         {
             return Operator.Code.Divide;
         }
@@ -71,7 +57,7 @@ public sealed class RandomExpressionStrategy(Random rng) : IExpressionStrategy
     
     public int GetConstant() 
     {
-        return rng.Next(MinimumValue, MaximumValue + 1);
+        return rng.Next(settings.Constant.Minimum, settings.Constant.Maximum + 1);
     }
 
     public int GetDivisor(int dividend)
@@ -81,7 +67,7 @@ public sealed class RandomExpressionStrategy(Random rng) : IExpressionStrategy
 
     public int GetExponent()
     {
-        return rng.Next(MinimumValue, MaximumExponent + 1);
+        return rng.Next(settings.Exponent.Minimum, settings.Exponent.Maximum + 1);
     }
 
     private int GetRandomDivisor(int dividend)
@@ -92,7 +78,9 @@ public sealed class RandomExpressionStrategy(Random rng) : IExpressionStrategy
         
         var limit = (int) Math.Sqrt(abs);
 
-        Span<int> divisors = stackalloc int[abs * 2];
+        const int complementaryPairsMultiplier = 2;
+
+        Span<int> divisors = stackalloc int[limit * complementaryPairsMultiplier];
         
         for (var divisor = 1; divisor <= limit; divisor++)
         {
@@ -111,11 +99,11 @@ public sealed class RandomExpressionStrategy(Random rng) : IExpressionStrategy
             }
         }
 
-        var inverse = rng.NextDouble() < 0.5d; 
-
         var index = rng.Next(cursor);
 
         var value = divisors[index];
+        
+        var inverse = rng.NextDouble() < 0.5d;
 
         return inverse ? -value : value;
     }
