@@ -8,11 +8,16 @@ public readonly record struct ConstantSettings(int Minimum, int Maximum)
     }
 }
 
-public readonly record struct OperatorSettings(float Weight)
+public readonly record struct OperatorSettings(bool Enabled, double Weight)
 {
-    public static OperatorSettings From(float weight)
+    public static OperatorSettings From(bool enabled, double weight)
     {
-        return new OperatorSettings(weight);
+        return new OperatorSettings(enabled, weight);
+    }
+
+    public double GetWeight()
+    {
+        return Enabled ? Weight : 0d;
     }
 }
 
@@ -33,32 +38,32 @@ internal static class ExpressionSettingsRegistry
         Depth: ConstantSettings.From(minimum: 1, maximum: 2),
         Constant: ConstantSettings.From(minimum: 1, maximum: 10),
         Exponent: ConstantSettings.From(minimum: 2, maximum: 3),
-        Add: OperatorSettings.From(weight: 1.0f),
-        Subtract: OperatorSettings.From(weight: 1.0f),
-        Multiply: OperatorSettings.From(weight: 0.5f),
-        Divide: OperatorSettings.From(weight: 0.3f),
-        Power: OperatorSettings.From(weight: 0.1f)
+        Add: OperatorSettings.From(enabled: true, weight: 1.0d),
+        Subtract: OperatorSettings.From(enabled: true, weight: 1.0d),
+        Multiply: OperatorSettings.From(enabled: true, weight: 0.5d),
+        Divide: OperatorSettings.From(enabled: true, weight: 0.3d),
+        Power: OperatorSettings.From(enabled: true, weight: 0.1d)
     );
 
     public static readonly ExpressionSettings Medium = new(
         Depth: ConstantSettings.From(minimum: 2, maximum: 3),
         Constant: ConstantSettings.From(minimum: 1, maximum: 15),
         Exponent: ConstantSettings.From(minimum: 2, maximum: 4),
-        Add: OperatorSettings.From(weight: 1.0f),
-        Subtract: OperatorSettings.From(weight: 1.0f),
-        Multiply: OperatorSettings.From(weight: 0.8f),
-        Divide: OperatorSettings.From(weight: 0.6f),
-        Power: OperatorSettings.From(weight: 0.3f)
+        Add: OperatorSettings.From(enabled: true, weight: 1.0d),
+        Subtract: OperatorSettings.From(enabled: true, weight: 1.0d),
+        Multiply: OperatorSettings.From(enabled: true, weight: 0.8d),
+        Divide: OperatorSettings.From(enabled: true, weight: 0.6d),
+        Power: OperatorSettings.From(enabled: true, weight: 0.3d)
     );
 
     public static readonly ExpressionSettings Hard = new(
         Depth: ConstantSettings.From(minimum: 3, maximum: 4),
         Constant: ConstantSettings.From(minimum: 1, maximum: 20),
         Exponent: ConstantSettings.From(minimum: 2, maximum: 5),
-        Add: OperatorSettings.From(weight: 1.0f),
-        Subtract: OperatorSettings.From(weight: 1.0f),
-        Multiply: OperatorSettings.From(weight: 1.0f),
-        Divide: OperatorSettings.From(weight: 0.8f),
-        Power: OperatorSettings.From(weight: 0.5f)
+        Add: OperatorSettings.From(enabled: true, weight: 1.0d),
+        Subtract: OperatorSettings.From(enabled: true, weight: 1.0d),
+        Multiply: OperatorSettings.From(enabled: true, weight: 1.0d),
+        Divide: OperatorSettings.From(enabled: true, weight: 0.8d),
+        Power: OperatorSettings.From(enabled: true, weight: 0.5d)
     );
 }

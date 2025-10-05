@@ -25,29 +25,29 @@ public sealed class RandomExpressionStrategy(ExpressionSettings settings, Random
     public Operator.Code GetOperatorCode()
     {
         var randomOperatorWeight = rng.NextDouble() * (
-            settings.Add.Weight + 
-            settings.Subtract.Weight + 
-            settings.Multiply.Weight + 
-            settings.Divide.Weight + 
-            settings.Power.Weight
+            settings.Add.GetWeight() + 
+            settings.Subtract.GetWeight() + 
+            settings.Multiply.GetWeight() + 
+            settings.Divide.GetWeight() + 
+            settings.Power.GetWeight()
         );
         
-        if ((randomOperatorWeight -= settings.Add.Weight) < 0) 
+        if ((randomOperatorWeight -= settings.Add.GetWeight()) < 0) 
         {
             return Operator.Code.Add;
         }
         
-        if ((randomOperatorWeight -= settings.Subtract.Weight) < 0)
+        if ((randomOperatorWeight -= settings.Subtract.GetWeight()) < 0)
         {
             return Operator.Code.Subtract;
         }
 
-        if ((randomOperatorWeight -= settings.Multiply.Weight) < 0)
+        if ((randomOperatorWeight -= settings.Multiply.GetWeight()) < 0)
         {
             return Operator.Code.Multiply;
         }
         
-        if (randomOperatorWeight - settings.Divide.Weight < 0)
+        if (randomOperatorWeight - settings.Divide.GetWeight() < 0)
         {
             return Operator.Code.Divide;
         }
