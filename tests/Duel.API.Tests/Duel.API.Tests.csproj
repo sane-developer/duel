@@ -6,15 +6,14 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <OutputPath>../../build/debug/core-tests</OutputPath>
+      <OutputPath>../../build/debug/api-tests\</OutputPath>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <OutputPath>../../build/release/core-tests</OutputPath>
+      <OutputPath>../../build/release/api-tests\</OutputPath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -27,10 +26,6 @@
 
     <ItemGroup>
         <Using Include="NUnit.Framework"/>
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\src\Duel.Core\Duel.Core.csproj" />
     </ItemGroup>
 
 </Project>

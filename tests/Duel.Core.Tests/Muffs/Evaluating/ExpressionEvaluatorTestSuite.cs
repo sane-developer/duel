@@ -5,7 +5,7 @@ namespace Duel.Core.Tests.Muffs.Evaluating;
 
 public abstract class ExpressionEvaluatorTestSuite : ExpressionParserTestSuite
 {
-    protected static int GetEvaluation(string text)
+    private static int GetEvaluation(string text)
     {
         var expression = GetExpression(text);
 

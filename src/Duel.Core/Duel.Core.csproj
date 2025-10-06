@@ -7,8 +7,12 @@
         <WarningsAsErrors>true</WarningsAsErrors>
     </PropertyGroup>
 
-    <ItemGroup>
-      <Folder Include="Matchmaking\" />
-    </ItemGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <OutputPath>../../build/debug/core</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <OutputPath>../../build/release/core</OutputPath>
+    </PropertyGroup>
 
 </Project>
