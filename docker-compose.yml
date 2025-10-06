@@ -1,0 +1,105 @@
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: duel-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: duel-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - duel-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d duel-db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: duel-redis
+    command: redis-server --appendonly yes --requirepass admin
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - duel-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: duel-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__PostgreSQL=Host=postgres;Port=5432;Database=duel-db;Username=admin;Password=admin
+      - ConnectionStrings__Redis=redis:6379,password=admin
+    ports:
+      - "5000:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - duel-network
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: duel-pg-admin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@duel.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - duel-network
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    profiles:
+      - tools
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: duel-redis-commander
+    environment:
+      - REDIS_HOSTS=local:redis:6379:0:admin
+    ports:
+      - "8081:8081"
+    networks:
+      - duel-network
+    depends_on:
+      - redis
+    restart: unless-stopped
+    profiles:
+      - tools
+
+networks:
+  duel-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+    name: duel-postgres-data
+  redis-data:
+    name: duel-redis-data
+  pgadmin-data:
+    name: duel-pgadmin-data
