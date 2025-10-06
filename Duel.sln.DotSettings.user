@@ -3,5 +3,5 @@
 	<s:Int64 x:Key="/Default/Environment/Hierarchy/Build/BuildTool/MsbuildVersion/@EntryValue">1114124</s:Int64>
 	<s:String x:Key="/Default/Environment/Hierarchy/Build/BuildTool/CustomBuildToolPath/@EntryValue">C:\Program Files\dotnet\sdk\9.0.101\MSBuild.dll</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b9bd04e8_002D30a6_002D46d2_002D8802_002D4840e3b41c4a/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from Engine.cs" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;ProjectFile&gt;99CECAA0-0FCA-43E1-92F4-238AF35DCC46/d:Games/d:Muffs/f:ExpressionGeneratorTests.cs&lt;/ProjectFile&gt;&#xD;
+  &lt;ProjectFile&gt;99CECAA0-0FCA-43E1-92F4-238AF35DCC46/d:Muffs/f:ExpressionParserTests.cs&lt;/ProjectFile&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
