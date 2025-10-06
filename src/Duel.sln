@@ -1,10 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Duel.Core", "Duel.Core\Duel.Core.csproj", "{D5004067-5894-4370-A733-B6841BEDBEC3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Duel.API", "Duel.API\Duel.API.csproj", "{EF72A887-E78C-45F3-A13E-A6452DE1E86A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Duel.Core.Tests", "..\tests\Duel.Core.Tests\Duel.Core.Tests.csproj", "{EC2BBB20-E8F6-4ED3-8ECE-45C53EE3C2A5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Duel.API.Tests", "..\tests\Duel.API.Tests\Duel.API.Tests.csproj", "{B599DEC0-F3F3-4ADF-807D-56D166454357}"
 EndProject
