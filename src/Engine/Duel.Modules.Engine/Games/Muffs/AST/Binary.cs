@@ -23,9 +23,9 @@ public abstract record Binary(Expression Left, Expression Right) : Expression
         };
     }
 
-    public static bool IsRightAssociative(Type code)
+    public static bool IsRightAssociative(Type type)
     {
-        return code is Type.Power;
+        return type is Type.Power;
     }
 
     public static Binary From(Type type, Expression lhs, Expression rhs) 
