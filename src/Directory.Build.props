@@ -1,0 +1,20 @@
+<Project>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="System.Diagnostics.CodeAnalysis" />
+    <Using Include="Duel.Shared.Exceptions" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputPath>$(MSBuildThisFileDirectory)..\build\$(Configuration)\$(MSBuildProjectName)\</OutputPath>
+    <IntermediateOutputPath>$(MSBuildThisFileDirectory)..\build\$(Configuration)\$(MSBuildProjectName)\obj\</IntermediateOutputPath>
+  </PropertyGroup>
+
+</Project>

@@ -6,13 +6,11 @@ WORKDIR /build
 
 COPY src/ ./src/
 
-COPY tests/ ./tests/
-
 RUN dotnet restore ./src/Duel.sln
 
-RUN dotnet build ./src/Duel.API/Duel.API.csproj -c Release
+RUN dotnet build ./src/Web/Duel.API/Duel.API.csproj -c Release
 
-RUN dotnet publish ./src/Duel.API/Duel.API.csproj -c Release --no-build -o /app/publish
+RUN dotnet publish ./src/Web/Duel.API/Duel.API.csproj -c Release --no-build -o /app/publish
 
 ### Stage 2: Runtime
 
