@@ -27,7 +27,7 @@ public sealed class SingleOperationsTestSuite : ExpressionGeneratorTestSuite
     [Test]
     public void Generate_Addition_ValidStructure()
     {
-        var settings = CreateSingleOperatorSettings(Operator.Code.Add);
+        var settings = CreateSingleOperatorSettings(Binary.Type.Add);
         
         var expression = GetExpression(settings, _rng);
 
@@ -37,7 +37,7 @@ public sealed class SingleOperationsTestSuite : ExpressionGeneratorTestSuite
     [Test]
     public void Generate_Subtraction_ValidStructure()
     {
-        var settings = CreateSingleOperatorSettings(Operator.Code.Subtract);
+        var settings = CreateSingleOperatorSettings(Binary.Type.Subtract);
        
         var expression = GetExpression(settings, _rng);
 
@@ -47,7 +47,7 @@ public sealed class SingleOperationsTestSuite : ExpressionGeneratorTestSuite
     [Test]
     public void Generate_Multiplication_ValidStructure()
     {
-        var settings = CreateSingleOperatorSettings(Operator.Code.Multiply);
+        var settings = CreateSingleOperatorSettings(Binary.Type.Multiply);
         
         var expression = GetExpression(settings, _rng);
 
@@ -57,7 +57,7 @@ public sealed class SingleOperationsTestSuite : ExpressionGeneratorTestSuite
     [Test]
     public void Generate_Division_ExactDivisor()
     {
-        var settings = CreateSingleOperatorSettings(Operator.Code.Divide);
+        var settings = CreateSingleOperatorSettings(Binary.Type.Divide);
         
         var expression = GetExpression(settings, _rng);
 
@@ -73,7 +73,7 @@ public sealed class SingleOperationsTestSuite : ExpressionGeneratorTestSuite
     [Test]
     public void Generate_Power_ExponentInRange()
     {
-        var settings = CreateSingleOperatorSettings(Operator.Code.Power);
+        var settings = CreateSingleOperatorSettings(Binary.Type.Power);
         
         var expression = GetExpression(settings, _rng).As<Binary>();
 
@@ -87,7 +87,7 @@ public sealed class SingleOperationsTestSuite : ExpressionGeneratorTestSuite
     [Test]
     public void Generate_SingleOperation_EvaluatesWithoutError()
     {
-        var settings = CreateSingleOperatorSettings(Operator.Code.Add);
+        var settings = CreateSingleOperatorSettings(Binary.Type.Add);
         
         var expression = GetExpression(settings, _rng);
 

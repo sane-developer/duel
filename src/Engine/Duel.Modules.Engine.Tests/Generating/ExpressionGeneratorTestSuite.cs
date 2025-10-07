@@ -39,17 +39,17 @@ public abstract class ExpressionGeneratorTestSuite
         );
     }
 
-    protected static ExpressionSettings CreateSingleOperatorSettings(Operator.Code code)
+    protected static ExpressionSettings CreateSingleOperatorSettings(Binary.Type type)
     {
         return new ExpressionSettings(
             Depth: ConstantSettings.From(minimum: 1, maximum: 2),
             Constant: ConstantSettings,
             Exponent: ExponentSettings,
-            Add: OperatorSettings.From(enabled: code is Operator.Code.Add, weight: 1.0f),
-            Subtract: OperatorSettings.From(enabled: code is Operator.Code.Subtract, weight: 1.0f),
-            Multiply: OperatorSettings.From(enabled: code is Operator.Code.Multiply, weight: 1.0f),
-            Divide: OperatorSettings.From(enabled: code is Operator.Code.Divide, weight: 1.0f),
-            Power: OperatorSettings.From(enabled: code is Operator.Code.Power, weight: 1.0f)
+            Add: OperatorSettings.From(enabled: type is Binary.Type.Add, weight: 1.0f),
+            Subtract: OperatorSettings.From(enabled: type is Binary.Type.Subtract, weight: 1.0f),
+            Multiply: OperatorSettings.From(enabled: type is Binary.Type.Multiply, weight: 1.0f),
+            Divide: OperatorSettings.From(enabled: type is Binary.Type.Divide, weight: 1.0f),
+            Power: OperatorSettings.From(enabled: type is Binary.Type.Power, weight: 1.0f)
         );
     }
 

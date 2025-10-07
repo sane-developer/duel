@@ -30,6 +30,17 @@ public sealed class ExpressionTokenizer(string text)
                 continue;
             }
 
+            if (char.IsLetter(character))
+            {
+                var (identifierToken, nextCharacterIndex) = GetIdentifierToken(text, cursor);
+
+                cursor = nextCharacterIndex;
+
+                tokens.Add(identifierToken);
+
+                continue;
+            }
+
             var operatorToken = GetOperatorToken(character);
             
             tokens.Add(operatorToken);
@@ -84,6 +95,38 @@ public sealed class ExpressionTokenizer(string text)
         return (token, cursor);
     }
     
+    private static (ExpressionToken token, int nextCharacterIndex) GetIdentifierToken(string expression, int startIndex)
+    {
+        var cursor = startIndex;
+        
+        while (cursor < expression.Length)
+        {
+            var character = expression[cursor];
+
+            if (!char.IsLetterOrDigit(character))
+            {
+                break;
+            }
+            
+            cursor++;
+        }
+
+        var identifier = expression[startIndex..cursor];
+
+        var tokenType = identifier switch
+        {
+            "minus" => TokenType.UnaryMinus,
+            "abs" => TokenType.Abs,
+            "sqrt" => TokenType.Sqrt,
+            "factorial" => TokenType.Factorial,
+            _ => throw new FormatException($"Unknown function: {identifier}")
+        };
+        
+        var token = ExpressionToken.From(tokenType, identifier);
+        
+        return (token, cursor);
+    }
+    
     private static ExpressionToken GetOperatorToken(char character)
     {
         return character switch
@@ -93,6 +136,7 @@ public sealed class ExpressionTokenizer(string text)
             '*' => ExpressionTokenRegistry.Multiply,
             '/' => ExpressionTokenRegistry.Divide,
             '^' => ExpressionTokenRegistry.Power,
+            '%' => ExpressionTokenRegistry.Mod,
             '(' => ExpressionTokenRegistry.LeftParen,
             ')' => ExpressionTokenRegistry.RightParen,
             _ => Situation.Unreachable<ExpressionToken>()

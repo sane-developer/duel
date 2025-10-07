@@ -53,6 +53,11 @@ public sealed class ExpressionParser(List<ExpressionToken> tokens)
     {
         var token = _state.Current;
 
+        if (token.Type is TokenType.UnaryMinus or TokenType.Abs or TokenType.Sqrt or TokenType.Factorial)
+        {
+            return ParseUnaryFunction(token.Type);
+        }
+
         if (token.Type is TokenType.Number)
         {
             _state.Advance();
@@ -79,35 +84,57 @@ public sealed class ExpressionParser(List<ExpressionToken> tokens)
         throw new FormatException($"Unexpected token '{token.Value}'.");
     }
 
-    private static (Operator.Code code, int precedence, bool rightAssociative) GetOperatorMetadata(TokenType kind)
+    private Expression ParseUnaryFunction(TokenType type)
+    {
+        _state.Advance();
+        
+        _state.Expect(TokenType.LeftParen);
+        
+        var operand = ParseExpression(minimumPrecedence: 0);
+        
+        _state.Expect(TokenType.RightParen);
+        
+        return type switch
+        {
+            TokenType.UnaryMinus => Negation.From(operand),
+            TokenType.Sqrt => SquareRoot.From(operand),
+            TokenType.Abs => Abs.From(operand),
+            TokenType.Factorial => Factorial.From(operand),
+            _ => Situation.Unreachable<Expression>()
+        };
+    }
+
+    private static (Binary.Type type, int precedence, bool rightAssociative) GetOperatorMetadata(TokenType kind)
     {
         var code = kind switch
         {
-            TokenType.Plus => Operator.Code.Add,
-            TokenType.Minus => Operator.Code.Subtract,
-            TokenType.Multiply => Operator.Code.Multiply,
-            TokenType.Divide => Operator.Code.Divide,
-            TokenType.Power => Operator.Code.Power,
-            _ => Situation.Unreachable<Operator.Code>()
+            TokenType.Plus => Binary.Type.Add,
+            TokenType.Minus => Binary.Type.Subtract,
+            TokenType.Multiply => Binary.Type.Multiply,
+            TokenType.Divide => Binary.Type.Divide,
+            TokenType.Modulo => Binary.Type.Modulo,
+            TokenType.Power => Binary.Type.Power,
+            _ => Situation.Unreachable<Binary.Type>()
         };
 
-        return (code, Operator.Precedence(code), Operator.IsRightAssociative(code));
+        return (code, Binary.Precedence(code), Binary.IsRightAssociative(code));
     }
 
     private static bool IsBinaryOperator(TokenType type)
     {
-        return type is TokenType.Plus or TokenType.Minus or TokenType.Multiply or TokenType.Divide or TokenType.Power;
+        return type is TokenType.Plus or TokenType.Minus or TokenType.Multiply or TokenType.Divide or TokenType.Modulo or TokenType.Power;
     }
 
-    private static Expression MakeBinary(Operator.Code code, Expression left, Expression right)
+    private static Expression MakeBinary(Binary.Type type, Expression lhs, Expression rhs)
     {
-        return code switch
+        return type switch
         {
-            Operator.Code.Add => Addition.From(left, right),
-            Operator.Code.Subtract => Subtraction.From(left, right),
-            Operator.Code.Multiply => Multiplication.From(left, right),
-            Operator.Code.Divide => Division.From(left, right),
-            Operator.Code.Power => Power.From(left, right),
+            Binary.Type.Add => Addition.From(lhs, rhs),
+            Binary.Type.Subtract => Subtraction.From(lhs, rhs),
+            Binary.Type.Multiply => Multiplication.From(lhs, rhs),
+            Binary.Type.Divide => Division.From(lhs, rhs),
+            Binary.Type.Modulo => Modulo.From(lhs, rhs),
+            Binary.Type.Power => Power.From(lhs, rhs),
             _ => Situation.Unreachable<Expression>()
         };
     }

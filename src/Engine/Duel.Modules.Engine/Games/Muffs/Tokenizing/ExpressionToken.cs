@@ -8,8 +8,13 @@ public enum TokenType
     Multiply,
     Divide,
     Power,
+    Modulo,
     LeftParen,
     RightParen,
+    UnaryMinus,
+    Abs,
+    Sqrt,
+    Factorial,
     EndOfInput
 }
 
@@ -32,6 +37,8 @@ internal static class ExpressionTokenRegistry
     public static readonly ExpressionToken Multiply = ExpressionToken.From(TokenType.Multiply, "*");
     
     public static readonly ExpressionToken Power = ExpressionToken.From(TokenType.Power, "^");
+    
+    public static readonly ExpressionToken Mod = ExpressionToken.From(TokenType.Modulo, "%");
     
     public static readonly ExpressionToken LeftParen = ExpressionToken.From(TokenType.LeftParen, "(");
     
