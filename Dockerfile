@@ -4,6 +4,10 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 
 WORKDIR /build
 
+COPY Directory.Build.props ./
+
+COPY Directory.Packages.props ./
+
 COPY src/ ./src/
 
 COPY tests/ ./tests/
