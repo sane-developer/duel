@@ -1,8 +1,8 @@
-using Duel.Core.Games.Muffs.AST;
-using Duel.Core.Games.Muffs.Generating;
-using Duel.Core.Games.Muffs.Generating.Strategies;
+using Duel.Modules.Engine.Games.Muffs.AST;
+using Duel.Modules.Engine.Games.Muffs.Generating;
+using Duel.Modules.Engine.Games.Muffs.Generating.Strategies;
 
-namespace Duel.Core.Tests.Muffs.Generating;
+namespace Duel.Modules.Engine.Tests.Generating;
 
 public abstract class ExpressionGeneratorTestSuite
 {

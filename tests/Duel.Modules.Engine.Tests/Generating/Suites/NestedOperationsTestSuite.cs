@@ -1,8 +1,8 @@
-using Duel.Core.Games.Muffs.AST;
-using Duel.Core.Games.Muffs.Evaluating;
-using Duel.Core.Games.Muffs.Generating;
+using Duel.Modules.Engine.Games.Muffs.AST;
+using Duel.Modules.Engine.Games.Muffs.Evaluating;
+using Duel.Modules.Engine.Games.Muffs.Generating;
 
-namespace Duel.Core.Tests.Muffs.Generating.Suites;
+namespace Duel.Modules.Engine.Tests.Generating.Suites;
 
 [TestFixture]
 public sealed class NestedOperationsTestSuite : ExpressionGeneratorTestSuite

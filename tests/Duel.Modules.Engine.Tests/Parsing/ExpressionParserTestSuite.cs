@@ -1,8 +1,8 @@
-﻿using Duel.Core.Games.Muffs.AST;
-using Duel.Core.Games.Muffs.Parsing;
-using Duel.Core.Games.Muffs.Tokenizing;
+﻿using Duel.Modules.Engine.Games.Muffs.AST;
+using Duel.Modules.Engine.Games.Muffs.Parsing;
+using Duel.Modules.Engine.Games.Muffs.Tokenizing;
 
-namespace Duel.Core.Tests.Muffs.Parsing;
+namespace Duel.Modules.Engine.Tests.Parsing;
 
 public abstract class ExpressionParserTestSuite
 {

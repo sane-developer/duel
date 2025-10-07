@@ -1,7 +1,7 @@
-using Duel.Core.Games.Muffs.AST;
-using Duel.Core.Games.Muffs.Evaluating;
+using Duel.Modules.Engine.Games.Muffs.AST;
+using Duel.Modules.Engine.Games.Muffs.Evaluating;
 
-namespace Duel.Core.Tests.Muffs.Generating.Suites;
+namespace Duel.Modules.Engine.Tests.Generating.Suites;
 
 [TestFixture]
 public sealed class SingleOperationsTestSuite : ExpressionGeneratorTestSuite

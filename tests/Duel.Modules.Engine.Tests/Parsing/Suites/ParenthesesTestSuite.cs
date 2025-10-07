@@ -1,6 +1,6 @@
-﻿using Duel.Core.Games.Muffs.AST;
+﻿using Duel.Modules.Engine.Games.Muffs.AST;
 
-namespace Duel.Core.Tests.Muffs.Parsing.Suites;
+namespace Duel.Modules.Engine.Tests.Parsing.Suites;
 
 [TestFixture]
 public sealed class ParenthesesTestSuite : ExpressionParserTestSuite

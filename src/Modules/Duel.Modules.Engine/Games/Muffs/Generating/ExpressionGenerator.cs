@@ -1,7 +1,7 @@
-﻿using Duel.Core.Games.Muffs.AST;
-using Duel.Core.Games.Muffs.Evaluating;
+﻿using Duel.Modules.Engine.Games.Muffs.AST;
+using Duel.Modules.Engine.Games.Muffs.Evaluating;
 
-namespace Duel.Core.Games.Muffs.Generating;
+namespace Duel.Modules.Engine.Games.Muffs.Generating;
 
 public sealed class ExpressionGenerator(IExpressionStrategy strategy)
 {

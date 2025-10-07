@@ -1,6 +1,4 @@
-﻿using Duel.Shared.Common;
-
-namespace Duel.Core.Games.Muffs.AST;
+﻿namespace Duel.Modules.Engine.Games.Muffs.AST;
 
 public abstract record Expression
 {

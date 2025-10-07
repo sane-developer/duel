@@ -1,4 +1,4 @@
-namespace Duel.Core.Tests.Muffs.Evaluating.Suites;
+namespace Duel.Modules.Engine.Tests.Evaluating.Suites;
 
 [TestFixture]
 public sealed class NestedOperationsTestSuite : ExpressionEvaluatorTestSuite

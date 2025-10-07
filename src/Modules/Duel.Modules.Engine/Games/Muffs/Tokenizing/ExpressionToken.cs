@@ -1,4 +1,4 @@
-﻿namespace Duel.Core.Games.Muffs.Tokenizing;
+﻿namespace Duel.Modules.Engine.Games.Muffs.Tokenizing;
 
 public enum TokenType
 {

@@ -1,6 +1,6 @@
-﻿using Duel.Core.Games.Muffs.Tokenizing;
+﻿using Duel.Modules.Engine.Games.Muffs.Tokenizing;
 
-namespace Duel.Core.Games.Muffs.Parsing;
+namespace Duel.Modules.Engine.Games.Muffs.Parsing;
 
 internal sealed class ExpressionParserState(List<ExpressionToken> tokens)
 {

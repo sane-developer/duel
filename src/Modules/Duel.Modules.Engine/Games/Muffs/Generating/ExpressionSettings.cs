@@ -1,4 +1,4 @@
-namespace Duel.Core.Games.Muffs.Generating;
+namespace Duel.Modules.Engine.Games.Muffs.Generating;
 
 public readonly record struct ConstantSettings(int Minimum, int Maximum)
 {

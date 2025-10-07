@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace Duel.Shared.Common;
+namespace Duel.Shared.Exceptions;
 
 public static class Situation
 {

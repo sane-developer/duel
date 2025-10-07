@@ -1,4 +1,4 @@
-﻿namespace Duel.Core.Games;
+﻿namespace Duel.Modules.Engine.Abstractions;
 
 public interface IGameEngine
 {

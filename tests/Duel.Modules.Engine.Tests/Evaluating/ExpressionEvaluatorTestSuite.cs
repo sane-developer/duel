@@ -1,7 +1,7 @@
-using Duel.Core.Games.Muffs.Evaluating;
-using Duel.Core.Tests.Muffs.Parsing;
+using Duel.Modules.Engine.Games.Muffs.Evaluating;
+using Duel.Modules.Engine.Tests.Parsing;
 
-namespace Duel.Core.Tests.Muffs.Evaluating;
+namespace Duel.Modules.Engine.Tests.Evaluating;
 
 public abstract class ExpressionEvaluatorTestSuite : ExpressionParserTestSuite
 {

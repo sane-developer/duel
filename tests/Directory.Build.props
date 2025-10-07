@@ -4,9 +4,8 @@
   
   <PropertyGroup>
     <IsPackable>false</IsPackable>
-    <BaseOutputPath>$(MSBuildThisFileDirectory)..\build\bin\tests\</BaseOutputPath>
-    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)..\build\obj\tests\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)..\build\$(Configuration)\$(MSBuildProjectName)\</OutputPath>
+    <IntermediateOutputPath>$(MSBuildThisFileDirectory)..\build\$(Configuration)\$(MSBuildProjectName)\obj\</IntermediateOutputPath>
   </PropertyGroup>
-  
-</Project>
 
+</Project>

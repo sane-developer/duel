@@ -1,4 +1,4 @@
-﻿namespace Duel.Core.Tests.Muffs.Parsing.Suites;
+﻿namespace Duel.Modules.Engine.Tests.Parsing.Suites;
 
 [TestFixture]
 public sealed class LiteralsTestSuite : ExpressionParserTestSuite

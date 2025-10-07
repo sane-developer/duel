@@ -1,4 +1,4 @@
-﻿namespace Duel.Core.Games.Muffs.Serializing;
+﻿namespace Duel.Modules.Engine.Games.Muffs.Serializing;
 
 public class ExpressionSerializer
 {

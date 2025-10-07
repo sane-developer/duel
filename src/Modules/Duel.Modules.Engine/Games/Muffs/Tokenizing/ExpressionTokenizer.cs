@@ -1,6 +1,4 @@
-﻿using Duel.Shared.Common;
-
-namespace Duel.Core.Games.Muffs.Tokenizing;
+﻿namespace Duel.Modules.Engine.Games.Muffs.Tokenizing;
 
 public sealed class ExpressionTokenizer(string text)
 {

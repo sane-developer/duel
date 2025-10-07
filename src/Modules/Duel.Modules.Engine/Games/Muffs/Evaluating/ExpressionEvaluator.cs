@@ -1,7 +1,6 @@
-﻿using Duel.Core.Games.Muffs.AST;
-using Duel.Shared.Common;
+﻿using Duel.Modules.Engine.Games.Muffs.AST;
 
-namespace Duel.Core.Games.Muffs.Evaluating;
+namespace Duel.Modules.Engine.Games.Muffs.Evaluating;
 
 public sealed class ExpressionEvaluator(Expression expression)
 {

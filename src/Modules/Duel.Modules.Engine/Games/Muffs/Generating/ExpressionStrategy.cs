@@ -1,6 +1,6 @@
-using Duel.Core.Games.Muffs.AST;
+using Duel.Modules.Engine.Games.Muffs.AST;
 
-namespace Duel.Core.Games.Muffs.Generating;
+namespace Duel.Modules.Engine.Games.Muffs.Generating;
 
 public interface IExpressionStrategy
 {

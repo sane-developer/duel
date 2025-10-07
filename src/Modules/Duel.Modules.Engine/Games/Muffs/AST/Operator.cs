@@ -1,4 +1,4 @@
-﻿namespace Duel.Core.Games.Muffs.AST;
+﻿namespace Duel.Modules.Engine.Games.Muffs.AST;
 
 public static class Operator
 {

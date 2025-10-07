@@ -1,9 +1,8 @@
 ﻿using System.Globalization;
-using Duel.Core.Games.Muffs.AST;
-using Duel.Core.Games.Muffs.Tokenizing;
-using Duel.Shared.Common;
+using Duel.Modules.Engine.Games.Muffs.AST;
+using Duel.Modules.Engine.Games.Muffs.Tokenizing;
 
-namespace Duel.Core.Games.Muffs.Parsing;
+namespace Duel.Modules.Engine.Games.Muffs.Parsing;
 
 public sealed class ExpressionParser(List<ExpressionToken> tokens)
 {
