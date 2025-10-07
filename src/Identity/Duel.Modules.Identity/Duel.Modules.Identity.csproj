@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     
     <ItemGroup>
-      <ProjectReference Include="..\..\Duel.Shared\Duel.Shared.csproj" />
+      <ProjectReference Include="..\..\Shared\Duel.Shared\Duel.Shared.csproj" />
     </ItemGroup>
 
 </Project>

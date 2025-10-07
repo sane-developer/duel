@@ -1,5 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+    <PropertyGroup>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="coverlet.collector" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
@@ -13,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Modules\Duel.Modules.Engine\Duel.Modules.Engine.csproj" />
+      <ProjectReference Include="..\Duel.Modules.Engine\Duel.Modules.Engine.csproj" />
     </ItemGroup>
 
 </Project>
