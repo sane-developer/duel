@@ -38,7 +38,7 @@ internal static class ExpressionTokenRegistry
     
     public static readonly ExpressionToken Power = ExpressionToken.From(TokenType.Power, "^");
     
-    public static readonly ExpressionToken Mod = ExpressionToken.From(TokenType.Modulo, "%");
+    public static readonly ExpressionToken Modulo = ExpressionToken.From(TokenType.Modulo, "%");
     
     public static readonly ExpressionToken LeftParen = ExpressionToken.From(TokenType.LeftParen, "(");
     

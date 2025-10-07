@@ -113,7 +113,7 @@ public sealed class ExpressionTokenizer(string text)
 
         var identifier = expression[startIndex..cursor];
 
-        var tokenType = identifier switch
+        var type = identifier switch
         {
             "minus" => TokenType.UnaryMinus,
             "abs" => TokenType.Abs,
@@ -122,7 +122,7 @@ public sealed class ExpressionTokenizer(string text)
             _ => throw new FormatException($"Unknown function: {identifier}")
         };
         
-        var token = ExpressionToken.From(tokenType, identifier);
+        var token = ExpressionToken.From(type, identifier);
         
         return (token, cursor);
     }
@@ -136,7 +136,7 @@ public sealed class ExpressionTokenizer(string text)
             '*' => ExpressionTokenRegistry.Multiply,
             '/' => ExpressionTokenRegistry.Divide,
             '^' => ExpressionTokenRegistry.Power,
-            '%' => ExpressionTokenRegistry.Mod,
+            '%' => ExpressionTokenRegistry.Modulo,
             '(' => ExpressionTokenRegistry.LeftParen,
             ')' => ExpressionTokenRegistry.RightParen,
             _ => Situation.Unreachable<ExpressionToken>()
