@@ -1,0 +1,12 @@
+<Project>
+
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+  
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <BaseOutputPath>$(MSBuildThisFileDirectory)..\build\bin\tests\</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)..\build\obj\tests\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  
+</Project>
+
