@@ -90,7 +90,7 @@ public sealed class ExpressionTokenizer(string text)
 
         var slice = expression[startIndex..cursor];
         
-        var token = ExpressionToken.From(TokenType.Number, slice);
+        var token = ExpressionToken.From(ExpressionTokenType.Number, slice);
         
         return (token, cursor);
     }
@@ -115,10 +115,10 @@ public sealed class ExpressionTokenizer(string text)
 
         var type = identifier switch
         {
-            "minus" => TokenType.UnaryMinus,
-            "abs" => TokenType.Abs,
-            "sqrt" => TokenType.Sqrt,
-            "factorial" => TokenType.Factorial,
+            "minus" => ExpressionTokenType.UnaryMinus,
+            "abs" => ExpressionTokenType.Abs,
+            "sqrt" => ExpressionTokenType.Sqrt,
+            "factorial" => ExpressionTokenType.Factorial,
             _ => throw new FormatException($"Unknown function: {identifier}")
         };
         

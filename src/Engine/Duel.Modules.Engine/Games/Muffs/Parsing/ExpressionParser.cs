@@ -12,7 +12,7 @@ public sealed class ExpressionParser(List<ExpressionToken> tokens)
     {
         var expression = ParseExpression(minimumPrecedence: 0);
 
-        _state.Expect(TokenType.EndOfInput);
+        _state.Expect(ExpressionTokenType.EndOfInput);
         
         return expression;
     }
@@ -53,12 +53,12 @@ public sealed class ExpressionParser(List<ExpressionToken> tokens)
     {
         var token = _state.Current;
 
-        if (token.Type is TokenType.UnaryMinus or TokenType.Abs or TokenType.Sqrt or TokenType.Factorial)
+        if (token.Type is ExpressionTokenType.UnaryMinus or ExpressionTokenType.Abs or ExpressionTokenType.Sqrt or ExpressionTokenType.Factorial)
         {
             return ParseUnaryFunction(token.Type);
         }
 
-        if (token.Type is TokenType.Number)
+        if (token.Type is ExpressionTokenType.Number)
         {
             _state.Advance();
 
@@ -70,13 +70,13 @@ public sealed class ExpressionParser(List<ExpressionToken> tokens)
             return Constant.From(value);
         }
 
-        if (token.Type is TokenType.LeftParen)
+        if (token.Type is ExpressionTokenType.LeftParen)
         {
             _state.Advance();
             
             var inner = ParseExpression(minimumPrecedence: 0);
             
-            _state.Expect(TokenType.RightParen);
+            _state.Expect(ExpressionTokenType.RightParen);
             
             return inner;
         }
@@ -84,45 +84,45 @@ public sealed class ExpressionParser(List<ExpressionToken> tokens)
         throw new FormatException($"Unexpected token '{token.Value}'.");
     }
 
-    private Expression ParseUnaryFunction(TokenType type)
+    private Expression ParseUnaryFunction(ExpressionTokenType type)
     {
         _state.Advance();
         
-        _state.Expect(TokenType.LeftParen);
+        _state.Expect(ExpressionTokenType.LeftParen);
         
         var operand = ParseExpression(minimumPrecedence: 0);
         
-        _state.Expect(TokenType.RightParen);
+        _state.Expect(ExpressionTokenType.RightParen);
         
         return type switch
         {
-            TokenType.UnaryMinus => Negation.From(operand),
-            TokenType.Sqrt => SquareRoot.From(operand),
-            TokenType.Abs => Abs.From(operand),
-            TokenType.Factorial => Factorial.From(operand),
+            ExpressionTokenType.UnaryMinus => Negation.From(operand),
+            ExpressionTokenType.Sqrt => SquareRoot.From(operand),
+            ExpressionTokenType.Abs => Abs.From(operand),
+            ExpressionTokenType.Factorial => Factorial.From(operand),
             _ => Situation.Unreachable<Expression>()
         };
     }
 
-    private static (Binary.Type type, int precedence, bool rightAssociative) GetOperatorMetadata(TokenType kind)
+    private static (Binary.Type type, int precedence, bool rightAssociative) GetOperatorMetadata(ExpressionTokenType kind)
     {
         var code = kind switch
         {
-            TokenType.Plus => Binary.Type.Add,
-            TokenType.Minus => Binary.Type.Subtract,
-            TokenType.Multiply => Binary.Type.Multiply,
-            TokenType.Divide => Binary.Type.Divide,
-            TokenType.Modulo => Binary.Type.Modulo,
-            TokenType.Power => Binary.Type.Power,
+            ExpressionTokenType.Plus => Binary.Type.Add,
+            ExpressionTokenType.Minus => Binary.Type.Subtract,
+            ExpressionTokenType.Multiply => Binary.Type.Multiply,
+            ExpressionTokenType.Divide => Binary.Type.Divide,
+            ExpressionTokenType.Modulo => Binary.Type.Modulo,
+            ExpressionTokenType.Power => Binary.Type.Power,
             _ => Situation.Unreachable<Binary.Type>()
         };
 
         return (code, Binary.Precedence(code), Binary.IsRightAssociative(code));
     }
 
-    private static bool IsBinaryOperator(TokenType type)
+    private static bool IsBinaryOperator(ExpressionTokenType type)
     {
-        return type is TokenType.Plus or TokenType.Minus or TokenType.Multiply or TokenType.Divide or TokenType.Modulo or TokenType.Power;
+        return type is ExpressionTokenType.Plus or ExpressionTokenType.Minus or ExpressionTokenType.Multiply or ExpressionTokenType.Divide or ExpressionTokenType.Modulo or ExpressionTokenType.Power;
     }
 
     private static Expression MakeBinary(Binary.Type type, Expression lhs, Expression rhs)
