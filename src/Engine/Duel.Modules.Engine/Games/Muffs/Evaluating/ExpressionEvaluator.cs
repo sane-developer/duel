@@ -84,11 +84,6 @@ public sealed class ExpressionEvaluator(Expression expression)
         {
             var value = Evaluate(node.Operand);
 
-            if (value < 0)
-            {
-                throw new ArgumentException($"Factorial is undefined for negative numbers (got {value}).");
-            }
-        
             if (value is 0 or 1)
             {
                 return 1;

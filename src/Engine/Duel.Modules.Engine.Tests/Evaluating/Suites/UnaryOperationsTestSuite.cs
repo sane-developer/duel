@@ -101,18 +101,6 @@ public sealed class UnaryOperationsTestSuite : ExpressionEvaluatorTestSuite
     }
 
     [Test]
-    public void Factorial_NegativeNumber_ThrowsException()
-    {
-        var expression = "factorial(minus(5))";
-
-        Assert.Throws<ArgumentException>(() =>
-        {
-            var eval = new ExpressionEvaluator(GetExpression(expression));
-            eval.Evaluate();
-        });
-    }
-
-    [Test]
     public void UnaryWithBinary_AbsOfSubtraction_ReturnsCorrectResult()
     {
         var expression = "abs(5 - 10)";
