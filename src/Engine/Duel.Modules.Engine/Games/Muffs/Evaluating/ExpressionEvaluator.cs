@@ -18,7 +18,12 @@ public sealed class ExpressionEvaluator(Expression expression)
             Subtraction node => Subtract(node),
             Multiplication node => Multiply(node),
             Division node => Divide(node),
+            Modulo node => Modulo(node),
             Power node => Power(node),
+            Negation node => Negate(node),
+            Abs node => Absolute(node),
+            SquareRoot node => Sqrt(node),
+            Factorial node => Factorial(node),
             _ => Situation.Unreachable<int>()
         };
 
@@ -42,6 +47,11 @@ public sealed class ExpressionEvaluator(Expression expression)
             return Evaluate(node.Left) / Evaluate(node.Right);
         }
 
+        int Modulo(Binary node)
+        {
+            return Evaluate(node.Left) % Evaluate(node.Right);
+        }
+
         int Power(Binary node)
         {
             var lhs = Evaluate(node.Left);
@@ -49,6 +59,44 @@ public sealed class ExpressionEvaluator(Expression expression)
             var rhs = Evaluate(node.Right);
             
             return (int) Math.Pow(lhs, rhs);
+        }
+
+        int Negate(Unary node)
+        {
+            return -Evaluate(node.Operand);
+        }
+
+        int Absolute(Unary node)
+        {
+            var value = Evaluate(node.Operand);
+
+            return Math.Abs(value);
+        }
+
+        int Sqrt(Unary node)
+        {
+            var value = Evaluate(node.Operand);
+
+            return (int) Math.Sqrt(value);
+        }
+
+        int Factorial(Unary node)
+        {
+            var value = Evaluate(node.Operand);
+
+            if (value is 0 or 1)
+            {
+                return 1;
+            }
+            
+            var result = 1;
+            
+            for (var i = 2; i <= value; i++)
+            {
+                result *= i;
+            }
+            
+            return result;
         }
     }
 }

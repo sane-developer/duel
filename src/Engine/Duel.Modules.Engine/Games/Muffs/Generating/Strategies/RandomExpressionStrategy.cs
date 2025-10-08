@@ -22,31 +22,31 @@ public sealed class RandomExpressionStrategy(ExpressionSettings settings, Random
         return rng.NextDouble() < luckyThreshold;
     }
 
-    public Operator.Code GetOperatorCode()
+    public Binary.Type GetOperatorCode()
     {        
         var randomOperatorWeight = rng.NextDouble() * GetTotalWeight();
         
         if ((randomOperatorWeight -= settings.Add.GetWeight()) < 0) 
         {
-            return Operator.Code.Add;
+            return Binary.Type.Add;
         }
         
         if ((randomOperatorWeight -= settings.Subtract.GetWeight()) < 0)
         {
-            return Operator.Code.Subtract;
+            return Binary.Type.Subtract;
         }
 
         if ((randomOperatorWeight -= settings.Multiply.GetWeight()) < 0)
         {
-            return Operator.Code.Multiply;
+            return Binary.Type.Multiply;
         }
         
         if (randomOperatorWeight - settings.Divide.GetWeight() < 0)
         {
-            return Operator.Code.Divide;
+            return Binary.Type.Divide;
         }
 
-        return Operator.Code.Power;
+        return Binary.Type.Power;
     }
     
     public int GetConstant() 

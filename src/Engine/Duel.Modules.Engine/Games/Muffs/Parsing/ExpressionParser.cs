@@ -12,7 +12,7 @@ public sealed class ExpressionParser(List<ExpressionToken> tokens)
     {
         var expression = ParseExpression(minimumPrecedence: 0);
 
-        _state.Expect(TokenType.EndOfInput);
+        _state.Expect(ExpressionTokenType.EndOfInput);
         
         return expression;
     }
@@ -53,7 +53,12 @@ public sealed class ExpressionParser(List<ExpressionToken> tokens)
     {
         var token = _state.Current;
 
-        if (token.Type is TokenType.Number)
+        if (token.Type is ExpressionTokenType.UnaryMinus or ExpressionTokenType.Abs or ExpressionTokenType.Sqrt or ExpressionTokenType.Factorial)
+        {
+            return ParseUnaryFunction(token.Type);
+        }
+
+        if (token.Type is ExpressionTokenType.Number)
         {
             _state.Advance();
 
@@ -65,13 +70,13 @@ public sealed class ExpressionParser(List<ExpressionToken> tokens)
             return Constant.From(value);
         }
 
-        if (token.Type is TokenType.LeftParen)
+        if (token.Type is ExpressionTokenType.LeftParen)
         {
             _state.Advance();
             
             var inner = ParseExpression(minimumPrecedence: 0);
             
-            _state.Expect(TokenType.RightParen);
+            _state.Expect(ExpressionTokenType.RightParen);
             
             return inner;
         }
@@ -79,35 +84,57 @@ public sealed class ExpressionParser(List<ExpressionToken> tokens)
         throw new FormatException($"Unexpected token '{token.Value}'.");
     }
 
-    private static (Operator.Code code, int precedence, bool rightAssociative) GetOperatorMetadata(TokenType kind)
+    private Expression ParseUnaryFunction(ExpressionTokenType type)
+    {
+        _state.Advance();
+        
+        _state.Expect(ExpressionTokenType.LeftParen);
+        
+        var operand = ParseExpression(minimumPrecedence: 0);
+        
+        _state.Expect(ExpressionTokenType.RightParen);
+        
+        return type switch
+        {
+            ExpressionTokenType.UnaryMinus => Negation.From(operand),
+            ExpressionTokenType.Sqrt => SquareRoot.From(operand),
+            ExpressionTokenType.Abs => Abs.From(operand),
+            ExpressionTokenType.Factorial => Factorial.From(operand),
+            _ => Situation.Unreachable<Expression>()
+        };
+    }
+
+    private static (Binary.Type type, int precedence, bool rightAssociative) GetOperatorMetadata(ExpressionTokenType kind)
     {
         var code = kind switch
         {
-            TokenType.Plus => Operator.Code.Add,
-            TokenType.Minus => Operator.Code.Subtract,
-            TokenType.Multiply => Operator.Code.Multiply,
-            TokenType.Divide => Operator.Code.Divide,
-            TokenType.Power => Operator.Code.Power,
-            _ => Situation.Unreachable<Operator.Code>()
+            ExpressionTokenType.Plus => Binary.Type.Add,
+            ExpressionTokenType.Minus => Binary.Type.Subtract,
+            ExpressionTokenType.Multiply => Binary.Type.Multiply,
+            ExpressionTokenType.Divide => Binary.Type.Divide,
+            ExpressionTokenType.Modulo => Binary.Type.Modulo,
+            ExpressionTokenType.Power => Binary.Type.Power,
+            _ => Situation.Unreachable<Binary.Type>()
         };
 
-        return (code, Operator.Precedence(code), Operator.IsRightAssociative(code));
+        return (code, Binary.Precedence(code), Binary.IsRightAssociative(code));
     }
 
-    private static bool IsBinaryOperator(TokenType type)
+    private static bool IsBinaryOperator(ExpressionTokenType type)
     {
-        return type is TokenType.Plus or TokenType.Minus or TokenType.Multiply or TokenType.Divide or TokenType.Power;
+        return type is ExpressionTokenType.Plus or ExpressionTokenType.Minus or ExpressionTokenType.Multiply or ExpressionTokenType.Divide or ExpressionTokenType.Modulo or ExpressionTokenType.Power;
     }
 
-    private static Expression MakeBinary(Operator.Code code, Expression left, Expression right)
+    private static Expression MakeBinary(Binary.Type type, Expression lhs, Expression rhs)
     {
-        return code switch
+        return type switch
         {
-            Operator.Code.Add => Addition.From(left, right),
-            Operator.Code.Subtract => Subtraction.From(left, right),
-            Operator.Code.Multiply => Multiplication.From(left, right),
-            Operator.Code.Divide => Division.From(left, right),
-            Operator.Code.Power => Power.From(left, right),
+            Binary.Type.Add => Addition.From(lhs, rhs),
+            Binary.Type.Subtract => Subtraction.From(lhs, rhs),
+            Binary.Type.Multiply => Multiplication.From(lhs, rhs),
+            Binary.Type.Divide => Division.From(lhs, rhs),
+            Binary.Type.Modulo => Modulo.From(lhs, rhs),
+            Binary.Type.Power => Power.From(lhs, rhs),
             _ => Situation.Unreachable<Expression>()
         };
     }

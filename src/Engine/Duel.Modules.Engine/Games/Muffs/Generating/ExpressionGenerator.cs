@@ -23,12 +23,12 @@ public sealed class ExpressionGenerator(IExpressionStrategy strategy)
 
         var lhs = GetNode(depth + 1);
 
-        if (code is Operator.Code.Divide)
+        if (code is Binary.Type.Divide)
         {
             return GetDivisionNode(lhs);
         }
 
-        if (code is Operator.Code.Power)
+        if (code is Binary.Type.Power)
         {
             return GetPowerNode(lhs);
         }

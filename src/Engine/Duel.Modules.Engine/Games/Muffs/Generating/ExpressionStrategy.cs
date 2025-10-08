@@ -6,7 +6,7 @@ public interface IExpressionStrategy
 {
     bool IsReady(int depth);
 
-    Operator.Code GetOperatorCode();
+    Binary.Type GetOperatorCode();
 
     int GetConstant();
 
