@@ -1,3 +1,4 @@
+using Duel.Modules.Engine.Games.Muffs.Expressions.Vaults;
 using Duel.Shared.Ranges;
 
 namespace Duel.Modules.Engine.Games.Muffs.Expressions;
@@ -31,4 +32,9 @@ public interface IExpressionContext
     ///     The range of values representing the possible count of operators in the entire expression.
     /// </summary>
     Range<int> Operators { get; }
+
+    /// <summary>
+    ///     The pre-computed lookup table of operand pairs that produce specific results for each binary operation.
+    /// </summary>
+    ExpressionVault Vault { get; }
 }

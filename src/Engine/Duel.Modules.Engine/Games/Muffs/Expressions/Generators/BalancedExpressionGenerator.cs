@@ -1,16 +1,10 @@
 using Duel.Modules.Engine.Games.Muffs.Expressions.Evaluators;
 using Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
-using Duel.Modules.Engine.Games.Muffs.Expressions.Vaults;
 
 namespace Duel.Modules.Engine.Games.Muffs.Expressions.Generators;
 
 public sealed class BalancedExpressionGenerator(IExpressionContext context) : IExpressionGenerator
 {
-    private readonly ExpressionVault _vault = ExpressionVault.Create(
-        context.Constant.Minimum, 
-        context.Constant.Maximum
-    );
-
     public Expression Generate()
     {
         var budget = GetRandomNumber(context.Operators.Minimum, context.Operators.Maximum);
@@ -22,7 +16,7 @@ public sealed class BalancedExpressionGenerator(IExpressionContext context) : IE
 
     private Expression GetExpression(int budget, int depth)
     {
-        if (ShouldReturnConstant(budget, depth))
+        if (budget is 0 || depth is 0)
         {
             return GetRandomConstant();
         }   
@@ -67,23 +61,23 @@ public sealed class BalancedExpressionGenerator(IExpressionContext context) : IE
 
     private Expression GetExpressionWithSpecificResult(int result, int budget, int depth)
     {
-        if (budget == 0 || depth == 0)
+        if (budget is 0 || depth is 0)
         {
             return Constant.From(result);
         }
 
-        var availableOps = _vault.GetAvailableOperations(result);
+        var availableOps = context.Vault.GetAvailableOperations(result);
         
-        if (availableOps.Count == 0)
+        if (availableOps.Count is 0)
         {
             return Constant.From(result);
         }
 
         var index = context.Rng.Next(availableOps.Count);
-
+        
         var type = availableOps[index];
         
-        var operands = _vault.GetRandomOperands(type, result, context.Rng);
+        var operands = context.Vault.GetRandomOperands(type, result);
         
         if (operands is null)
         {
@@ -101,11 +95,6 @@ public sealed class BalancedExpressionGenerator(IExpressionContext context) : IE
         return Binary.From(type, lhs, rhs);
     }
 
-    private bool ShouldReturnConstant(int budget, int depth)
-    {
-        return budget == 0 || depth >= context.Depth.Maximum;
-    }
-
     private Constant GetRandomConstant()
     {
         var value = GetRandomNumber(context.Constant.Minimum, context.Constant.Maximum);
@@ -116,9 +105,9 @@ public sealed class BalancedExpressionGenerator(IExpressionContext context) : IE
     private ExpressionType GetRandomOperatorType()
     {
         const int lowestIndex = (int) ExpressionType.Add;
-        
-        const int highestIndex = (int) ExpressionType.Factorial;
 
+        const int highestIndex = (int) ExpressionType.Factorial;
+        
         return (ExpressionType) GetRandomNumber(lowestIndex, highestIndex);
     }
 

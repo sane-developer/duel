@@ -1,244 +1,417 @@
 namespace Duel.Modules.Engine.Games.Muffs.Expressions.Vaults;
 
 /// <summary>
-/// Pre-computed lookup table of operand pairs that produce specific results for each binary operation.
-/// This eliminates the need for runtime math decomposition.
+///     Pre-computed lookup table of operand pairs that produce specific results for each binary operation.
+///     This eliminates the need for runtime math decomposition.
+///     Should be registered as a singleton and reused across all generators.
 /// </summary>
-public sealed class ExpressionVault
+public sealed class ExpressionVault(Random rng)
 {
-    private readonly Dictionary<ExpressionType, Dictionary<int, List<(int Left, int Right)>>> _vault = [];
+    private readonly Dictionary<ExpressionType, Dictionary<int, (int Left, int Right)[]>> _vault = [];
 
     /// <summary>
-    /// Creates and initializes the vault with all possible combinations for the given value range.
+    ///     Creates and initializes the vault with all possible combinations for the given value range.
+    ///     This is an expensive operation - call once and reuse.
     /// </summary>
-    public static ExpressionVault Create(int minimum, int maximum)
+    public static ExpressionVault Create(Random rng, int minimum, int maximum)
     {
-        var vault = new ExpressionVault();
+        var vault = new ExpressionVault(rng);
         
-        vault.Initialize(minimum, maximum);
+        vault.InitializeAddition(minimum, maximum);
+        
+        vault.InitializeSubtraction(minimum, maximum);
+        
+        vault.InitializeMultiplication(minimum, maximum);
+        
+        vault.InitializeDivision(minimum, maximum);
+        
+        vault.InitializeModulo(minimum, maximum);
+        
+        vault.InitializePower(minimum, maximum);
         
         return vault;
     }
 
-    private void Initialize(int minimum, int maximum)
+    private void InitializeAddition(int minimum, int maximum)
     {
-        InitializeAddition(minimum, maximum);
+        var range = maximum - minimum + 1;
         
-        InitializeSubtraction(minimum, maximum);
+        var totalCombinations = range * range;
         
-        InitializeMultiplication(minimum, maximum);
+        var counts = new Dictionary<int, int>(totalCombinations);
         
-        InitializeDivision(minimum, maximum);
-        
-        InitializeModulo(minimum, maximum);
-        
-        InitializePower(minimum, maximum);
-    }
-
-    private void InitializeAddition(int minValue, int maxValue)
-    {
-        var additions = new Dictionary<int, List<(int, int)>>();
-
-        for (var left = minValue; left <= maxValue; left++)
+        for (var left = minimum; left <= maximum; left++)
         {
-            for (var right = minValue; right <= maxValue; right++)
+            for (var right = minimum; right <= maximum; right++)
             {
                 var result = left + right;
                 
-                if (!additions.ContainsKey(result))
-                {
-                    additions[result] = [];
-                }
+                counts.TryGetValue(result, out var count);
                 
-                additions[result].Add((left, right));
+                counts[result] = count + 1;
             }
         }
 
-        _vault[ExpressionType.Add] = additions;
+        var vault = new Dictionary<int, (int, int)[]>(counts.Count);
+
+        var cursors = new Dictionary<int, int>(counts.Count);
+        
+        foreach (var (result, count) in counts)
+        {
+            vault[result] = new (int, int)[count];
+            
+            cursors[result] = 0;
+        }
+        
+        for (var left = minimum; left <= maximum; left++)
+        {
+            for (var right = minimum; right <= maximum; right++)
+            {
+                var result = left + right;
+                
+                var index = cursors[result]++;
+                
+                vault[result][index] = (left, right);
+            }
+        }
+
+        _vault[ExpressionType.Add] = vault;
     }
 
-    private void InitializeSubtraction(int minValue, int maxValue)
+    private void InitializeSubtraction(int minimum, int maximum)
     {
-        var subtractions = new Dictionary<int, List<(int, int)>>();
+        var range = maximum - minimum + 1;
 
-        for (int left = minValue; left <= maxValue; left++)
+        var totalCombinations = range * range;
+        
+        var counts = new Dictionary<int, int>(totalCombinations);
+        
+        for (var left = minimum; left <= maximum; left++)
         {
-            for (int right = minValue; right <= maxValue; right++)
+            for (var right = minimum; right <= maximum; right++)
             {
                 var result = left - right;
                 
-                if (!subtractions.ContainsKey(result))
-                {
-                    subtractions[result] = new List<(int, int)>();
-                }
+                counts.TryGetValue(result, out var count);
                 
-                subtractions[result].Add((left, right));
+                counts[result] = count + 1;
             }
         }
 
-        _vault[ExpressionType.Subtract] = subtractions;
+        var vault = new Dictionary<int, (int, int)[]>(counts.Count);
+
+        var cursors = new Dictionary<int, int>(counts.Count);
+        
+        foreach (var (result, count) in counts)
+        {
+            vault[result] = new (int, int)[count];
+
+            cursors[result] = 0;
+        }
+        
+        for (var left = minimum; left <= maximum; left++)
+        {
+            for (var right = minimum; right <= maximum; right++)
+            {
+                var result = left - right;
+                
+                var index = cursors[result]++;
+                
+                vault[result][index] = (left, right);
+            }
+        }
+
+        _vault[ExpressionType.Subtract] = vault;
     }
 
-    private void InitializeMultiplication(int minValue, int maxValue)
+    private void InitializeMultiplication(int minimum, int maximum)
     {
-        var multiplications = new Dictionary<int, List<(int, int)>>();
-
-        for (int left = minValue; left <= maxValue; left++)
+        var range = maximum - minimum + 1;
+        
+        var totalCombinations = range * range;
+        
+        var counts = new Dictionary<int, int>(totalCombinations);
+        
+        for (var left = minimum; left <= maximum; left++)
         {
-            for (int right = minValue; right <= maxValue; right++)
+            for (var right = minimum; right <= maximum; right++)
             {
                 var result = left * right;
                 
-                if (!multiplications.ContainsKey(result))
-                {
-                    multiplications[result] = new List<(int, int)>();
-                }
+                counts.TryGetValue(result, out var count);
                 
-                multiplications[result].Add((left, right));
+                counts[result] = count + 1;
             }
         }
 
-        _vault[ExpressionType.Multiply] = multiplications;
+        var vault = new Dictionary<int, (int, int)[]>(counts.Count);
+        
+        var cursors = new Dictionary<int, int>(counts.Count);
+        
+        foreach (var (result, count) in counts)
+        {
+            vault[result] = new (int, int)[count];
+            
+            cursors[result] = 0;
+        }
+        
+        for (var left = minimum; left <= maximum; left++)
+        {
+            for (var right = minimum; right <= maximum; right++)
+            {
+                var result = left * right;
+                
+                var index = cursors[result]++;
+                
+                vault[result][index] = (left, right);
+            }
+        }
+
+        _vault[ExpressionType.Multiply] = vault;
     }
 
-    private void InitializeDivision(int minValue, int maxValue)
+    private void InitializeDivision(int minimum, int maximum)
     {
-        var divisions = new Dictionary<int, List<(int, int)>>();
-
-        for (int left = minValue; left <= maxValue; left++)
+        var range = maximum - minimum + 1;
+        
+        var estimatedCombinations = range * range;
+        
+        var counts = new Dictionary<int, int>(estimatedCombinations);
+        
+        for (var left = minimum; left <= maximum; left++)
         {
-            for (int right = minValue; right <= maxValue; right++)
+            for (var right = minimum; right <= maximum; right++)
             {
-                // Skip division by zero
-                if (right == 0) continue;
+                if (right is 0)
+                {
+                    continue;
+                }
                 
                 var result = left / right;
                 
-                if (!divisions.ContainsKey(result))
-                {
-                    divisions[result] = new List<(int, int)>();
-                }
+                counts.TryGetValue(result, out var count);
                 
-                divisions[result].Add((left, right));
+                counts[result] = count + 1;
             }
         }
 
-        _vault[ExpressionType.Divide] = divisions;
+        var vault = new Dictionary<int, (int, int)[]>(counts.Count);
+        
+        var cursors = new Dictionary<int, int>(counts.Count);
+        
+        foreach (var (result, count) in counts)
+        {
+            vault[result] = new (int, int)[count];
+
+            cursors[result] = 0;
+        }
+        
+        for (var left = minimum; left <= maximum; left++)
+        {
+            for (var right = minimum; right <= maximum; right++)
+            {
+                if (right is 0)
+                {
+                    continue;
+                }
+                
+                var result = left / right;
+                
+                var index = cursors[result]++;
+                
+                vault[result][index] = (left, right);
+            }
+        }
+
+        _vault[ExpressionType.Divide] = vault;
     }
 
-    private void InitializeModulo(int minValue, int maxValue)
+    private void InitializeModulo(int minimum, int maximum)
     {
-        var modulos = new Dictionary<int, List<(int, int)>>();
-
-        for (int left = minValue; left <= maxValue; left++)
+        var range = maximum - minimum + 1;
+        
+        var estimatedCombinations = range * range;
+        
+        var counts = new Dictionary<int, int>(estimatedCombinations);
+        
+        for (var left = minimum; left <= maximum; left++)
         {
-            for (int right = minValue; right <= maxValue; right++)
+            for (var right = minimum; right <= maximum; right++)
             {
-                // Skip modulo by zero
-                if (right == 0) continue;
+                if (right is 0)
+                {
+                    continue;
+                }
                 
                 var result = left % right;
                 
-                if (!modulos.ContainsKey(result))
-                {
-                    modulos[result] = new List<(int, int)>();
-                }
+                counts.TryGetValue(result, out var count);
                 
-                modulos[result].Add((left, right));
+                counts[result] = count + 1;
             }
         }
 
-        _vault[ExpressionType.Modulo] = modulos;
+        var vault = new Dictionary<int, (int, int)[]>(counts.Count);
+        
+        var cursors = new Dictionary<int, int>(counts.Count);
+        
+        foreach (var (result, count) in counts)
+        {
+            vault[result] = new (int, int)[count];
+            
+            cursors[result] = 0;
+        }
+        
+        for (var left = minimum; left <= maximum; left++)
+        {
+            for (var right = minimum; right <= maximum; right++)
+            {
+                if (right is 0)
+                {
+                    continue;
+                }
+                
+                var result = left % right;
+                
+                var index = cursors[result]++;
+                
+                vault[result][index] = (left, right);
+            }
+        }
+
+        _vault[ExpressionType.Modulo] = vault;
     }
 
-    private void InitializePower(int minValue, int maxValue)
+    private void InitializePower(int minimum, int maximum)
     {
-        var powers = new Dictionary<int, List<(int, int)>>();
-
-        for (int left = minValue; left <= maxValue; left++)
+        var range = maximum - minimum + 1;
+        
+        var estimatedCombinations = range * range;
+        
+        var counts = new Dictionary<int, int>(estimatedCombinations);
+        
+        for (var left = minimum; left <= maximum; left++)
         {
-            for (int right = minValue; right <= maxValue; right++)
+            for (var right = minimum; right <= maximum; right++)
             {
                 try
                 {
-                    var result = (int)Math.Pow(left, right);
+                    var result = (int) Math.Pow(left, right);
                     
-                    // Skip if result is too large (overflow protection)
                     if (result > int.MaxValue / 2 || result < int.MinValue / 2)
-                        continue;
-                    
-                    if (!powers.ContainsKey(result))
                     {
-                        powers[result] = new List<(int, int)>();
+                        continue;
                     }
                     
-                    powers[result].Add((left, right));
+                    counts.TryGetValue(result, out var count);
+                    
+                    counts[result] = count + 1;
                 }
                 catch (OverflowException)
                 {
-                    // Skip combinations that overflow
                     continue;
                 }
             }
         }
 
-        _vault[ExpressionType.Power] = powers;
+        var vault = new Dictionary<int, (int, int)[]>(counts.Count);
+
+        var cursors = new Dictionary<int, int>(counts.Count);
+        
+        foreach (var (result, count) in counts)
+        {
+            vault[result] = new (int, int)[count];
+
+            cursors[result] = 0;
+        }
+        
+        for (var left = minimum; left <= maximum; left++)
+        {
+            for (var right = minimum; right <= maximum; right++)
+            {
+                try
+                {
+                    var result = (int)Math.Pow(left, right);
+                    
+                    if (result > int.MaxValue / 2 || result < int.MinValue / 2)
+                    {
+                        continue;
+                    }
+                    
+                    var index = cursors[result]++;
+
+                    vault[result][index] = (left, right);
+                }
+                catch (OverflowException)
+                {
+                    continue;
+                }
+            }
+        }
+
+        _vault[ExpressionType.Power] = vault;
     }
 
     /// <summary>
     /// Gets a random operand pair that produces the specified result for the given operation type.
     /// Returns null if no combination exists.
     /// </summary>
-    public (int Left, int Right)? GetRandomOperands(ExpressionType operationType, int targetResult, Random rng)
+    public (int Left, int Right)? GetRandomOperands(ExpressionType type, int result)
     {
-        if (!_vault.TryGetValue(operationType, out var operationResults))
+        if (!_vault.TryGetValue(type, out var results))
         {
             return null;
         }
 
-        if (!operationResults.TryGetValue(targetResult, out var operandPairs))
+        if (!results.TryGetValue(result, out var operands))
         {
             return null;
         }
 
-        if (operandPairs.Count == 0)
+        if (operands.Length is 0)
         {
             return null;
         }
 
-        var index = rng.Next(operandPairs.Count);
-        return operandPairs[index];
+        var index = rng.Next(operands.Length);
+        
+        return operands[index];
     }
 
     /// <summary>
     /// Checks if a combination exists that produces the target result for the given operation.
     /// </summary>
-    public bool HasCombination(ExpressionType operationType, int targetResult)
+    public bool HasCombination(ExpressionType type, int result)
     {
-        if (!_vault.TryGetValue(operationType, out var operationResults))
+        if (!_vault.TryGetValue(type, out var results))
         {
             return false;
         }
 
-        return operationResults.ContainsKey(targetResult) && operationResults[targetResult].Count > 0;
+        if (!results.TryGetValue(result, out var pairs))
+        {
+            return false;
+        }
+
+        return pairs.Length > 0;
     }
 
     /// <summary>
     /// Gets all operation types that can produce the target result.
     /// </summary>
-    public List<ExpressionType> GetAvailableOperations(int targetResult)
+    public List<ExpressionType> GetAvailableOperations(int result)
     {
-        var availableOps = new List<ExpressionType>();
+        var expressions = new List<ExpressionType>(_vault.Count);
 
-        foreach (var kvp in _vault)
+        foreach (var (type, results) in _vault)
         {
-            if (kvp.Value.ContainsKey(targetResult) && kvp.Value[targetResult].Count > 0)
+            if (results.TryGetValue(result, out var pairs) && pairs.Length > 0)
             {
-                availableOps.Add(kvp.Key);
+                expressions.Add(type);
             }
         }
 
-        return availableOps;
+        return expressions;
     }
 }
 
