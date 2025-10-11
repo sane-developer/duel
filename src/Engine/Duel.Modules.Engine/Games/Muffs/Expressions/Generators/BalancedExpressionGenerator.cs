@@ -18,8 +18,10 @@ public sealed class BalancedExpressionGenerator(IExpressionContext context) : IE
     {
         if (budget is 0 || depth is 0)
         {
-            return GetRandomConstant();
-        }   
+            var value = GetRandomNumber(context.Constant.Minimum, context.Constant.Maximum);
+
+            return Constant.From(value);
+        }
 
         var type = GetRandomOperatorType();
 
@@ -35,18 +37,18 @@ public sealed class BalancedExpressionGenerator(IExpressionContext context) : IE
 
             var divisor = GetRandomDivisor(dividend);
 
-            var node = GetExpressionWithSpecificResult(divisor, rb, depth - 1);
+            var symbol = GetExpressionWithSpecificResult(divisor, rb, depth - 1);
 
-            return Binary.From(type, lhs, node);
+            return Binary.From(type, lhs, symbol);
         }
 
         if (type is ExpressionType.Power)
         {
             var exponent = GetRandomExponent();
 
-            var node = GetExpressionWithSpecificResult(exponent, rb, depth - 1);
+            var symbol = GetExpressionWithSpecificResult(exponent, rb, depth - 1);
 
-            return Binary.From(type, lhs, node);
+            return Binary.From(type, lhs, symbol);
         }
 
         var rhs = GetExpression(rb, depth - 1);
@@ -66,16 +68,16 @@ public sealed class BalancedExpressionGenerator(IExpressionContext context) : IE
             return Constant.From(result);
         }
 
-        var availableOps = context.Vault.GetAvailableOperations(result);
+        var operations = context.Vault.GetAvailableOperations(result);
         
-        if (availableOps.Count is 0)
+        if (operations.Count is 0)
         {
             return Constant.From(result);
         }
 
-        var index = context.Rng.Next(availableOps.Count);
+        var index = context.Rng.Next(operations.Count);
         
-        var type = availableOps[index];
+        var type = operations[index];
         
         var operands = context.Vault.GetRandomOperands(type, result);
         
@@ -84,22 +86,15 @@ public sealed class BalancedExpressionGenerator(IExpressionContext context) : IE
             return Constant.From(result);
         }
 
-        var leftBudget = GetLeftBudget(budget - 1);
+        var lb = GetLeftBudget(budget - 1);
         
-        var rightBudget = GetRightBudget(budget - 1, leftBudget);
+        var rb = GetRightBudget(budget - 1, lb);
         
-        var lhs = GetExpressionWithSpecificResult(operands.Value.Left, leftBudget, depth - 1);
+        var lhs = GetExpressionWithSpecificResult(operands.Value.Left, lb, depth - 1);
         
-        var rhs = GetExpressionWithSpecificResult(operands.Value.Right, rightBudget, depth - 1);
+        var rhs = GetExpressionWithSpecificResult(operands.Value.Right, rb, depth - 1);
         
         return Binary.From(type, lhs, rhs);
-    }
-
-    private Constant GetRandomConstant()
-    {
-        var value = GetRandomNumber(context.Constant.Minimum, context.Constant.Maximum);
-
-        return Constant.From(value);
     }
 
     private ExpressionType GetRandomOperatorType()

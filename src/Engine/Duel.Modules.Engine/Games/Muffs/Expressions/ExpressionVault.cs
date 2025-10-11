@@ -1,18 +1,9 @@
-namespace Duel.Modules.Engine.Games.Muffs.Expressions.Vaults;
+namespace Duel.Modules.Engine.Games.Muffs.Expressions;
 
-/// <summary>
-///     Pre-computed lookup table of operand pairs that produce specific results for each binary operation.
-///     This eliminates the need for runtime math decomposition.
-///     Should be registered as a singleton and reused across all generators.
-/// </summary>
 public sealed class ExpressionVault(Random rng)
 {
     private readonly Dictionary<ExpressionType, Dictionary<int, (int Left, int Right)[]>> _vault = [];
 
-    /// <summary>
-    ///     Creates and initializes the vault with all possible combinations for the given value range.
-    ///     This is an expensive operation - call once and reuse.
-    /// </summary>
     public static ExpressionVault Create(Random rng, int minimum, int maximum)
     {
         var vault = new ExpressionVault(rng);
@@ -352,10 +343,6 @@ public sealed class ExpressionVault(Random rng)
         _vault[ExpressionType.Power] = vault;
     }
 
-    /// <summary>
-    /// Gets a random operand pair that produces the specified result for the given operation type.
-    /// Returns null if no combination exists.
-    /// </summary>
     public (int Left, int Right)? GetRandomOperands(ExpressionType type, int result)
     {
         if (!_vault.TryGetValue(type, out var results))
@@ -378,9 +365,6 @@ public sealed class ExpressionVault(Random rng)
         return operands[index];
     }
 
-    /// <summary>
-    /// Checks if a combination exists that produces the target result for the given operation.
-    /// </summary>
     public bool HasCombination(ExpressionType type, int result)
     {
         if (!_vault.TryGetValue(type, out var results))
@@ -396,9 +380,6 @@ public sealed class ExpressionVault(Random rng)
         return pairs.Length > 0;
     }
 
-    /// <summary>
-    /// Gets all operation types that can produce the target result.
-    /// </summary>
     public List<ExpressionType> GetAvailableOperations(int result)
     {
         var expressions = new List<ExpressionType>(_vault.Count);
