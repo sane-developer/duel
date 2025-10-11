@@ -1,4 +1,4 @@
-namespace Duel.Modules.Engine.Games.Muffs.AST;
+namespace Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
 
 public abstract record Unary(Expression Operand) : Expression
 {
@@ -7,8 +7,8 @@ public abstract record Unary(Expression Operand) : Expression
         return type switch
         {
             ExpressionType.Negate => Negation.From(operand),
-            ExpressionType.Abs => Absolute.From(operand),
-            ExpressionType.Sqrt => SquareRoot.From(operand),
+            ExpressionType.Absolute => Absolute.From(operand),
+            ExpressionType.SquareRoot => SquareRoot.From(operand),
             ExpressionType.Factorial => Factorial.From(operand),
             _ => Situation.Unreachable<Unary>()
         };

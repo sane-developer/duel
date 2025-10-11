@@ -1,7 +1,21 @@
-namespace Duel.Modules.Engine.Games.Muffs.AST;
+namespace Duel.Modules.Engine.Games.Muffs.Expressions;
 
 public abstract record Binary(Expression Left, Expression Right) : Expression
 {
+    public static Binary From(ExpressionType type, Expression lhs, Expression rhs) 
+    {
+        return type switch
+        {
+            ExpressionType.Add => Addition.From(lhs, rhs),
+            ExpressionType.Subtract => Subtraction.From(lhs, rhs),
+            ExpressionType.Multiply => Multiplication.From(lhs, rhs),
+            ExpressionType.Divide => Division.From(lhs, rhs),
+            ExpressionType.Modulo => Modulo.From(lhs, rhs),
+            ExpressionType.Power => Power.From(lhs, rhs),
+            _ => Situation.Unreachable<Binary>()
+        };
+    }
+
     public static int Precedence(ExpressionType type)
     {
         return type switch
@@ -16,20 +30,6 @@ public abstract record Binary(Expression Left, Expression Right) : Expression
     public static bool IsRightAssociative(ExpressionType type)
     {
         return type is ExpressionType.Power;
-    }
-
-    public static Binary From(ExpressionType type, Expression lhs, Expression rhs) 
-    {
-        return type switch
-        {
-            ExpressionType.Add => Addition.From(lhs, rhs),
-            ExpressionType.Subtract => Subtraction.From(lhs, rhs),
-            ExpressionType.Multiply => Multiplication.From(lhs, rhs),
-            ExpressionType.Divide => Division.From(lhs, rhs),
-            ExpressionType.Modulo => Modulo.From(lhs, rhs),
-            ExpressionType.Power => Power.From(lhs, rhs),
-            _ => Situation.Unreachable<Binary>()
-        };
     }
 }
 

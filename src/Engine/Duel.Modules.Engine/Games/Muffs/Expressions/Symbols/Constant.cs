@@ -1,4 +1,4 @@
-namespace Duel.Modules.Engine.Games.Muffs.AST;
+namespace Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
 
 public sealed record Constant(int Value) : Expression
 {

@@ -1,4 +1,4 @@
-﻿namespace Duel.Modules.Engine.Games.Muffs.AST;
+﻿namespace Duel.Modules.Engine.Games.Muffs.Expressions;
 
 public abstract record Expression
 {
@@ -17,7 +17,7 @@ public enum ExpressionType
     Modulo, 
     Power,
     Negate, 
-    Abs, 
-    Sqrt, 
+    Absolute, 
+    SquareRoot, 
     Factorial
 }
