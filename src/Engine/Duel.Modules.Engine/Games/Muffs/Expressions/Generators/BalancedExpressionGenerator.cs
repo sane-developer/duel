@@ -1,10 +1,16 @@
 using Duel.Modules.Engine.Games.Muffs.Expressions.Evaluators;
 using Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
+using Duel.Modules.Engine.Games.Muffs.Expressions.Vaults;
 
 namespace Duel.Modules.Engine.Games.Muffs.Expressions.Generators;
 
 public sealed class BalancedExpressionGenerator(IExpressionContext context) : IExpressionGenerator
 {
+    private readonly ExpressionVault _vault = ExpressionVault.Create(
+        context.Constant.Minimum, 
+        context.Constant.Maximum
+    );
+
     public Expression Generate()
     {
         var budget = GetRandomNumber(context.Operators.Minimum, context.Operators.Maximum);
@@ -61,7 +67,38 @@ public sealed class BalancedExpressionGenerator(IExpressionContext context) : IE
 
     private Expression GetExpressionWithSpecificResult(int result, int budget, int depth)
     {
-        throw new NotImplementedException();
+        if (budget == 0 || depth == 0)
+        {
+            return Constant.From(result);
+        }
+
+        var availableOps = _vault.GetAvailableOperations(result);
+        
+        if (availableOps.Count == 0)
+        {
+            return Constant.From(result);
+        }
+
+        var index = context.Rng.Next(availableOps.Count);
+
+        var type = availableOps[index];
+        
+        var operands = _vault.GetRandomOperands(type, result, context.Rng);
+        
+        if (operands is null)
+        {
+            return Constant.From(result);
+        }
+
+        var leftBudget = GetLeftBudget(budget - 1);
+        
+        var rightBudget = GetRightBudget(budget - 1, leftBudget);
+        
+        var lhs = GetExpressionWithSpecificResult(operands.Value.Left, leftBudget, depth - 1);
+        
+        var rhs = GetExpressionWithSpecificResult(operands.Value.Right, rightBudget, depth - 1);
+        
+        return Binary.From(type, lhs, rhs);
     }
 
     private bool ShouldReturnConstant(int budget, int depth)
