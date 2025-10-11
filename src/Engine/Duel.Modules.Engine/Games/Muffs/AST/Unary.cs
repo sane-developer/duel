@@ -2,22 +2,14 @@ namespace Duel.Modules.Engine.Games.Muffs.AST;
 
 public abstract record Unary(Expression Operand) : Expression
 {
-    public enum Type
-    {
-        Negate, 
-        Abs, 
-        Sqrt, 
-        Factorial
-    }
-
-    public static Unary From(Type type, Expression operand)
+    public static Unary From(ExpressionType type, Expression operand)
     {
         return type switch
         {
-            Type.Negate => Negation.From(operand),
-            Type.Abs => Abs.From(operand),
-            Type.Sqrt => SquareRoot.From(operand),
-            Type.Factorial => Factorial.From(operand),
+            ExpressionType.Negate => Negation.From(operand),
+            ExpressionType.Abs => Absolute.From(operand),
+            ExpressionType.Sqrt => SquareRoot.From(operand),
+            ExpressionType.Factorial => Factorial.From(operand),
             _ => Situation.Unreachable<Unary>()
         };
     }
@@ -31,11 +23,11 @@ public sealed record Negation(Expression Operand) : Unary(Operand)
     }
 }
 
-public sealed record Abs(Expression Operand) : Unary(Operand)
+public sealed record Absolute(Expression Operand) : Unary(Operand)
 {
-    public static Abs From(Expression operand)
+    public static Absolute From(Expression operand)
     {
-        return new Abs(operand);
+        return new Absolute(operand);
     }
 }
 

@@ -7,3 +7,17 @@ public abstract record Expression
         return (T) this;
     }
 }
+
+public enum ExpressionType
+{
+    Add, 
+    Subtract, 
+    Multiply, 
+    Divide, 
+    Modulo, 
+    Power,
+    Negate, 
+    Abs, 
+    Sqrt, 
+    Factorial
+}

@@ -21,7 +21,7 @@ public sealed class ExpressionEvaluator(Expression expression)
             Modulo node => Modulo(node),
             Power node => Power(node),
             Negation node => Negate(node),
-            Abs node => Absolute(node),
+            Absolute node => Absolute(node),
             SquareRoot node => Sqrt(node),
             Factorial node => Factorial(node),
             _ => Situation.Unreachable<int>()

@@ -98,7 +98,7 @@ public sealed class ExpressionParser(List<ExpressionToken> tokens)
         {
             ExpressionTokenType.UnaryMinus => Negation.From(operand),
             ExpressionTokenType.Sqrt => SquareRoot.From(operand),
-            ExpressionTokenType.Abs => Abs.From(operand),
+            ExpressionTokenType.Abs => Absolute.From(operand),
             ExpressionTokenType.Factorial => Factorial.From(operand),
             _ => Situation.Unreachable<Expression>()
         };

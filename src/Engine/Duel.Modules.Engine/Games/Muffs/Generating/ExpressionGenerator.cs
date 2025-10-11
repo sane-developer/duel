@@ -1,62 +1,93 @@
-﻿using Duel.Modules.Engine.Games.Muffs.AST;
-using Duel.Modules.Engine.Games.Muffs.Evaluating;
+using Duel.Modules.Engine.Games.Muffs.AST;
+using Duel.Shared.Ranges;
 
 namespace Duel.Modules.Engine.Games.Muffs.Generating;
 
-public sealed class ExpressionGenerator(IExpressionStrategy strategy)
+public interface IExpressionContext
+{
+    /// <summary>
+    ///     The random number generator.
+    /// </summary>
+    Random Rng { get; }
+
+    /// <summary>
+    ///     The range of values representing the possible depth of the entire expression.
+    /// </summary>
+    Range<int> Depth { get; }
+
+    /// <summary>
+    ///     The range of values representing the possible constant values.
+    /// </summary>
+    Range<int> Constant { get; }
+
+    /// <summary>
+    ///     The range of values representing the possible count of operators in the entire expression.
+    /// </summary>
+    Range<int> Operators { get; }
+}
+
+public interface IExpressionGenerator
+{
+    Expression Generate();
+}
+
+public sealed class RandomExpressionGenerator(IExpressionContext context) : IExpressionGenerator
 {
     public Expression Generate()
     {
-        return GetNode(depth: 1);
+        var budget = GetRandomNumber(context.Operators.Minimum, context.Operators.Maximum);
+
+        return GetExpression(budget);
     }
 
-    private Expression GetNode(int depth)
+    private Expression GetExpression(int budget)
     {
-        if (strategy.IsReady(depth))
+        if (budget == 0)
         {
-            var value = strategy.GetConstant();
-
-            return Constant.From(value);
+            return GetRandomConstant();
         }
 
-        var code = strategy.GetOperatorCode();
+        var type = GetRandomOperatorType();
 
-        var lhs = GetNode(depth + 1);
+        var lb = GetLeftBudget(budget - 1);
 
-        if (code is Binary.Type.Divide)
-        {
-            return GetDivisionNode(lhs);
-        }
+        var rb = GetRightBudget(budget - 1, lb);
 
-        if (code is Binary.Type.Power)
-        {
-            return GetPowerNode(lhs);
-        }
+        var lhs = GetExpression(lb);
 
-        var rhs = GetNode(depth + 1);
-        
-        return Binary.From(code, lhs, rhs);
+        var rhs = GetExpression(rb);
+
+        return Binary.From(type, lhs, rhs);
     }
 
-    private Division GetDivisionNode(Expression lhs)
+    private Constant GetRandomConstant()
     {
-        var evaluator = new ExpressionEvaluator(lhs);
+        var value = GetRandomNumber(context.Constant.Minimum, context.Constant.Maximum);
 
-        var dividend = evaluator.Evaluate();
-        
-        var divisor = strategy.GetDivisor(dividend);
-        
-        var rhs = Constant.From(divisor);
-        
-        return Division.From(lhs, rhs);
+        return Constant.From(value);
     }
 
-    private Power GetPowerNode(Expression lhs)
+    private ExpressionType GetRandomOperatorType()
     {
-        var exponent = strategy.GetExponent();
+        const int lowestIndex = (int) ExpressionType.Add;
         
-        var rhs = Constant.From(exponent);
-        
-        return Power.From(lhs, rhs);
+        const int highestIndex = (int) ExpressionType.Factorial;
+
+        return (ExpressionType) GetRandomNumber(lowestIndex, highestIndex);
+    }
+
+    private int GetRandomNumber(int minimum, int maximum)
+    {
+        return context.Rng.Next(minimum, maximum + 1);
+    }
+
+    private static int GetLeftBudget(int remainingOperations)
+    {
+        return (int) Math.Ceiling(remainingOperations / 2d);
+    }
+
+    private static int GetRightBudget(int remainingOperations, int leftBudget)
+    {
+        return remainingOperations - leftBudget;
     }
 }

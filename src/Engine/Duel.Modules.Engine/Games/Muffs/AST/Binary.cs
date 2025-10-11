@@ -2,42 +2,32 @@ namespace Duel.Modules.Engine.Games.Muffs.AST;
 
 public abstract record Binary(Expression Left, Expression Right) : Expression
 {
-    public enum Type
-    {
-        Add, 
-        Subtract, 
-        Multiply, 
-        Divide, 
-        Modulo, 
-        Power
-    }
-
-    public static int Precedence(Type type)
+    public static int Precedence(ExpressionType type)
     {
         return type switch
         {
-            Type.Add or Type.Subtract => 1,
-            Type.Multiply or Type.Divide or Type.Modulo => 2,
-            Type.Power => 3,
+            ExpressionType.Add or ExpressionType.Subtract => 1,
+            ExpressionType.Multiply or ExpressionType.Divide or ExpressionType.Modulo => 2,
+            ExpressionType.Power => 3,
             _ => 0
         };
     }
 
-    public static bool IsRightAssociative(Type type)
+    public static bool IsRightAssociative(ExpressionType type)
     {
-        return type is Type.Power;
+        return type is ExpressionType.Power;
     }
 
-    public static Binary From(Type type, Expression lhs, Expression rhs) 
+    public static Binary From(ExpressionType type, Expression lhs, Expression rhs) 
     {
         return type switch
         {
-            Type.Add => Addition.From(lhs, rhs),
-            Type.Subtract => Subtraction.From(lhs, rhs),
-            Type.Multiply => Multiplication.From(lhs, rhs),
-            Type.Divide => Division.From(lhs, rhs),
-            Type.Modulo => Modulo.From(lhs, rhs),
-            Type.Power => Power.From(lhs, rhs),
+            ExpressionType.Add => Addition.From(lhs, rhs),
+            ExpressionType.Subtract => Subtraction.From(lhs, rhs),
+            ExpressionType.Multiply => Multiplication.From(lhs, rhs),
+            ExpressionType.Divide => Division.From(lhs, rhs),
+            ExpressionType.Modulo => Modulo.From(lhs, rhs),
+            ExpressionType.Power => Power.From(lhs, rhs),
             _ => Situation.Unreachable<Binary>()
         };
     }
