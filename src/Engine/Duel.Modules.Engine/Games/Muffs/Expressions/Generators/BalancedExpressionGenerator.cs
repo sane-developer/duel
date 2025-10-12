@@ -70,16 +70,11 @@ public sealed class BalancedExpressionGenerator(IExpressionContext context) : IE
 
         var operations = context.Vault.GetAvailableOperations(result);
         
-        if (operations.Count is 0)
-        {
-            return Constant.From(result);
-        }
-
         var index = context.Rng.Next(operations.Count);
         
         var type = operations[index];
         
-        var operands = context.Vault.GetRandomOperands(type, result);
+        var operands = context.Vault.GetRandomOperands(context.Rng, type, result);
         
         if (operands is null)
         {

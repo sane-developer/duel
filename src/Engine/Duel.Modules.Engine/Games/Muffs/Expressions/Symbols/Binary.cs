@@ -1,4 +1,4 @@
-namespace Duel.Modules.Engine.Games.Muffs.Expressions;
+namespace Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
 
 public abstract record Binary(Expression Left, Expression Right) : Expression
 {

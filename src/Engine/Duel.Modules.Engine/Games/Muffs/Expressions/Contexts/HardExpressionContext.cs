@@ -6,21 +6,26 @@ public sealed class HardExpressionContext(Random rng) : IExpressionContext
 {
     public Random Rng => rng;
 
-    public Range<int> Depth => _depth;
+    public Range<int> Depth => ExpressionSettings.Depth;
 
-    public Range<int> Constant => _constant;
+    public Range<int> Constant => ExpressionSettings.Constant;
 
-    public Range<int> Exponent => _exponent;
+    public Range<int> Exponent => ExpressionSettings.Exponent;
 
-    public Range<int> Operators => _operators;
+    public Range<int> Operators => ExpressionSettings.Operations;
 
-    public ExpressionVault Vault => ExpressionVault.Create(rng, Constant.Minimum, Constant.Maximum);
+    public ExpressionVault Vault => ExpressionSettings.Vault;
+}
 
-    private static readonly Range<int> _depth = new(1, 10);
+file sealed class ExpressionSettings
+{
+    public static readonly Range<int> Depth = new(1, 10);
     
-    private static readonly Range<int> _constant = new(1, 100);
+    public static readonly Range<int> Constant = new(1, 100);
     
-    private static readonly Range<int> _exponent = new(1, 10);
+    public static readonly Range<int> Exponent = new(1, 10);
     
-    private static readonly Range<int> _operators = new(1, 10);
+    public static readonly Range<int> Operators = new(1, 10);
+
+    public static readonly ExpressionVault Vault = ExpressionVault.Create(Constant.Minimum, Constant.Maximum);
 }

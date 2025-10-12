@@ -1,12 +1,12 @@
 namespace Duel.Modules.Engine.Games.Muffs.Expressions;
 
-public sealed class ExpressionVault(Random rng)
+public sealed class ExpressionVault
 {
     private readonly Dictionary<ExpressionType, Dictionary<int, (int Left, int Right)[]>> _vault = [];
 
-    public static ExpressionVault Create(Random rng, int minimum, int maximum)
+    public static ExpressionVault Create(int minimum, int maximum)
     {
-        var vault = new ExpressionVault(rng);
+        var vault = new ExpressionVault();
         
         vault.InitializeAddition(minimum, maximum);
         
@@ -343,7 +343,7 @@ public sealed class ExpressionVault(Random rng)
         _vault[ExpressionType.Power] = vault;
     }
 
-    public (int Left, int Right)? GetRandomOperands(ExpressionType type, int result)
+    public (int Left, int Right)? GetRandomOperands(Random rng, ExpressionType type, int result)
     {
         if (!_vault.TryGetValue(type, out var results))
         {

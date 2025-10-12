@@ -4,9 +4,9 @@ namespace Duel.Modules.Engine.Games.Muffs.Expressions.Evaluators;
 
 public static class ExpressionEvaluator
 {
-    public static int Evaluate(Expression root)
+    public static int Evaluate(Expression expression)
     {
-        return root switch
+        return expression switch
         {
             Constant node => node.Value,
             Addition node => Add(node),
