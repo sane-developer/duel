@@ -1,6 +1,6 @@
 ﻿using Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
 
-namespace Duel.Modules.Engine.Games.Muffs.Expressions.Evaluators;
+namespace Duel.Modules.Engine.Games.Muffs.Expressions;
 
 public static class ExpressionEvaluator
 {

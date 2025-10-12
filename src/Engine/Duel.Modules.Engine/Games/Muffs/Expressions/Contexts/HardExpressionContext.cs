@@ -12,12 +12,12 @@ public sealed class HardExpressionContext(Random rng) : IExpressionContext
 
     public Range<int> Exponent => ExpressionSettings.Exponent;
 
-    public Range<int> Operators => ExpressionSettings.Operations;
+    public Range<int> Operators => ExpressionSettings.Operators;
 
     public ExpressionVault Vault => ExpressionSettings.Vault;
 }
 
-file sealed class ExpressionSettings
+file static class ExpressionSettings
 {
     public static readonly Range<int> Depth = new(1, 10);
     

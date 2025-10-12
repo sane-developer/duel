@@ -17,7 +17,7 @@ public sealed class MediumExpressionContext(Random rng) : IExpressionContext
     public ExpressionVault Vault => ExpressionSettings.Vault;
 }
 
-file sealed class ExpressionSettings
+file static class ExpressionSettings
 {
     public static readonly Range<int> Depth = new(1, 10);
     
