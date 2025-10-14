@@ -2,34 +2,34 @@ namespace Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
 
 public abstract record Binary(Expression Left, Expression Right) : Expression
 {
-    public static Binary From(ExpressionType type, Expression lhs, Expression rhs) 
+    public static Binary From(Type type, Expression lhs, Expression rhs) 
     {
         return type switch
         {
-            ExpressionType.Add => Addition.From(lhs, rhs),
-            ExpressionType.Subtract => Subtraction.From(lhs, rhs),
-            ExpressionType.Multiply => Multiplication.From(lhs, rhs),
-            ExpressionType.Divide => Division.From(lhs, rhs),
-            ExpressionType.Modulo => Modulo.From(lhs, rhs),
-            ExpressionType.Power => Power.From(lhs, rhs),
+            Type.Add => Addition.From(lhs, rhs),
+            Type.Subtract => Subtraction.From(lhs, rhs),
+            Type.Multiply => Multiplication.From(lhs, rhs),
+            Type.Divide => Division.From(lhs, rhs),
+            Type.Modulo => Modulo.From(lhs, rhs),
+            Type.Power => Power.From(lhs, rhs),
             _ => Situation.Unreachable<Binary>()
         };
     }
 
-    public static int Precedence(ExpressionType type)
+    public static int Precedence(Type type)
     {
         return type switch
         {
-            ExpressionType.Add or ExpressionType.Subtract => 1,
-            ExpressionType.Multiply or ExpressionType.Divide or ExpressionType.Modulo => 2,
-            ExpressionType.Power => 3,
+            Type.Add or Type.Subtract => 1,
+            Type.Multiply or Type.Divide or Type.Modulo => 2,
+            Type.Power => 3,
             _ => 0
         };
     }
 
-    public static bool IsRightAssociative(ExpressionType type)
+    public static bool IsRightAssociative(Type type)
     {
-        return type is ExpressionType.Power;
+        return type is Type.Power;
     }
 }
 

@@ -2,14 +2,14 @@ namespace Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
 
 public abstract record Unary(Expression Operand) : Expression
 {
-    public static Unary From(ExpressionType type, Expression operand)
+    public static Unary From(Type type, Expression operand)
     {
         return type switch
         {
-            ExpressionType.Negate => Negation.From(operand),
-            ExpressionType.Absolute => Absolute.From(operand),
-            ExpressionType.SquareRoot => SquareRoot.From(operand),
-            ExpressionType.Factorial => Factorial.From(operand),
+            Type.Negate => Negation.From(operand),
+            Type.Absolute => Absolute.From(operand),
+            Type.SquareRoot => SquareRoot.From(operand),
+            Type.Factorial => Factorial.From(operand),
             _ => Situation.Unreachable<Unary>()
         };
     }

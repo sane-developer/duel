@@ -1,14 +1,15 @@
+using Duel.Modules.Engine.Games.Muffs.Expressions.Contexts;
 using Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
 
 namespace Duel.Modules.Engine.Games.Muffs.Expressions;
 
-public sealed class ExpressionGenerator(IExpressionContext context)
+public sealed class ExpressionGenerator(ExpressionContext context)
 {
     public Expression Generate()
     {
-        var budget = GetRandomNumber(context.Operators.Minimum, context.Operators.Maximum);
+        var budget = GetRandomNumber(context.Operators.Start.Value, context.Operators.End.Value);
 
-        var depth = GetRandomNumber(context.Depth.Minimum, context.Depth.Maximum);
+        var depth = GetRandomNumber(context.Depth.Start.Value, context.Depth.End.Value);
 
         return GetExpression(budget, depth);
     }
@@ -17,7 +18,7 @@ public sealed class ExpressionGenerator(IExpressionContext context)
     {
         if (budget is 0 || depth is 0)
         {
-            var value = GetRandomNumber(context.Constant.Minimum, context.Constant.Maximum);
+            var value = GetRandomNumber(context.Constant.Start.Value, context.Constant.End.Value);
 
             return Constant.From(value);
         }
@@ -30,7 +31,7 @@ public sealed class ExpressionGenerator(IExpressionContext context)
 
         var lhs = GetExpression(lb, depth - 1);
 
-        if (type is ExpressionType.Divide)
+        if (type is Expression.Type.Divide)
         {
             var dividend = ExpressionEvaluator.Evaluate(lhs);
 
@@ -41,7 +42,7 @@ public sealed class ExpressionGenerator(IExpressionContext context)
             return Binary.From(type, lhs, symbol);
         }
 
-        if (type is ExpressionType.Power)
+        if (type is Expression.Type.Power)
         {
             var exponent = GetRandomExponent();
 
@@ -52,7 +53,7 @@ public sealed class ExpressionGenerator(IExpressionContext context)
 
         var rhs = GetExpression(rb, depth - 1);
 
-        if (type is ExpressionType.Factorial or ExpressionType.SquareRoot)
+        if (type is Expression.Type.Factorial or Expression.Type.SquareRoot)
         {
             return Absolute.From(rhs);
         }
@@ -67,42 +68,29 @@ public sealed class ExpressionGenerator(IExpressionContext context)
             return Constant.From(result);
         }
 
-        var operations = context.Vault.GetAvailableOperations(result);
-        
-        var index = context.Rng.Next(operations.Count);
-        
-        var type = operations[index];
-        
-        var operands = context.Vault.GetRandomOperands(context.Rng, type, result);
-        
-        if (operands is null)
-        {
-            return Constant.From(result);
-        }
+        var composition = context.Vault.GetRandomComposition(context.Rng, result);
 
         var lb = GetLeftBudget(budget - 1);
         
         var rb = GetRightBudget(budget - 1, lb);
         
-        var lhs = GetExpressionWithSpecificResult(operands.Value.Left, lb, depth - 1);
+        var lhs = GetExpressionWithSpecificResult(composition.Left, lb, depth - 1);
         
-        var rhs = GetExpressionWithSpecificResult(operands.Value.Right, rb, depth - 1);
+        var rhs = GetExpressionWithSpecificResult(composition.Right, rb, depth - 1);
         
-        return Binary.From(type, lhs, rhs);
+        return Binary.From(composition.Type, lhs, rhs);
     }
 
-    private ExpressionType GetRandomOperatorType()
+    private Expression.Type GetRandomOperatorType()
     {
-        const int lowestIndex = (int) ExpressionType.Add;
-
-        const int highestIndex = (int) ExpressionType.Factorial;
+        var index = GetRandomNumber(0, context.Operations.Length - 1);
         
-        return (ExpressionType) GetRandomNumber(lowestIndex, highestIndex);
+        return context.Operations[index];
     }
 
     private int GetRandomExponent()
     {
-        return GetRandomNumber(context.Exponent.Minimum, context.Exponent.Maximum);
+        return GetRandomNumber(context.Exponent.Start.Value, context.Exponent.End.Value);
     }
 
     private int GetRandomNumber(int minimum, int maximum)
