@@ -15,7 +15,9 @@ public sealed class DivisorVault
 
     public int GetRandomDivisor(Random rng, int number)
     {
-        var divisors = _divisorsByNumber[Math.Abs(number)];
+        var key = Math.Abs(number);
+        
+        var divisors = _divisorsByNumber[key];
         
         var index = rng.Next(divisors.Length);
         
@@ -26,11 +28,11 @@ public sealed class DivisorVault
     {
         for (var number = minimum; number <= maximum; number++)
         {
-            _divisorsByNumber[number] = ComputeDivisors(number);
+            _divisorsByNumber[number] = Compute(number);
         }
     }
 
-    private static int[] ComputeDivisors(int number)
+    private static int[] Compute(int number)
     {
         var abs = Math.Abs(number);
         

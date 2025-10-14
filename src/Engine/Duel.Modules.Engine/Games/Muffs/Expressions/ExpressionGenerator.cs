@@ -107,5 +107,4 @@ public sealed class ExpressionGenerator(ExpressionContext context)
     {
         return totalBudget - leftBudget;
     }
-
 }
