@@ -42,4 +42,9 @@ public sealed class ExpressionContext(Random rng, ExpressionSettings settings)
     ///     The pre-computed lookup table of operand pairs that produce specific results for each binary operation.
     /// </summary>
     public readonly ExpressionVault Vault = ExpressionVaultFactory.Create(settings.Constant, settings.Operations);
+
+    /// <summary>
+    ///     The pre-computed lookup table of divisors for all numbers in the constant range.
+    /// </summary>
+    public readonly DivisorVault Divisors = DivisorVault.For(settings.Constant.Start.Value, settings.Constant.End.Value);
 }

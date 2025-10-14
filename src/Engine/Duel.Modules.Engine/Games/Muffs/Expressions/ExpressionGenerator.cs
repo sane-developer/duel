@@ -35,7 +35,7 @@ public sealed class ExpressionGenerator(ExpressionContext context)
         {
             var dividend = ExpressionEvaluator.Evaluate(lhs);
 
-            var divisor = GetRandomDivisor(dividend);
+            var divisor = context.Divisors.GetRandomDivisor(context.Rng, dividend);
 
             var symbol = GetExpressionWithSpecificResult(divisor, rb, depth - 1);
 
@@ -108,37 +108,4 @@ public sealed class ExpressionGenerator(ExpressionContext context)
         return totalBudget - leftBudget;
     }
 
-    private int GetRandomDivisor(int dividend)
-    {
-        var cursor = 0;
-
-        var abs = Math.Abs(dividend);
-        
-        var limit = (int) Math.Sqrt(abs);
-
-        const int complementaryPairsMultiplier = 2;
-
-        Span<int> divisors = stackalloc int[limit * complementaryPairsMultiplier];
-        
-        for (var divisor = 1; divisor <= limit; divisor++)
-        {
-            if (abs % divisor != 0)
-            {
-                continue;
-            }
-
-            divisors[cursor++] = divisor;
-            
-            var complementary = abs / divisor;
-            
-            if (complementary != divisor)
-            {
-                divisors[cursor++] = complementary;
-            }
-        }
-
-        var index = context.Rng.Next(cursor);
-
-        return divisors[index];
-    }
 }
