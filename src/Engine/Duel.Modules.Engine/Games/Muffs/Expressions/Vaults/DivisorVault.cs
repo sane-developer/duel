@@ -4,11 +4,11 @@ public sealed class DivisorVault
 {
     private readonly Dictionary<int, int[]> _divisorsByNumber = [];
 
-    public static DivisorVault For(int minimum, int maximum)
+    public static DivisorVault For(Range range)
     {
         var vault = new DivisorVault();
         
-        vault.Initialize(minimum, maximum);
+        vault.Initialize(range.Start.Value, range.End.Value);
 
         return vault;
     }

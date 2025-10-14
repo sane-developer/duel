@@ -2,11 +2,11 @@ using Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
 
 namespace Duel.Modules.Engine.Games.Muffs.Expressions.Vaults;
 
-public static class ExpressionVaultFactory
+public static class CompositionVaultFactory
 {
-    public static ExpressionVault Create(Range constant, params Expression.Type[] operations)
+    public static CompositionVault Create(Range constant, params Expression.Type[] operations)
     {
-        return ExpressionVault
+        return CompositionVault
             .For(constant.Start.Value, constant.End.Value)
             .Register(operations)
             .Filter(c => c.Result is 0)

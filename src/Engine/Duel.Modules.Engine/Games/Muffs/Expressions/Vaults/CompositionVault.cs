@@ -2,18 +2,18 @@ using Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
 
 namespace Duel.Modules.Engine.Games.Muffs.Expressions.Vaults;
 
-public sealed class ExpressionVault(int minimum, int maximum)
+public sealed class CompositionVault(int minimum, int maximum)
 {
     private List<Expression.Composition> _compositions = [];
     
     private Dictionary<int, List<Expression.Composition>> _compositionsByResults = [];
 
-    public static ExpressionVault For(int minimum, int maximum)
+    public static CompositionVault For(int minimum, int maximum)
     {
-        return new ExpressionVault(minimum, maximum);
+        return new CompositionVault(minimum, maximum);
     }
 
-    public ExpressionVault Register(params Expression.Type[] types)
+    public CompositionVault Register(params Expression.Type[] types)
     {
         foreach (var type in types)
         {
@@ -43,14 +43,14 @@ public sealed class ExpressionVault(int minimum, int maximum)
         return this;
     }
 
-    public ExpressionVault Filter(Predicate<Expression.Composition> predicate)
+    public CompositionVault Filter(Predicate<Expression.Composition> predicate)
     {
         _compositions = [.. _compositions.Where(x => !predicate(x))];
 
         return this;
     }
 
-    public ExpressionVault Compile()
+    public CompositionVault Compile()
     {
         _compositionsByResults = _compositions.GroupBy(c => c.Result).ToDictionary(g => g.Key, g => g.ToList());
 
