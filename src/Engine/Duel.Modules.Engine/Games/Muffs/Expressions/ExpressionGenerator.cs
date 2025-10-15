@@ -3,13 +3,13 @@ using Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
 
 namespace Duel.Modules.Engine.Games.Muffs.Expressions;
 
-public sealed class ExpressionGenerator(Random rng,ExpressionContext context)
+public sealed class ExpressionGenerator(Random rng, ExpressionContext context)
 {
     public Expression Generate()
     {
-        var budget = context.GetRandomBudget(rng);
+        var budget = context.GetBudget(rng);
 
-        var depth = context.GetRandomDepth(rng);
+        var depth = context.GetDepth(rng);
 
         return GetExpression(budget, depth);
     }
@@ -18,12 +18,12 @@ public sealed class ExpressionGenerator(Random rng,ExpressionContext context)
     {
         if (budget is 0 || depth is 0)
         {
-            var value = context.GetRandomConstant(rng);
+            var value = context.GetConstant(rng);
 
             return context.Constants.Get(value);
         }
 
-        var type = context.GetRandomOperator(rng);
+        var type = context.GetOperatorType(rng);
 
         var lb = GetLeftBudget(budget - 1);
 
@@ -35,7 +35,7 @@ public sealed class ExpressionGenerator(Random rng,ExpressionContext context)
         {
             var dividend = ExpressionEvaluator.Evaluate(lhs);
 
-            var divisor = context.Divisors.GetRandom(dividend, rng);
+            var divisor = context.GetDivisor(rng, dividend);
 
             var symbol = GetExpression(divisor, rb, depth - 1);
 
@@ -44,7 +44,7 @@ public sealed class ExpressionGenerator(Random rng,ExpressionContext context)
 
         if (type is Expression.Operator.Power)
         {
-            var exponent = context.GetRandomExponent(rng);
+            var exponent = context.GetExponent(rng);
 
             var symbol = GetExpression(exponent, rb, depth - 1);
 
@@ -65,14 +65,14 @@ public sealed class ExpressionGenerator(Random rng,ExpressionContext context)
     {
         if (budget is 0 || depth is 0)
         {
-            return context.Constants.Get(result);
+            return context.GetConstant(result);
         }
-
-        var composition = context.Compositions.GetRandom(result, rng);
 
         var lb = GetLeftBudget(budget - 1);
         
         var rb = GetRightBudget(budget - 1, lb);
+        
+        var composition = context.GetComposition(rng, result);
         
         var lhs = GetExpression(composition.Left, lb, depth - 1);
         

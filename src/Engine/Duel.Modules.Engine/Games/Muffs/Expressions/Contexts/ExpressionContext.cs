@@ -11,31 +11,46 @@ public sealed class ExpressionContext(ExpressionSettings settings)
 
     public required CompositionVault Compositions { get; init; }
 
-    public int GetRandomDepth(Random rng)
+    public int GetDepth(Random rng)
     {
         return GetRandomNumber(rng, settings.Depth.Start.Value, settings.Depth.End.Value);
     }
 
-    public int GetRandomBudget(Random rng)
+    public int GetBudget(Random rng)
     {
         return GetRandomNumber(rng, settings.Budget.Start.Value, settings.Budget.End.Value);
     }
 
-    public int GetRandomConstant(Random rng)
+    public int GetConstant(Random rng)
     {
         return GetRandomNumber(rng, settings.Constant.Start.Value, settings.Constant.End.Value);
     }
 
-    public int GetRandomExponent(Random rng)
+    public int GetExponent(Random rng)
     {
         return GetRandomNumber(rng, settings.Exponent.Start.Value, settings.Exponent.End.Value);
     }
 
-    public Expression.Operator GetRandomOperator(Random rng)
+    public Expression.Operator GetOperatorType(Random rng)
     {
         var index = GetRandomIndex(rng, settings.Operators.Length);
 
         return settings.Operators[index];
+    }
+    
+    public Expression.Composition GetComposition(Random rng, int result)
+    {
+        return Compositions.GetRandom(result, rng);
+    }
+
+    public Constant GetConstant(int value)
+    {
+        return Constants.Get(value);
+    }
+    
+    public int GetDivisor(Random rng, int dividend)
+    {
+        return Divisors.GetRandom(dividend, rng);
     }
 
     private static int GetRandomNumber(Random rng, int minimum, int maximum)
