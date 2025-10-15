@@ -2,42 +2,22 @@ using Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
 
 namespace Duel.Modules.Engine.Games.Muffs.Expressions.Vaults;
 
-public sealed class CompositionVault(int minimum, int maximum)
+public sealed class CompositionVault(Range constant)
 {
     private List<Expression.Composition> _compositions = [];
     
     private Dictionary<int, List<Expression.Composition>> _compositionsByResults = [];
 
-    public static CompositionVault For(int minimum, int maximum)
+    public static CompositionVault For(Range constant)
     {
-        return new CompositionVault(minimum, maximum);
+        return new CompositionVault(constant);
     }
 
     public CompositionVault Register(params Expression.Type[] types)
     {
         foreach (var type in types)
         {
-            switch (type)
-            {
-                case Expression.Type.Add:
-                    ExpressionCompositionsProvider.RegisterAdditions(_compositions, minimum, maximum);
-                    break;
-                case Expression.Type.Subtract:
-                    ExpressionCompositionsProvider.RegisterSubtractions(_compositions, minimum, maximum);
-                    break;
-                case Expression.Type.Multiply:
-                    ExpressionCompositionsProvider.RegisterMultiplications(_compositions, minimum, maximum);
-                    break;
-                case Expression.Type.Divide:
-                    ExpressionCompositionsProvider.RegisterDivisions(_compositions, minimum, maximum);
-                    break;
-                case Expression.Type.Modulo:
-                    ExpressionCompositionsProvider.RegisterModulos(_compositions, minimum, maximum);
-                    break;
-                case Expression.Type.Power:
-                    ExpressionCompositionsProvider.RegisterPowers(_compositions, minimum, maximum);
-                    break;
-            }
+            _compositions.Register(type, constant);
         }
 
         return this;
@@ -57,7 +37,7 @@ public sealed class CompositionVault(int minimum, int maximum)
         return this;
     }
 
-    public Expression.Composition GetRandomComposition(Random rng, int result)
+    public Expression.Composition GetRandom(int result, Random rng)
     {
         var compositions = _compositionsByResults[result];
 
@@ -67,13 +47,38 @@ public sealed class CompositionVault(int minimum, int maximum)
     }
 }
 
-file static class ExpressionCompositionsProvider
+file static class ExpressionCompositionsRegistrar
 {
-    public static void RegisterAdditions(List<Expression.Composition> compositions, int minimum, int maximum)
-    {        
-        for (var lhs = minimum; lhs <= maximum; lhs++)
+    public static void Register(this List<Expression.Composition> compositions, Expression.Type type, Range constant)
+    {
+        switch (type)
         {
-            for (var rhs = minimum; rhs <= maximum; rhs++)
+            case Expression.Type.Add:
+                RegisterAdditions(compositions, constant);
+                break;
+            case Expression.Type.Subtract:
+                RegisterSubtractions(compositions, constant);
+                break;
+            case Expression.Type.Multiply:
+                RegisterMultiplications(compositions, constant);
+                break;
+            case Expression.Type.Divide:
+                RegisterDivisions(compositions, constant);
+                break;
+            case Expression.Type.Modulo:
+                RegisterModulos(compositions, constant);
+                break;
+            case Expression.Type.Power:
+                RegisterPowers(compositions, constant);
+                break;
+        }
+    }
+
+    private static void RegisterAdditions(this List<Expression.Composition> compositions, Range constant)
+    {        
+        for (var lhs = constant.Start.Value; lhs <= constant.End.Value; lhs++)
+        {
+            for (var rhs = constant.Start.Value; rhs <= constant.End.Value; rhs++)
             {
                 var result = lhs + rhs;
 
@@ -84,11 +89,11 @@ file static class ExpressionCompositionsProvider
         }
     }
 
-    public static void RegisterSubtractions(List<Expression.Composition> compositions, int minimum, int maximum)
+    private static void RegisterSubtractions(this List<Expression.Composition> compositions, Range constant)
     {
-        for (var lhs = minimum; lhs <= maximum; lhs++)
+        for (var lhs = constant.Start.Value; lhs <= constant.End.Value; lhs++)
         {
-            for (var rhs = minimum; rhs <= maximum; rhs++)
+            for (var rhs = constant.Start.Value; rhs <= constant.End.Value; rhs++)
             {
                 var result = lhs - rhs;
 
@@ -99,11 +104,11 @@ file static class ExpressionCompositionsProvider
         }
     }
 
-    public static void RegisterMultiplications(List<Expression.Composition> compositions, int minimum, int maximum)
+    private static void RegisterMultiplications(this List<Expression.Composition> compositions, Range constant)
     {
-        for (var lhs = minimum; lhs <= maximum; lhs++)
+        for (var lhs = constant.Start.Value; lhs <= constant.End.Value; lhs++)
         {
-            for (var rhs = minimum; rhs <= maximum; rhs++)
+            for (var rhs = constant.Start.Value; rhs <= constant.End.Value; rhs++)
             {
                 var result = lhs * rhs;
 
@@ -114,11 +119,11 @@ file static class ExpressionCompositionsProvider
         }
     }
 
-    public static void RegisterDivisions(List<Expression.Composition> compositions, int minimum, int maximum)
+    private static void RegisterDivisions(this List<Expression.Composition> compositions, Range constant)
     {
-        for (var lhs = minimum; lhs <= maximum; lhs++)
+        for (var lhs = constant.Start.Value; lhs <= constant.End.Value; lhs++)
         {
-            for (var rhs = minimum; rhs <= maximum; rhs++)
+            for (var rhs = constant.Start.Value; rhs <= constant.End.Value; rhs++)
             {
                 if (rhs is not 0)
                 {
@@ -132,11 +137,11 @@ file static class ExpressionCompositionsProvider
         }
     }
 
-    public static void RegisterModulos(List<Expression.Composition> compositions, int minimum, int maximum)
+    private static void RegisterModulos(this List<Expression.Composition> compositions, Range constant)
     {
-        for (var lhs = minimum; lhs <= maximum; lhs++)
+        for (var lhs = constant.Start.Value; lhs <= constant.End.Value; lhs++)
         {
-            for (var rhs = minimum; rhs <= maximum; rhs++)
+            for (var rhs = constant.Start.Value; rhs <= constant.End.Value; rhs++)
             {
                 var result = lhs % rhs;
                 
@@ -147,11 +152,11 @@ file static class ExpressionCompositionsProvider
         }
     }
 
-    public static void RegisterPowers(List<Expression.Composition> compositions, int minimum, int maximum)
+    private static void RegisterPowers(this List<Expression.Composition> compositions, Range constant)
     {
-        for (var lhs = minimum; lhs <= maximum; lhs++)
+        for (var lhs = constant.Start.Value; lhs <= constant.End.Value; lhs++)
         {
-            for (var rhs = minimum; rhs <= maximum; rhs++)
+            for (var rhs = constant.Start.Value; rhs <= constant.End.Value; rhs++)
             {
                 var result = (int) Math.Pow(lhs, rhs);
                 

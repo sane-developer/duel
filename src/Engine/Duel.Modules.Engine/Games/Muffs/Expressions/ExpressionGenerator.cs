@@ -7,7 +7,7 @@ public sealed class ExpressionGenerator(ExpressionContext context)
 {
     public Expression Generate()
     {
-        var budget = GetRandomNumber(context.Operators.Start.Value, context.Operators.End.Value);
+        var budget = GetRandomNumber(context.Budget.Start.Value, context.Budget.End.Value);
 
         var depth = GetRandomNumber(context.Depth.Start.Value, context.Depth.End.Value);
 
@@ -35,9 +35,9 @@ public sealed class ExpressionGenerator(ExpressionContext context)
         {
             var dividend = ExpressionEvaluator.Evaluate(lhs);
 
-            var divisor = context.Divisors.GetRandomDivisor(context.Rng, dividend);
+            var divisor = context.Divisors.GetRandom(dividend, context.Rng);
 
-            var symbol = GetExpressionWithSpecificResult(divisor, rb, depth - 1);
+            var symbol = GetExpression(divisor, rb, depth - 1);
 
             return Binary.From(type, lhs, symbol);
         }
@@ -46,7 +46,7 @@ public sealed class ExpressionGenerator(ExpressionContext context)
         {
             var exponent = GetRandomExponent();
 
-            var symbol = GetExpressionWithSpecificResult(exponent, rb, depth - 1);
+            var symbol = GetExpression(exponent, rb, depth - 1);
 
             return Binary.From(type, lhs, symbol);
         }
@@ -61,22 +61,22 @@ public sealed class ExpressionGenerator(ExpressionContext context)
         return Binary.From(type, lhs, rhs);
     }
 
-    private Expression GetExpressionWithSpecificResult(int result, int budget, int depth)
+    private Expression GetExpression(int result, int budget, int depth)
     {
         if (budget is 0 || depth is 0)
         {
             return Constant.From(result);
         }
 
-        var composition = context.Vault.GetRandomComposition(context.Rng, result);
+        var composition = context.Compositions.GetRandom(result, context.Rng);
 
         var lb = GetLeftBudget(budget - 1);
         
         var rb = GetRightBudget(budget - 1, lb);
         
-        var lhs = GetExpressionWithSpecificResult(composition.Left, lb, depth - 1);
+        var lhs = GetExpression(composition.Left, lb, depth - 1);
         
-        var rhs = GetExpressionWithSpecificResult(composition.Right, rb, depth - 1);
+        var rhs = GetExpression(composition.Right, rb, depth - 1);
         
         return Binary.From(composition.Type, lhs, rhs);
     }

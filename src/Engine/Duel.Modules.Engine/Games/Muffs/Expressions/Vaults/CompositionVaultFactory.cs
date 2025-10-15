@@ -7,7 +7,7 @@ public static class CompositionVaultFactory
     public static CompositionVault Create(Range constant, params Expression.Type[] operations)
     {
         return CompositionVault
-            .For(constant.Start.Value, constant.End.Value)
+            .For(constant)
             .Register(operations)
             .Filter(c => c.Result is 0)
             .Filter(c => c.Result < constant.Start.Value)

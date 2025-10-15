@@ -4,16 +4,16 @@ public sealed class DivisorVault
 {
     private readonly Dictionary<int, int[]> _divisorsByNumber = [];
 
-    public static DivisorVault For(Range range)
+    public static DivisorVault For(Range constant)
     {
         var vault = new DivisorVault();
         
-        vault.Initialize(range.Start.Value, range.End.Value);
+        vault.Initialize(constant.Start.Value, constant.End.Value);
 
         return vault;
     }
 
-    public int GetRandomDivisor(Random rng, int number)
+    public int GetRandom(int number, Random rng)
     {
         var key = Math.Abs(number);
         
@@ -36,11 +36,6 @@ public sealed class DivisorVault
     {
         var abs = Math.Abs(number);
         
-        if (abs is 0)
-        {
-            return [];
-        }
-
         var limit = (int) Math.Sqrt(abs);
         
         var divisors = new List<int>();

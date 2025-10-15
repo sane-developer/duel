@@ -9,9 +9,9 @@ public static class ExpressionContextFactory
         var settings = new ExpressionSettings
         {
             Depth = new Range(1, 10),
+            Budget = new Range(1, 10),
             Constant = new Range(1, 100),
             Exponent = new Range(1, 10),
-            Operators = new Range(1, 10),
             Operations = [
                 Expression.Type.Add, 
                 Expression.Type.Subtract, 
@@ -29,7 +29,7 @@ public static class ExpressionContextFactory
             Depth = new Range(1, 10),
             Constant = new Range(1, 100),
             Exponent = new Range(1, 10),
-            Operators = new Range(1, 10),
+            Budget = new Range(1, 10),
             Operations = [
                 Expression.Type.Add, 
                 Expression.Type.Subtract, 
@@ -49,7 +49,7 @@ public static class ExpressionContextFactory
             Depth = new Range(1, 10),
             Constant = new Range(1, 100),
             Exponent = new Range(1, 10),
-            Operators = new Range(1, 10),
+            Budget = new Range(1, 10),
             Operations = [
                 Expression.Type.Add, 
                 Expression.Type.Subtract, 
