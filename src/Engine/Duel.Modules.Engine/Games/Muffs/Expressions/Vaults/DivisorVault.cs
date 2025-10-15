@@ -4,13 +4,17 @@ public sealed class DivisorVault
 {
     private readonly Dictionary<int, int[]> _divisorsByNumber = [];
 
+    private DivisorVault(Range constant)
+    {
+        for (var number = constant.Start.Value; number <= constant.End.Value; number++)
+        {
+            _divisorsByNumber[number] = Compute(number);
+        }
+    }
+
     public static DivisorVault Create(Range constant)
     {
-        var vault = new DivisorVault();
-        
-        vault.Initialize(constant.Start.Value, constant.End.Value);
-
-        return vault;
+        return new DivisorVault(constant);
     }
 
     public int GetRandom(int number, Random rng)
@@ -22,14 +26,6 @@ public sealed class DivisorVault
         var index = rng.Next(divisors.Length);
         
         return divisors[index];
-    }
-
-    private void Initialize(int minimum, int maximum)
-    {
-        for (var number = minimum; number <= maximum; number++)
-        {
-            _divisorsByNumber[number] = Compute(number);
-        }
     }
 
     private static int[] Compute(int number)

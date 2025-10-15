@@ -2,7 +2,7 @@ using Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
 
 namespace Duel.Modules.Engine.Games.Muffs.Expressions.Contexts;
 
-public sealed class ExpressionSettings
+public record struct ExpressionSettings
 {
     public Range Depth { get; set; }
 
@@ -12,19 +12,24 @@ public sealed class ExpressionSettings
 
     public Range Exponent { get; set; }
 
-    public Expression.Operator[] Operators { get; set; } = [];
+    public Expression.Operator[] Operators { get; set; }
+
+    public ExpressionSettings()
+    {
+        Operators = [];
+    }
 }
 
 public static class ExpressionSettingsRegistry
 {
     public static readonly ExpressionSettings Easy = ExpressionSettingsBuilder.New()
-        .WithOperator(Expression.Operator.Add)
-        .WithOperator(Expression.Operator.Subtract)
-        .WithOperator(Expression.Operator.Multiply)
         .WithDepth(minimum: 1, maximum: 10)
         .WithBudget(minimum: 1, maximum: 10)
         .WithConstant(minimum: 1, maximum: 100)
         .WithExponent(minimum: 1, maximum: 10)
+        .WithOperator(Expression.Operator.Add)
+        .WithOperator(Expression.Operator.Subtract)
+        .WithOperator(Expression.Operator.Multiply)
         .Build();
 
     public static readonly ExpressionSettings Medium = ExpressionSettingsBuilder.From(Easy)

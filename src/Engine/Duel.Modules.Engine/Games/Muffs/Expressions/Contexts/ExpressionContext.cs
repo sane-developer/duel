@@ -5,33 +5,47 @@ namespace Duel.Modules.Engine.Games.Muffs.Expressions.Contexts;
 
 public sealed class ExpressionContext(ExpressionSettings settings)
 {
-    public Range Depth => settings.Depth;
-
-    public Range Constant => settings.Constant;
-
-    public Range Exponent => settings.Exponent;
-
-    public Range Budget => settings.Budget;
-
-    public Expression.Operator[] Operators => settings.Operators;
-
     public required DivisorVault Divisors { get; init; }
 
+    public required ConstantVault Constants { get; init; }
+
     public required CompositionVault Compositions { get; init; }
-}
 
-public static class ExpressionContextFactory
-{
-    public static ExpressionContext Create(ExpressionSettings settings)
+    public int GetRandomDepth(Random rng)
     {
-        var divisors = DivisorVault.Create(settings.Constant);
+        return GetRandomNumber(rng, settings.Depth.Start.Value, settings.Depth.End.Value);
+    }
 
-        var compositions = CompositionVault.Create(settings.Constant, settings.Operators);
+    public int GetRandomBudget(Random rng)
+    {
+        return GetRandomNumber(rng, settings.Budget.Start.Value, settings.Budget.End.Value);
+    }
 
-        return new ExpressionContext(settings)
-        {
-            Divisors = divisors, Compositions = compositions
-        };
+    public int GetRandomConstant(Random rng)
+    {
+        return GetRandomNumber(rng, settings.Constant.Start.Value, settings.Constant.End.Value);
+    }
+
+    public int GetRandomExponent(Random rng)
+    {
+        return GetRandomNumber(rng, settings.Exponent.Start.Value, settings.Exponent.End.Value);
+    }
+
+    public Expression.Operator GetRandomOperator(Random rng)
+    {
+        var index = GetRandomIndex(rng, settings.Operators.Length);
+
+        return settings.Operators[index];
+    }
+
+    private static int GetRandomNumber(Random rng, int minimum, int maximum)
+    {
+        return rng.Next(minimum, maximum + 1);
+    }
+
+    private static int GetRandomIndex(Random rng, int length)
+    {
+        return rng.Next(length);
     }
 }
 
@@ -48,4 +62,17 @@ public static class ExpressionContextRegistry
     public static readonly ExpressionContext Hard = ExpressionContextFactory.Create(
         ExpressionSettingsRegistry.Hard
     );
+}
+
+file static class ExpressionContextFactory
+{
+    public static ExpressionContext Create(ExpressionSettings settings)
+    {
+        return new ExpressionContext(settings)
+        {
+            Divisors = DivisorVault.Create(settings.Constant),
+            Constants = ConstantVault.Create(settings.Constant),
+            Compositions = CompositionVault.Create(settings.Constant, settings.Operators)
+        };
+    }
 }
