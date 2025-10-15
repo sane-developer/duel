@@ -2,30 +2,16 @@
 
 public abstract record Expression
 {
-    public enum Type
+    public enum Operator
     {
-        Add,
-        Subtract,
-        Multiply,
-        Divide,
-        Modulo,
-        Power,
-        Negate,
-        Absolute,
-        SquareRoot,
-        Factorial
+        Add, Subtract, Multiply, Divide, Modulo, Power, Negate, Absolute, SquareRoot, Factorial
     }
 
-    public readonly record struct Composition(Type Type, int Left, int Right, int Result)
+    public readonly record struct Composition(Operator Type, int Left, int Right, int Result)
     {
-        public static Composition From(Type type, int left, int right, int result)
+        public static Composition From(Operator type, int left, int right, int result)
         {
             return new Composition(type, left, right, result);
         }
-    }
-
-    public T As<T>() where T : Expression
-    {
-        return (T) this;
     }
 }

@@ -31,7 +31,7 @@ public sealed class ExpressionGenerator(ExpressionContext context)
 
         var lhs = GetExpression(lb, depth - 1);
 
-        if (type is Expression.Type.Divide)
+        if (type is Expression.Operator.Divide)
         {
             var dividend = ExpressionEvaluator.Evaluate(lhs);
 
@@ -42,7 +42,7 @@ public sealed class ExpressionGenerator(ExpressionContext context)
             return Binary.From(type, lhs, symbol);
         }
 
-        if (type is Expression.Type.Power)
+        if (type is Expression.Operator.Power)
         {
             var exponent = GetRandomExponent();
 
@@ -53,7 +53,7 @@ public sealed class ExpressionGenerator(ExpressionContext context)
 
         var rhs = GetExpression(rb, depth - 1);
 
-        if (type is Expression.Type.Factorial or Expression.Type.SquareRoot)
+        if (type is Expression.Operator.Factorial or Expression.Operator.SquareRoot)
         {
             return Absolute.From(rhs);
         }
@@ -81,11 +81,11 @@ public sealed class ExpressionGenerator(ExpressionContext context)
         return Binary.From(composition.Type, lhs, rhs);
     }
 
-    private Expression.Type GetRandomOperatorType()
+    private Expression.Operator GetRandomOperatorType()
     {
-        var index = GetRandomNumber(0, context.Operations.Length - 1);
+        var index = GetRandomNumber(0, context.Operators.Length - 1);
         
-        return context.Operations[index];
+        return context.Operators[index];
     }
 
     private int GetRandomExponent()

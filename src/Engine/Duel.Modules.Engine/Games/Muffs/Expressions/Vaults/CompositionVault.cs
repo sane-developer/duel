@@ -13,7 +13,7 @@ public sealed class CompositionVault(Range constant)
         return new CompositionVault(constant);
     }
 
-    public CompositionVault Register(params Expression.Type[] types)
+    public CompositionVault Register(params Expression.Operator[] types)
     {
         foreach (var type in types)
         {
@@ -49,26 +49,26 @@ public sealed class CompositionVault(Range constant)
 
 file static class ExpressionCompositionsRegistrar
 {
-    public static void Register(this List<Expression.Composition> compositions, Expression.Type type, Range constant)
+    public static void Register(this List<Expression.Composition> compositions, Expression.Operator type, Range constant)
     {
         switch (type)
         {
-            case Expression.Type.Add:
+            case Expression.Operator.Add:
                 compositions.RegisterAdditions(constant);
                 break;
-            case Expression.Type.Subtract:
+            case Expression.Operator.Subtract:
                 compositions.RegisterSubtractions(constant);
                 break;
-            case Expression.Type.Multiply:
+            case Expression.Operator.Multiply:
                 compositions.RegisterMultiplications(constant);
                 break;
-            case Expression.Type.Divide:
+            case Expression.Operator.Divide:
                 compositions.RegisterDivisions(constant);
                 break;
-            case Expression.Type.Modulo:
+            case Expression.Operator.Modulo:
                 compositions.RegisterModulos(constant);
                 break;
-            case Expression.Type.Power:
+            case Expression.Operator.Power:
                 compositions.RegisterPowers(constant);
                 break;
         }
@@ -82,7 +82,7 @@ file static class ExpressionCompositionsRegistrar
             {
                 var result = lhs + rhs;
 
-                var composition = Expression.Composition.From(Expression.Type.Add, lhs, rhs, result);
+                var composition = Expression.Composition.From(Expression.Operator.Add, lhs, rhs, result);
                 
                 compositions.Add(composition);
             }
@@ -97,7 +97,7 @@ file static class ExpressionCompositionsRegistrar
             {
                 var result = lhs - rhs;
 
-                var composition = Expression.Composition.From(Expression.Type.Subtract, lhs, rhs, result);
+                var composition = Expression.Composition.From(Expression.Operator.Subtract, lhs, rhs, result);
                 
                 compositions.Add(composition);
             }
@@ -112,7 +112,7 @@ file static class ExpressionCompositionsRegistrar
             {
                 var result = lhs * rhs;
 
-                var composition = Expression.Composition.From(Expression.Type.Multiply, lhs, rhs, result);
+                var composition = Expression.Composition.From(Expression.Operator.Multiply, lhs, rhs, result);
                 
                 compositions.Add(composition);
             }
@@ -129,7 +129,7 @@ file static class ExpressionCompositionsRegistrar
                 {
                     var result = lhs / rhs;
 
-                    var composition = Expression.Composition.From(Expression.Type.Divide, lhs, rhs, result);
+                    var composition = Expression.Composition.From(Expression.Operator.Divide, lhs, rhs, result);
                     
                     compositions.Add(composition);
                 }
@@ -145,7 +145,7 @@ file static class ExpressionCompositionsRegistrar
             {
                 var result = lhs % rhs;
                 
-                var composition = Expression.Composition.From(Expression.Type.Modulo, lhs, rhs, result);
+                var composition = Expression.Composition.From(Expression.Operator.Modulo, lhs, rhs, result);
                 
                 compositions.Add(composition);
             }
@@ -160,7 +160,7 @@ file static class ExpressionCompositionsRegistrar
             {
                 var result = (int) Math.Pow(lhs, rhs);
                 
-                var composition = Expression.Composition.From(Expression.Type.Power, lhs, rhs, result);
+                var composition = Expression.Composition.From(Expression.Operator.Power, lhs, rhs, result);
                 
                 compositions.Add(composition);
             }

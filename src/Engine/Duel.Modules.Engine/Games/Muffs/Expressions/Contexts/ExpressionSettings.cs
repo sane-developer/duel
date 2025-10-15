@@ -12,5 +12,5 @@ public sealed class ExpressionSettings
 
     public required Range Exponent { get; init; }
 
-    public required Expression.Type[] Operations { get; init; }
+    public required Expression.Operator[] Operators { get; init; }
 }

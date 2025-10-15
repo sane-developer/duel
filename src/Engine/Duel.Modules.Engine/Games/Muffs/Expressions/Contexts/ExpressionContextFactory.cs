@@ -12,10 +12,10 @@ public static class ExpressionContextFactory
             Budget = new Range(1, 10),
             Constant = new Range(1, 100),
             Exponent = new Range(1, 10),
-            Operations = [
-                Expression.Type.Add, 
-                Expression.Type.Subtract, 
-                Expression.Type.Multiply
+            Operators = [
+                Expression.Operator.Add, 
+                Expression.Operator.Subtract, 
+                Expression.Operator.Multiply
             ]
         };
 
@@ -27,15 +27,15 @@ public static class ExpressionContextFactory
         var settings = new ExpressionSettings
         {
             Depth = new Range(1, 10),
+            Budget = new Range(1, 10),
             Constant = new Range(1, 100),
             Exponent = new Range(1, 10),
-            Budget = new Range(1, 10),
-            Operations = [
-                Expression.Type.Add, 
-                Expression.Type.Subtract, 
-                Expression.Type.Multiply, 
-                Expression.Type.Divide, 
-                Expression.Type.Power
+            Operators = [
+                Expression.Operator.Add, 
+                Expression.Operator.Subtract, 
+                Expression.Operator.Multiply, 
+                Expression.Operator.Divide, 
+                Expression.Operator.Power
             ]
         };
 
@@ -47,16 +47,16 @@ public static class ExpressionContextFactory
         var settings = new ExpressionSettings
         {
             Depth = new Range(1, 10),
+            Budget = new Range(1, 10),
             Constant = new Range(1, 100),
             Exponent = new Range(1, 10),
-            Budget = new Range(1, 10),
-            Operations = [
-                Expression.Type.Add, 
-                Expression.Type.Subtract, 
-                Expression.Type.Multiply, 
-                Expression.Type.Divide, 
-                Expression.Type.Modulo, 
-                Expression.Type.Power
+            Operators = [
+                Expression.Operator.Add, 
+                Expression.Operator.Subtract, 
+                Expression.Operator.Multiply, 
+                Expression.Operator.Divide, 
+                Expression.Operator.Modulo, 
+                Expression.Operator.Power
             ]
         };
 
