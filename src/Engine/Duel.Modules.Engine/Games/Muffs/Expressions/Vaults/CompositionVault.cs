@@ -6,7 +6,7 @@ public sealed class CompositionVault(Range constant)
 {
     private List<Expression.Composition> _compositions = [];
     
-    private Dictionary<int, List<Expression.Composition>> _compositionsByResults = [];
+    private Dictionary<int, Expression.Composition[]> _compositionsByResults = [];
 
     public static CompositionVault For(Range constant)
     {
@@ -32,7 +32,7 @@ public sealed class CompositionVault(Range constant)
 
     public CompositionVault Compile()
     {
-        _compositionsByResults = _compositions.GroupBy(c => c.Result).ToDictionary(g => g.Key, g => g.ToList());
+        _compositionsByResults = _compositions.GroupBy(c => c.Result).ToDictionary(g => g.Key, g => g.ToArray());
 
         return this;
     }
@@ -41,7 +41,7 @@ public sealed class CompositionVault(Range constant)
     {
         var compositions = _compositionsByResults[result];
 
-        var index = rng.Next(compositions.Count);
+        var index = rng.Next(compositions.Length);
 
         return compositions[index];
     }
