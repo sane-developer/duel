@@ -3,7 +3,7 @@ using Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
 
 namespace Duel.Modules.Engine.Games.Muffs.Expressions;
 
-public sealed class ExpressionGenerator(ExpressionContext context)
+public sealed class ExpressionGenerator(Random rng,ExpressionContext context)
 {
     public Expression Generate()
     {
@@ -35,7 +35,7 @@ public sealed class ExpressionGenerator(ExpressionContext context)
         {
             var dividend = ExpressionEvaluator.Evaluate(lhs);
 
-            var divisor = context.Divisors.GetRandom(dividend, context.Rng);
+            var divisor = context.Divisors.GetRandom(dividend, rng);
 
             var symbol = GetExpression(divisor, rb, depth - 1);
 
@@ -55,7 +55,7 @@ public sealed class ExpressionGenerator(ExpressionContext context)
 
         if (type is Expression.Operator.Factorial or Expression.Operator.SquareRoot)
         {
-            return Absolute.From(rhs);
+            return Unary.From(type, rhs);
         }
 
         return Binary.From(type, lhs, rhs);
@@ -68,7 +68,7 @@ public sealed class ExpressionGenerator(ExpressionContext context)
             return Constant.From(result);
         }
 
-        var composition = context.Compositions.GetRandom(result, context.Rng);
+        var composition = context.Compositions.GetRandom(result, rng);
 
         var lb = GetLeftBudget(budget - 1);
         
@@ -95,7 +95,7 @@ public sealed class ExpressionGenerator(ExpressionContext context)
 
     private int GetRandomNumber(int minimum, int maximum)
     {
-        return context.Rng.Next(minimum, maximum + 1);
+        return rng.Next(minimum, maximum + 1);
     }
 
     private static int GetLeftBudget(int totalBudget)

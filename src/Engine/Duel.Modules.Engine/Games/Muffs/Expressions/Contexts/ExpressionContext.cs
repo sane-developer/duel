@@ -3,10 +3,8 @@ using Duel.Modules.Engine.Games.Muffs.Expressions.Vaults;
 
 namespace Duel.Modules.Engine.Games.Muffs.Expressions.Contexts;
 
-public sealed class ExpressionContext(Random rng, ExpressionSettings settings)
+public sealed class ExpressionContext(ExpressionSettings settings)
 {
-    public Random Rng => rng;
-
     public Range Depth => settings.Depth;
 
     public Range Constant => settings.Constant;
@@ -17,7 +15,37 @@ public sealed class ExpressionContext(Random rng, ExpressionSettings settings)
 
     public Expression.Operator[] Operators => settings.Operators;
 
-    public readonly DivisorVault Divisors = DivisorVault.Create(settings.Constant);
+    public required DivisorVault Divisors { get; init; }
 
-    public readonly CompositionVault Compositions = CompositionVault.Create(settings.Constant, settings.Operators);
+    public required CompositionVault Compositions { get; init; }
+}
+
+public static class ExpressionContextFactory
+{
+    public static ExpressionContext Create(ExpressionSettings settings)
+    {
+        var divisors = DivisorVault.Create(settings.Constant);
+
+        var compositions = CompositionVault.Create(settings.Constant, settings.Operators);
+
+        return new ExpressionContext(settings)
+        {
+            Divisors = divisors, Compositions = compositions
+        };
+    }
+}
+
+public static class ExpressionContextRegistry
+{
+    public static readonly ExpressionContext Easy = ExpressionContextFactory.Create(
+        ExpressionSettingsRegistry.Easy
+    );
+
+    public static readonly ExpressionContext Medium = ExpressionContextFactory.Create(
+        ExpressionSettingsRegistry.Medium
+    );
+
+    public static readonly ExpressionContext Hard = ExpressionContextFactory.Create(
+        ExpressionSettingsRegistry.Hard
+    );
 }
