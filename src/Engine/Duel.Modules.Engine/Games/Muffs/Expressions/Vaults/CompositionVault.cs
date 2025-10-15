@@ -54,22 +54,22 @@ file static class ExpressionCompositionsRegistrar
         switch (type)
         {
             case Expression.Type.Add:
-                RegisterAdditions(compositions, constant);
+                compositions.RegisterAdditions(constant);
                 break;
             case Expression.Type.Subtract:
-                RegisterSubtractions(compositions, constant);
+                compositions.RegisterSubtractions(constant);
                 break;
             case Expression.Type.Multiply:
-                RegisterMultiplications(compositions, constant);
+                compositions.RegisterMultiplications(constant);
                 break;
             case Expression.Type.Divide:
-                RegisterDivisions(compositions, constant);
+                compositions.RegisterDivisions(constant);
                 break;
             case Expression.Type.Modulo:
-                RegisterModulos(compositions, constant);
+                compositions.RegisterModulos(constant);
                 break;
             case Expression.Type.Power:
-                RegisterPowers(compositions, constant);
+                compositions.RegisterPowers(constant);
                 break;
         }
     }
