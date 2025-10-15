@@ -8,19 +8,15 @@ public sealed class CompositionVault(Range constant)
     
     private Dictionary<int, Expression.Composition[]> _compositionsByResults = [];
 
-    public static CompositionVault For(Range constant)
+    public static CompositionVault Create(Range constant, params Expression.Operator[] operations)
     {
-        return new CompositionVault(constant);
-    }
-
-    public CompositionVault Register(params Expression.Operator[] types)
-    {
-        foreach (var type in types)
-        {
-            _compositions.Register(type, constant);
-        }
-
-        return this;
+        return new CompositionVault(constant)
+            .Register(operations)
+            .Filter(c => c.Result is 0)
+            .Filter(c => c.Result < constant.Start.Value)
+            .Filter(c => c.Result > constant.End.Value)
+            .Filter(c => c.Type is Expression.Operator.Divide && c.Left % c.Right is not 0)
+            .Compile();
     }
 
     public CompositionVault Filter(Predicate<Expression.Composition> predicate)
@@ -44,6 +40,16 @@ public sealed class CompositionVault(Range constant)
         var index = rng.Next(compositions.Length);
 
         return compositions[index];
+    }
+
+    private CompositionVault Register(params Expression.Operator[] types)
+    {
+        foreach (var type in types)
+        {
+            _compositions.Register(type, constant);
+        }
+
+        return this;
     }
 }
 

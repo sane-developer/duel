@@ -4,7 +4,7 @@ public sealed class DivisorVault
 {
     private readonly Dictionary<int, int[]> _divisorsByNumber = [];
 
-    public static DivisorVault For(Range constant)
+    public static DivisorVault Create(Range constant)
     {
         var vault = new DivisorVault();
         
@@ -35,7 +35,7 @@ public sealed class DivisorVault
     private static int[] Compute(int number)
     {
         var abs = Math.Abs(number);
-        
+
         var limit = (int) Math.Sqrt(abs);
         
         var divisors = new List<int>();

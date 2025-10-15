@@ -17,7 +17,7 @@ public sealed class ExpressionContext(Random rng, ExpressionSettings settings)
 
     public Expression.Operator[] Operators => settings.Operators;
 
-    public readonly DivisorVault Divisors = DivisorVault.For(settings.Constant);
+    public readonly DivisorVault Divisors = DivisorVault.Create(settings.Constant);
 
-    public readonly CompositionVault Compositions = CompositionVaultFactory.Create(settings.Constant, settings.Operators);
+    public readonly CompositionVault Compositions = CompositionVault.Create(settings.Constant, settings.Operators);
 }
