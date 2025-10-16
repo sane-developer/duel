@@ -20,7 +20,70 @@ public record struct ExpressionSettings
     }
 }
 
-public static class ExpressionSettingsRegistry
+public sealed class ExpressionSettingsContext(ExpressionSettings settings)
+{
+    public int GetDepth(Random rng)
+    {
+        return GetRandomNumber(rng, settings.Depth.Start.Value, settings.Depth.End.Value);
+    }
+
+    public int GetBudget(Random rng)
+    {
+        return GetRandomNumber(rng, settings.Budget.Start.Value, settings.Budget.End.Value);
+    }
+
+    public int GetConstant(Random rng)
+    {
+        return GetRandomNumber(rng, settings.Constant.Start.Value, settings.Constant.End.Value);
+    }
+
+    public int GetExponent(Random rng)
+    {
+        return GetRandomNumber(rng, settings.Exponent.Start.Value, settings.Exponent.End.Value);
+    }
+
+    public Expression.Operator GetOperatorType(Random rng)
+    {
+        var index = GetRandomIndex(rng, settings.Operators.Length);
+
+        return settings.Operators[index];
+    }
+
+    private static int GetRandomNumber(Random rng, int minimum, int maximum)
+    {
+        return rng.Next(minimum, maximum + 1);
+    }
+
+    private static int GetRandomIndex(Random rng, int length)
+    {
+        return rng.Next(length);
+    }
+}
+
+public static class ExpressionSettingsContextFactory
+{
+    public static ExpressionSettingsContext Easy()
+    {
+        return From(ExpressionSettingsRegistry.Easy);
+    }
+
+    public static ExpressionSettingsContext Medium()
+    {
+        return From(ExpressionSettingsRegistry.Medium);
+    }
+
+    public static ExpressionSettingsContext Hard()
+    {
+        return From(ExpressionSettingsRegistry.Hard);
+    }
+
+    private static ExpressionSettingsContext From(ExpressionSettings settings)
+    {
+        return new ExpressionSettingsContext(settings);
+    }
+}
+
+file static class ExpressionSettingsRegistry
 {
     public static readonly ExpressionSettings Easy = ExpressionSettingsBuilder.New()
         .WithDepth(minimum: 1, maximum: 10)

@@ -17,7 +17,7 @@ public sealed class DivisorVault
         return new DivisorVault(constant);
     }
 
-    public int GetRandom(int number, Random rng)
+    public int Get(Random rng, int number)
     {
         var key = Math.Abs(number);
         

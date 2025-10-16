@@ -33,7 +33,7 @@ public sealed class CompositionVault(Range constant)
         return this;
     }
 
-    public Expression.Composition GetRandom(int result, Random rng)
+    public Expression.Composition Get(Random rng, int result)
     {
         var compositions = _compositionsByResults[result];
 
