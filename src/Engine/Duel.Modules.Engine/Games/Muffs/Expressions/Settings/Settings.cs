@@ -1,8 +1,8 @@
-using Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
+using Duel.Modules.Engine.Games.Muffs.Expressions.AST;
 
 namespace Duel.Modules.Engine.Games.Muffs.Expressions.Settings;
 
-public record struct ExpressionSettings
+public record struct Settings
 {
     public Range Depth { get; set; }
 
@@ -14,7 +14,7 @@ public record struct ExpressionSettings
 
     public Expression.Operator[] Operators { get; set; }
 
-    public ExpressionSettings()
+    public Settings()
     {
         Operators = [];
     }

@@ -1,9 +1,9 @@
-using Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
+using Duel.Modules.Engine.Games.Muffs.Expressions.AST;
 using Duel.Shared.Extensions;
 
 namespace Duel.Modules.Engine.Games.Muffs.Expressions.Settings;
 
-internal sealed class ExpressionSettingsContext(ExpressionSettings settings)
+internal sealed class SettingsContext(ExpressionSettings settings)
 {
     public int GetDepth(Random rng)
     {
@@ -27,6 +27,6 @@ internal sealed class ExpressionSettingsContext(ExpressionSettings settings)
 
     public Expression.Operator GetOperatorType(Random rng)
     {
-        return settings.Operators.Element(rng);
+        return settings.Operators.Random(rng);
     }
 }

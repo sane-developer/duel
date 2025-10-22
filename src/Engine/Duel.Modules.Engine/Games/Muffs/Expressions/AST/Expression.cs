@@ -1,4 +1,4 @@
-﻿namespace Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
+﻿namespace Duel.Modules.Engine.Games.Muffs.Expressions.AST;
 
 public abstract record Expression
 {

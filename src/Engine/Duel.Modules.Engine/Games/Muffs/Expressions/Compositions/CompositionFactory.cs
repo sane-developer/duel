@@ -1,4 +1,4 @@
-using Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
+using Duel.Modules.Engine.Games.Muffs.Expressions.AST;
 
 namespace Duel.Modules.Engine.Games.Muffs.Expressions.Compositions;
 

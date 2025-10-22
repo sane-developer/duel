@@ -1,10 +1,10 @@
 namespace Duel.Modules.Engine.Games.Muffs.Expressions.Compositions;
 
-public sealed class CompositionSet
+public sealed class CompositionRegistryBuilder
 {
     private List<Composition> _compositions = [];
 
-    private CompositionSet(Range constant)
+    private CompositionRegistryBuilder(Range constant)
     {
         _compositions.AddRange(CompositionFactory.FromAdditions(constant));
         
@@ -19,12 +19,12 @@ public sealed class CompositionSet
         _compositions.AddRange(CompositionFactory.FromModulos(constant));
     }
 
-    public static CompositionSet From(Range constant)
+    public static CompositionRegistryBuilder From(Range constant)
     {
-        return new CompositionSet(constant);
+        return new CompositionRegistryBuilder(constant);
     }
 
-    public CompositionSet Apply(ICompositionFilter filter)
+    public CompositionRegistryBuilder Apply(ICompositionRule filter)
     {
         _compositions = [.. _compositions.Where(filter.Predicate)];
 

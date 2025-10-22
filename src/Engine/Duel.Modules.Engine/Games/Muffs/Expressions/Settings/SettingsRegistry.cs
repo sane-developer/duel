@@ -1,10 +1,10 @@
-using Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
+using Duel.Modules.Engine.Games.Muffs.Expressions.AST;
 
 namespace Duel.Modules.Engine.Games.Muffs.Expressions.Settings;
 
-internal static class ExpressionSettingsRegistry
+internal static class SettingsRegistry
 {
-    public static readonly ExpressionSettings Easy = ExpressionSettingsBuilder.New()
+    public static readonly Settings Easy = SettingsBuilder.New()
         .WithDepth(minimum: 1, maximum: 10)
         .WithBudget(minimum: 1, maximum: 10)
         .WithConstant(minimum: 1, maximum: 100)
@@ -14,13 +14,13 @@ internal static class ExpressionSettingsRegistry
         .WithOperator(Expression.Operator.Multiply)
         .Build();
 
-    public static readonly ExpressionSettings Medium = ExpressionSettingsBuilder.From(Easy)
+    public static readonly Settings Medium = SettingsBuilder.From(Easy)
         .WithOperator(Expression.Operator.Divide)
         .WithOperator(Expression.Operator.Power)
         .WithOperator(Expression.Operator.SquareRoot)
         .Build();
 
-    public static readonly ExpressionSettings Hard = ExpressionSettingsBuilder.From(Medium)
+    public static readonly Settings Hard = SettingsBuilder.From(Medium)
         .WithOperator(Expression.Operator.Negate)
         .WithOperator(Expression.Operator.Absolute)
         .WithOperator(Expression.Operator.Factorial)

@@ -1,7 +1,6 @@
-using Duel.Modules.Engine.Games.Muffs.Expressions.Compositions;
 using System.Collections.Frozen;
 
-namespace Duel.Modules.Engine.Games.Muffs.Expressions.Vaults;
+namespace Duel.Modules.Engine.Games.Muffs.Expressions.Compositions;
 
 internal sealed class CompositionsVault
 {

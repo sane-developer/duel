@@ -1,7 +1,7 @@
-using Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
+using Duel.Modules.Engine.Games.Muffs.Expressions.AST;
 using System.Collections.Frozen;
 
-namespace Duel.Modules.Engine.Games.Muffs.Expressions.Vaults;
+namespace Duel.Modules.Engine.Games.Muffs.Expressions.Constants;
 
 internal sealed class ConstantsVault
 {
