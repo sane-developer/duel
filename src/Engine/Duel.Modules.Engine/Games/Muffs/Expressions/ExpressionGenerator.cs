@@ -1,93 +1,79 @@
-using Duel.Modules.Engine.Games.Muffs.Expressions.Contexts;
 using Duel.Modules.Engine.Games.Muffs.Expressions.Symbols;
 
 namespace Duel.Modules.Engine.Games.Muffs.Expressions;
 
 public sealed class ExpressionGenerator(ExpressionCacheContext cacheContext, ExpressionSettingsContext settingsContext)
 {
+    private State _state;
+
     public Expression Generate(Random rng)
     {
-        var budget = settingsContext.GetBudget(rng);
-
         var depth = settingsContext.GetDepth(rng);
 
-        return GetExpression(rng, budget, depth);
+        var budget = settingsContext.GetBudget(rng);
+        
+        _state = new State(rng, budget);
+
+        return GetExpression(depth);
     }
 
-    private Expression GetExpression(Random rng, int budget, int depth)
+    private Expression GetExpression(int depth)
     {
-        if (budget is 0 || depth is 0)
+        if (_state.RemainingBudget is 0 || depth is 0)
         {
-            var value = settingsContext.GetConstant(rng);
+            var value = settingsContext.GetConstant(_state.Rng);
 
             return cacheContext.GetConstant(value);
         }
 
-        var operatorType = settingsContext.GetOperatorType(rng);
+        _state.RemainingBudget--;
 
-        var leftBudget = GetLeftBudget(budget - 1);
+        var operatorType = settingsContext.GetOperatorType(_state.Rng);
 
-        var rightBudget = GetRightBudget(budget - 1, leftBudget);
-
-        var lhs = GetExpression(rng, leftBudget, depth - 1);
+        var lhs = GetExpression(depth - 1);
 
         if (operatorType is Expression.Operator.Divide)
         {
             var dividend = ExpressionEvaluator.Evaluate(lhs);
 
-            var divisor = cacheContext.GetDivisor(rng, dividend);
+            var divisor = cacheContext.GetDivisor(_state.Rng, dividend);
 
-            var division = GetExpression(rng, divisor, rightBudget, depth - 1);
+            var division = GetExpression(divisor, depth - 1);
 
             return Binary.From(operatorType, lhs, division);
         }
 
         if (operatorType is Expression.Operator.Power)
         {
-            var exponent = settingsContext.GetExponent(rng);
+            var exponent = settingsContext.GetExponent(_state.Rng);
 
-            var power = GetExpression(rng, exponent, rightBudget, depth - 1);
+            var power = GetExpression(exponent, depth - 1);
 
             return Binary.From(operatorType, lhs, power);
         }
 
-        var rhs = GetExpression(rng, rightBudget, depth - 1);
-
-        if (operatorType is Expression.Operator.Factorial or Expression.Operator.SquareRoot)
-        {
-            return Unary.From(operatorType, rhs);
-        }
+        var rhs = GetExpression(depth - 1);
 
         return Binary.From(operatorType, lhs, rhs);
     }
 
-    private Expression GetExpression(Random rng, int result, int budget, int depth)
+    private Expression GetExpression(int result, int depth)
     {
-        if (budget is 0 || depth is 0)
+        if (_state.RemainingBudget is 0 || depth is 0)
         {
             return cacheContext.GetConstant(result);
         }
 
-        var composition = cacheContext.GetComposition(rng, result);
+        _state.RemainingBudget--;
 
-        var leftBudget = GetLeftBudget(budget - 1);
+        var composition = cacheContext.GetComposition(_state.Rng, result);
         
-        var rightBudget = GetRightBudget(budget - 1, leftBudget);
+        var lhs = GetExpression(composition.Left, depth - 1);
         
-        var lhs = GetExpression(rng, composition.Left, leftBudget, depth - 1);
-        
-        var rhs = GetExpression(rng, composition.Right, rightBudget, depth - 1);
+        var rhs = GetExpression(composition.Right, depth - 1);
         
         return Binary.From(composition.Type, lhs, rhs);
     }
 
-    private static int GetLeftBudget(int totalBudget)
-    {
-        return (int) Math.Ceiling(totalBudget / 2d);
-    }
-
-    private static int GetRightBudget(int totalBudget, int leftBudget)
-    {
-        return totalBudget - leftBudget;
-    }
+    private record struct State(Random Rng, int RemainingBudget);
 }
