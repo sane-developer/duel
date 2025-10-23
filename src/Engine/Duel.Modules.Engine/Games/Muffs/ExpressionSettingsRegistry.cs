@@ -62,70 +62,70 @@ file sealed class ExpressionSettingsBuilder(ExpressionSettings settings)
 
     public ExpressionSettingsBuilder WithAdditions(bool allow, double weight)
     {
-        settings = settings with { Additions = new OperatorSettings(allow ? weight : 0d) };
+        settings = settings with { Addition = new OperatorSettings(allow ? weight : 0d) };
 
         return this;
     }
 
     public ExpressionSettingsBuilder WithSubtractions(bool allow, double weight)
     {
-        settings = settings with { Subtractions = new OperatorSettings(allow ? weight : 0d) };
+        settings = settings with { Subtraction = new OperatorSettings(allow ? weight : 0d) };
 
         return this;
     }
 
     public ExpressionSettingsBuilder WithMultiplications(bool allow, double weight)
     {
-        settings = settings with { Multiplications = new OperatorSettings(allow ? weight : 0d) };
+        settings = settings with { Multiplication = new OperatorSettings(allow ? weight : 0d) };
 
         return this;
     }
 
     public ExpressionSettingsBuilder WithDivisions(bool allow, double weight)
     {
-        settings = settings with { Divisions = new OperatorSettings(allow ? weight : 0d) };
+        settings = settings with { Division = new OperatorSettings(allow ? weight : 0d) };
 
         return this;
     }
 
     public ExpressionSettingsBuilder WithModulos(bool allow, double weight)
     {
-        settings = settings with { Modulos = new OperatorSettings(allow ? weight : 0d) };
+        settings = settings with { Modulo = new OperatorSettings(allow ? weight : 0d) };
 
         return this;
     }
 
     public ExpressionSettingsBuilder WithPowers(bool allow, double weight)
     {
-        settings = settings with { Powers = new OperatorSettings(allow ? weight : 0d) };
+        settings = settings with { Power = new OperatorSettings(allow ? weight : 0d) };
 
         return this;
     }
 
     public ExpressionSettingsBuilder WithNegations(bool allow, double weight)
     {
-        settings = settings with { Negations = new OperatorSettings(allow ? weight : 0d) };
+        settings = settings with { Negation = new OperatorSettings(allow ? weight : 0d) };
 
         return this;
     }
 
     public ExpressionSettingsBuilder WithAbsoluteValues(bool allow, double weight)
     {
-        settings = settings with { AbsoluteValues = new OperatorSettings(allow ? weight : 0d) };
+        settings = settings with { AbsoluteValue = new OperatorSettings(allow ? weight : 0d) };
 
         return this;
     }
 
     public ExpressionSettingsBuilder WithFactorials(bool allow, double weight)
     {
-        settings = settings with { Factorials = new OperatorSettings(allow ? weight : 0d) };
+        settings = settings with { Factorial = new OperatorSettings(allow ? weight : 0d) };
 
         return this;
     }
 
     public ExpressionSettingsBuilder WithSquareRoots(bool allow, double weight)
     {
-        settings = settings with { SquareRoots = new OperatorSettings(allow ? weight : 0d) };
+        settings = settings with { SquareRoot = new OperatorSettings(allow ? weight : 0d) };
 
         return this;
     }

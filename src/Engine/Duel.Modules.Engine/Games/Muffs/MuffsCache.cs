@@ -12,7 +12,7 @@ public sealed class MuffsCache
 
     private readonly FrozenDictionary<int, Number> _numbers;
 
-    private readonly FrozenDictionary<int, ExpressionComposition[]> _compositions;
+    private readonly FrozenDictionary<int, Composition[]> _compositions;
 
     public MuffsCache(ExpressionSettings settings)
     {
@@ -20,67 +20,67 @@ public sealed class MuffsCache
         
         var divisors = new List<(int, int[])>();
         
-        var compositions = new List<ExpressionComposition>();
+        var compositions = new List<Composition>();
 
         for (var i = settings.Number.Start.Value; i <= settings.Number.End.Value; i++)
         {
             numbers.Add(new Number(i));
 
-            if (settings.Divisions.IsAllowed) 
+            if (settings.Division.IsAllowed) 
             {
                 divisors.Add((i, i.Divisors().ToArray()));
             }
 
-            if (settings.SquareRoots.IsAllowed && i % i is 0)
+            if (settings.SquareRoot.IsAllowed && i % i is 0)
             {
-                compositions.Add(new ExpressionComposition(new SquareRoot(new Number(i)), (int) Math.Sqrt(i)));
+                compositions.Add(new Composition(new SquareRoot(new Number(i)), (int) Math.Sqrt(i)));
             }
 
-            if (settings.Factorials.IsAllowed && i >= 0)
+            if (settings.Factorial.IsAllowed && i >= 0)
             {
-                compositions.Add(new ExpressionComposition(new Factorial(new Number(i)), i.Factorial()));
+                compositions.Add(new Composition(new Factorial(new Number(i)), i.Factorial()));
             }
 
-            if (settings.AbsoluteValues.IsAllowed)
+            if (settings.AbsoluteValue.IsAllowed)
             {
-                compositions.Add(new ExpressionComposition(new Absolute(new Number(i)), Math.Abs(i)));
+                compositions.Add(new Composition(new Absolute(new Number(i)), Math.Abs(i)));
             }
 
-            if (settings.Negations.IsAllowed)
+            if (settings.Negation.IsAllowed)
             {
-                compositions.Add(new ExpressionComposition(new Negate(new Number(i)), -i));
+                compositions.Add(new Composition(new Negate(new Number(i)), -i));
             }
 
             for (var j = settings.Number.Start.Value; j <= settings.Number.End.Value; j++)
             {
-                if (settings.Additions.IsAllowed)
+                if (settings.Addition.IsAllowed)
                 {
-                    compositions.Add(new ExpressionComposition(new Add(new Number(i), new Number(j)), i + j));
+                    compositions.Add(new Composition(new Add(new Number(i), new Number(j)), i + j));
                 }
 
-                if (settings.Subtractions.IsAllowed)
+                if (settings.Subtraction.IsAllowed)
                 {
-                    compositions.Add(new ExpressionComposition(new Subtract(new Number(i), new Number(j)), i - j));
+                    compositions.Add(new Composition(new Subtract(new Number(i), new Number(j)), i - j));
                 }
                 
-                if (settings.Multiplications.IsAllowed)
+                if (settings.Multiplication.IsAllowed)
                 {
-                    compositions.Add(new ExpressionComposition(new Multiply(new Number(i), new Number(j)), i * j));
+                    compositions.Add(new Composition(new Multiply(new Number(i), new Number(j)), i * j));
                 }
 
-                if (settings.Divisions.IsAllowed && j != 0)
+                if (settings.Division.IsAllowed && j != 0)
                 {
-                    compositions.Add(new ExpressionComposition(new Divide(new Number(i), new Number(j)), i / j));
+                    compositions.Add(new Composition(new Divide(new Number(i), new Number(j)), i / j));
                 }
 
-                if (settings.Powers.IsAllowed)
+                if (settings.Power.IsAllowed)
                 {
-                    compositions.Add(new ExpressionComposition(new Power(new Number(i), new Number(j)), (int) Math.Pow(i, j)));
+                    compositions.Add(new Composition(new Power(new Number(i), new Number(j)), (int) Math.Pow(i, j)));
                 }
                 
-                if (settings.Modulos.IsAllowed)
+                if (settings.Modulo.IsAllowed)
                 {
-                    compositions.Add(new ExpressionComposition(new Modulo(new Number(i), new Number(j)), i % j));
+                    compositions.Add(new Composition(new Modulo(new Number(i), new Number(j)), i % j));
                 }
             }
         }
@@ -103,7 +103,7 @@ public sealed class MuffsCache
 
     public int[] GetDivisors(int value) => _divisors[value];
 
-    public ExpressionComposition[] GetCompositions(int value) => _compositions[value];
+    public Composition[] GetCompositions(int value) => _compositions[value];
 }
 
-public record ExpressionComposition(Symbol Expression, int Result);
+public readonly record struct Composition(Glyph Expression, int Result);

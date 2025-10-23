@@ -1,15 +1,15 @@
 namespace Duel.Modules.Engine.Games.Muffs.AST.Operators;
 
-public abstract record Binary(Symbol Lhs, Symbol Rhs) : Operator;
+public abstract record Binary(Glyph Lhs, Glyph Rhs) : Operator;
 
-public sealed record Add(Symbol Lhs, Symbol Rhs) : Binary(Lhs, Rhs);
+public sealed record Add(Glyph Lhs, Glyph Rhs) : Binary(Lhs, Rhs);
 
-public sealed record Subtract(Symbol Lhs, Symbol Rhs) : Binary(Lhs, Rhs);
+public sealed record Subtract(Glyph Lhs, Glyph Rhs) : Binary(Lhs, Rhs);
 
-public sealed record Multiply(Symbol Lhs, Symbol Rhs) : Binary(Lhs, Rhs);
+public sealed record Multiply(Glyph Lhs, Glyph Rhs) : Binary(Lhs, Rhs);
 
-public sealed record Divide(Symbol Lhs, Symbol Rhs) : Binary(Lhs, Rhs);
+public sealed record Divide(Glyph Lhs, Glyph Rhs) : Binary(Lhs, Rhs);
 
-public sealed record Modulo(Symbol Lhs, Symbol Rhs) : Binary(Lhs, Rhs);
+public sealed record Modulo(Glyph Lhs, Glyph Rhs) : Binary(Lhs, Rhs);
 
-public sealed record Power(Symbol Lhs, Symbol Rhs) : Binary(Lhs, Rhs);
+public sealed record Power(Glyph Lhs, Glyph Rhs) : Binary(Lhs, Rhs);

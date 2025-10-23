@@ -7,7 +7,7 @@ namespace Duel.Modules.Engine.Games.Muffs;
 
 public sealed class ExpressionEvaluator
 {
-    public static int Evaluate(Symbol root)
+    public static int Evaluate(Glyph root)
     {
         return root switch
         {

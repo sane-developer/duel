@@ -13,23 +13,23 @@ public record struct ExpressionSettings
 
     public Range Number { get; set; }
 
-    public OperatorSettings Additions { get; set; }
+    public OperatorSettings Addition { get; set; }
 
-    public OperatorSettings Subtractions { get; set; }
+    public OperatorSettings Subtraction { get; set; }
 
-    public OperatorSettings Multiplications { get; set; }
+    public OperatorSettings Multiplication { get; set; }
 
-    public OperatorSettings Divisions { get; set; }
+    public OperatorSettings Division { get; set; }
 
-    public OperatorSettings Modulos { get; set; }
+    public OperatorSettings Modulo { get; set; }
 
-    public OperatorSettings Powers { get; set; }
+    public OperatorSettings Power { get; set; }
 
-    public OperatorSettings Negations { get; set; }
+    public OperatorSettings Negation { get; set; }
 
-    public OperatorSettings AbsoluteValues { get; set; }
+    public OperatorSettings AbsoluteValue { get; set; }
 
-    public OperatorSettings Factorials { get; set; }
+    public OperatorSettings Factorial { get; set; }
 
-    public OperatorSettings SquareRoots { get; set; }
+    public OperatorSettings SquareRoot { get; set; }
 }

@@ -1,11 +1,11 @@
 namespace Duel.Modules.Engine.Games.Muffs.AST.Operators;
 
-public abstract record Unary(Symbol Operand) : Operator;
+public abstract record Unary(Glyph Operand) : Operator;
 
-public sealed record Negate(Symbol Operand) : Unary(Operand);
+public sealed record Negate(Glyph Operand) : Unary(Operand);
 
-public sealed record Absolute(Symbol Operand) : Unary(Operand);
+public sealed record Absolute(Glyph Operand) : Unary(Operand);
 
-public sealed record SquareRoot(Symbol Operand) : Unary(Operand);
+public sealed record SquareRoot(Glyph Operand) : Unary(Operand);
 
-public sealed record Factorial(Symbol Operand) : Unary(Operand);
+public sealed record Factorial(Glyph Operand) : Unary(Operand);
