@@ -1,6 +1,5 @@
 using Duel.Modules.Engine.Games.Muffs.AST;
 using Duel.Modules.Engine.Games.Muffs.AST.Literals;
-using Duel.Modules.Engine.Games.Muffs.AST.Operators;
 using Duel.Shared.Extensions;
 using System.Collections.Frozen;
 
@@ -16,94 +15,211 @@ public sealed class MuffsCache
 
     public MuffsCache(ExpressionSettings settings)
     {
-        var numbers = new List<Number>();
-        
+        var uniqueNumbers = new HashSet<int>();
+
         var divisors = new List<(int, int[])>();
-        
+
         var compositions = new List<Composition>();
 
-        for (var i = settings.Number.Start.Value; i <= settings.Number.End.Value; i++)
-        {
-            numbers.Add(new Number(i));
+        BuildBinaryCompositions(settings.Addition, OperatorType.Addition, (a, b) => a + b, uniqueNumbers, compositions, divisors);
+        
+        BuildBinaryCompositions(settings.Subtraction, OperatorType.Subtraction, (a, b) => a - b, uniqueNumbers, compositions, divisors);
+        
+        BuildBinaryCompositions(settings.Multiplication, OperatorType.Multiplication, (a, b) => a * b, uniqueNumbers, compositions, divisors);
+        
+        BuildBinaryCompositions(settings.Division, OperatorType.Division, (a, b) => a / b, uniqueNumbers, compositions, divisors, requireNonZeroRhs: true);
+        
+        BuildBinaryCompositions(settings.Modulo, OperatorType.Modulo, (a, b) => a % b, uniqueNumbers, compositions, divisors, requireNonZeroRhs: true);
+        
+        BuildBinaryCompositions(settings.Power, OperatorType.Power, (a, b) => (int) Math.Pow(a, b), uniqueNumbers, compositions, divisors, validator: IsSafePower);
 
-            if (settings.Division.IsAllowed) 
+        BuildUnaryCompositions(settings.Negation, OperatorType.Negation, a => -a, uniqueNumbers, compositions);
+
+        BuildUnaryCompositions(settings.AbsoluteValue, OperatorType.AbsoluteValue, Math.Abs, uniqueNumbers, compositions);
+
+        BuildUnaryCompositions(settings.Factorial, OperatorType.Factorial, a => a.Factorial(), uniqueNumbers, compositions, validator: a => a >= 0 && a <= 5);
+
+        BuildUnaryCompositions(settings.SquareRoot, OperatorType.SquareRoot, a => (int) Math.Sqrt(a), uniqueNumbers, compositions, validator: IsPerfectSquare);
+
+        _numbers = uniqueNumbers
+            .ToDictionary(n => n, n => new Number(n))
+            .ToFrozenDictionary();
+
+        _divisors = divisors
+            .ToDictionary(d => d.Item1, d => d.Item2)
+            .ToFrozenDictionary();
+
+        _compositions = compositions
+            .GroupBy(c => c.Result)
+            .ToDictionary(g => g.Key, g => g.ToArray())
+            .ToFrozenDictionary();
+    }
+
+    private static void BuildBinaryCompositions(
+        OperatorSettings settings,
+        OperatorType type,
+        Func<int, int, int> operation,
+        HashSet<int> numbers,
+        List<Composition> compositions,
+        List<(int, int[])> divisors,
+        bool requireNonZeroRhs = false,
+        Func<int, int, bool>? validator = null)
+    {
+        if (!settings.IsAllowed) return;
+
+        var range = settings.Operand;
+
+        for (var i = range.Start; i <= range.End; i++)
+        {
+            numbers.Add(i);
+            
+            if (type == OperatorType.Division && !divisors.Any(d => d.Item1 == i))
             {
                 divisors.Add((i, i.Divisors().ToArray()));
             }
 
-            if (settings.SquareRoot.IsAllowed && i % i is 0)
+            for (var j = range.Start; j <= range.End; j++)
             {
-                compositions.Add(new Composition(new SquareRoot(new Number(i)), (int) Math.Sqrt(i)));
-            }
-
-            if (settings.Factorial.IsAllowed && i >= 0)
-            {
-                compositions.Add(new Composition(new Factorial(new Number(i)), i.Factorial()));
-            }
-
-            if (settings.AbsoluteValue.IsAllowed)
-            {
-                compositions.Add(new Composition(new Absolute(new Number(i)), Math.Abs(i)));
-            }
-
-            if (settings.Negation.IsAllowed)
-            {
-                compositions.Add(new Composition(new Negate(new Number(i)), -i));
-            }
-
-            for (var j = settings.Number.Start.Value; j <= settings.Number.End.Value; j++)
-            {
-                if (settings.Addition.IsAllowed)
+                if (requireNonZeroRhs && j == 0) 
                 {
-                    compositions.Add(new Composition(new Add(new Number(i), new Number(j)), i + j));
-                }
-
-                if (settings.Subtraction.IsAllowed)
-                {
-                    compositions.Add(new Composition(new Subtract(new Number(i), new Number(j)), i - j));
+                    continue;
                 }
                 
-                if (settings.Multiplication.IsAllowed)
+                if (validator != null && !validator(i, j)) 
                 {
-                    compositions.Add(new Composition(new Multiply(new Number(i), new Number(j)), i * j));
+                    continue;
                 }
 
-                if (settings.Division.IsAllowed && j != 0)
+                try
                 {
-                    compositions.Add(new Composition(new Divide(new Number(i), new Number(j)), i / j));
-                }
+                    var result = operation(i, j);
+                    
+                    if (settings.Result.HasValue)
+                    {
+                        var resultRange = settings.Result.Value;
+                        
+                        if (result < resultRange.Start || result > resultRange.End)
+                        {
+                            continue;
+                        }
+                    }
 
-                if (settings.Power.IsAllowed)
-                {
-                    compositions.Add(new Composition(new Power(new Number(i), new Number(j)), (int) Math.Pow(i, j)));
+                    compositions.Add(new BinaryComposition(type, i, j, result));
+
+                    numbers.Add(result);
                 }
-                
-                if (settings.Modulo.IsAllowed)
+                catch
                 {
-                    compositions.Add(new Composition(new Modulo(new Number(i), new Number(j)), i % j));
+                    // Skip if operation fails (overflow, etc.)
                 }
             }
         }
-
-        _numbers = numbers
-            .ToDictionary(number => number.Value, number => number)
-            .ToFrozenDictionary();
-
-        _divisors = divisors
-            .ToDictionary(divisor => divisor.Item1, divisor => divisor.Item2)
-            .ToFrozenDictionary();
-
-        _compositions = compositions
-            .GroupBy(composition => composition.Result)
-            .ToDictionary(group => group.Key, group => group.ToArray())
-            .ToFrozenDictionary();
     }
 
-    public Number GetNumber(int value) => _numbers[value];
+    private static void BuildUnaryCompositions(
+        OperatorSettings settings,
+        OperatorType type,
+        Func<int, int> operation,
+        HashSet<int> numbers,
+        List<Composition> compositions,
+        Func<int, bool>? validator = null)
+    {
+        if (!settings.IsAllowed) 
+        {
+            return;
+        }
 
-    public int[] GetDivisors(int value) => _divisors[value];
+        var range = settings.Operand;
 
-    public Composition[] GetCompositions(int value) => _compositions[value];
+        for (var i = range.Start; i <= range.End; i++)
+        {
+            if (validator != null && !validator(i)) 
+            {
+                continue;
+            }
+
+            try
+            {
+                var result = operation(i);
+                
+                if (settings.Result.HasValue)
+                {
+                    var resultRange = settings.Result.Value;
+                    
+                    if (result < resultRange.Start || result > resultRange.End)
+                    {
+                        continue;
+                    }
+                }
+
+                compositions.Add(new UnaryComposition(type, i, result));
+                
+                numbers.Add(i);
+                
+                numbers.Add(result);
+            }
+            catch
+            {
+                // Skip if operation fails
+            }
+        }
+    }
+
+    public Number GetNumber(int value)
+    {
+        return _numbers[value];
+    }
+
+    public int[] GetDivisors(int value)
+    {
+        return _divisors[value];
+    }
+
+    public Composition[] GetCompositions(int value)
+    {
+        return _compositions[value];
+    }
+
+    private static bool IsPerfectSquare(int value)
+    {
+        if (value < 0) 
+        {
+            return false;
+        }
+
+        return Math.Sqrt(value) % 1 is 0;
+    }
+
+    private static bool IsSafePower(int @base, int exponent)
+    {
+        if (exponent < 0) 
+        {
+            return false;
+        }
+
+        if (exponent is 0) 
+        {
+            return true;
+        }
+
+        if (@base is 0 or 1 or -1) 
+        {
+            return true;
+        }
+
+        try
+        {
+            return Math.Pow(@base, exponent) is >= int.MinValue and <= int.MaxValue;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 }
 
-public readonly record struct Composition(Glyph Expression, int Result);
+public abstract record Composition(OperatorType Type, int Result);
+
+public sealed record UnaryComposition(OperatorType Type, int Operand, int Result) : Composition(Type, Result);
+
+public sealed record BinaryComposition(OperatorType Type, int Lhs, int Rhs, int Result) : Composition(Type, Result);

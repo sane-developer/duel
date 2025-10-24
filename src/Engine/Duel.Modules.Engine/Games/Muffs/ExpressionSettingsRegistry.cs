@@ -3,25 +3,37 @@ namespace Duel.Modules.Engine.Games.Muffs;
 public static class ExpressionSettingsRegistry
 {
     public static readonly ExpressionSettings Easy = ExpressionSettingsBuilder.New()
-        .WithDepth(1..10)
-        .WithBudget(1..10)
-        .WithNumber(1..10)
-        .WithAdditions(allow: true, weight: 1.0)
-        .WithSubtractions(allow: true, weight: 1.0)
-        .WithMultiplications(allow: true, weight: 1.0)
+        .WithDepth(1..3)
+        .WithLength(1..5)
+        .WithAdditions(weight: 1.0, operandRange: 1..10, resultRange: 0..50)
+        .WithSubtractions(weight: 1.0, operandRange: 1..10, resultRange: 0..50)
+        .WithMultiplications(weight: 1.0, operandRange: 1..10, resultRange: 0..100)
         .Build();
 
-    public static readonly ExpressionSettings Medium = ExpressionSettingsBuilder.From(Easy)
-        .WithDivisions(allow: true, weight: 1.0)
-        .WithModulos(allow: true, weight: 1.0)
-        .WithPowers(allow: true, weight: 1.0)
+    public static readonly ExpressionSettings Medium = ExpressionSettingsBuilder.New()
+        .WithDepth(2..4)
+        .WithLength(1..8)
+        .WithAdditions(weight: 1.0, operandRange: new NumericRange(-10, 20), resultRange: new NumericRange(-50, 100))
+        .WithSubtractions(weight: 1.0, operandRange: new NumericRange(-10, 20), resultRange: new NumericRange(-50, 100))
+        .WithMultiplications(weight: 1.0, operandRange: 1..12, resultRange: 0..150)
+        .WithDivisions(weight: 1.0, operandRange: 1..50, resultRange: 0..50)
+        .WithModulos(weight: 0.5, operandRange: 1..20, resultRange: 0..20)
+        .WithPowers(weight: 0.5, operandRange: 1..5, resultRange: 0..125)
         .Build();
 
-    public static readonly ExpressionSettings Hard = ExpressionSettingsBuilder.From(Medium)
-        .WithAbsoluteValues(allow: true, weight: 1.0)
-        .WithSquareRoots(allow: true, weight: 1.0)
-        .WithFactorials(allow: true, weight: 1.0)
-        .WithNegations(allow: true, weight: 1.0)
+    public static readonly ExpressionSettings Hard = ExpressionSettingsBuilder.New()
+        .WithDepth(3..5)
+        .WithLength(1..10)
+        .WithAdditions(weight: 1.0, operandRange: new NumericRange(-20, 30), resultRange: new NumericRange(-150, 150))
+        .WithSubtractions(weight: 1.0, operandRange: new NumericRange(-20, 30), resultRange: new NumericRange(-150, 150))
+        .WithMultiplications(weight: 1.0, operandRange: 1..15, resultRange: new NumericRange(-200, 200))
+        .WithDivisions(weight: 1.0, operandRange: 1..100, resultRange: new NumericRange(-100, 100))
+        .WithModulos(weight: 0.8, operandRange: 1..30, resultRange: 0..30)
+        .WithPowers(weight: 0.5, operandRange: 1..5, resultRange: 0..125)
+        .WithNegations(weight: 0.8, operandRange: new NumericRange(-50, 50), resultRange: new NumericRange(-150, 150))
+        .WithAbsoluteValues(weight: 0.8, operandRange: new NumericRange(-50, 50), resultRange: 0..150)
+        .WithFactorials(weight: 0.3, operandRange: 0..5, resultRange: 1..120)
+        .WithSquareRoots(weight: 0.3, operandRange: 0..100, resultRange: 0..10)
         .Build();
 }
 
@@ -42,91 +54,72 @@ file sealed class ExpressionSettingsBuilder(ExpressionSettings settings)
     public ExpressionSettingsBuilder WithDepth(Range depth)
     {
         settings = settings with { Depth = depth };
-
         return this;
     }
 
-    public ExpressionSettingsBuilder WithBudget(Range budget)
+    public ExpressionSettingsBuilder WithLength(Range length)
     {
-        settings = settings with { Budget = budget };
-
+        settings = settings with { Length = length };
         return this;
     }
 
-    public ExpressionSettingsBuilder WithNumber(Range number)
+    public ExpressionSettingsBuilder WithAdditions(double weight, NumericRange operandRange, NumericRange? resultRange = null)
     {
-        settings = settings with { Number = number };
-
+        settings = settings with { Addition = new OperatorSettings(weight, operandRange, resultRange) };
         return this;
     }
 
-    public ExpressionSettingsBuilder WithAdditions(bool allow, double weight)
+    public ExpressionSettingsBuilder WithSubtractions(double weight, NumericRange operandRange, NumericRange? resultRange = null)
     {
-        settings = settings with { Addition = new OperatorSettings(allow ? weight : 0d) };
-
+        settings = settings with { Subtraction = new OperatorSettings(weight, operandRange, resultRange) };
         return this;
     }
 
-    public ExpressionSettingsBuilder WithSubtractions(bool allow, double weight)
+    public ExpressionSettingsBuilder WithMultiplications(double weight, NumericRange operandRange, NumericRange? resultRange = null)
     {
-        settings = settings with { Subtraction = new OperatorSettings(allow ? weight : 0d) };
-
+        settings = settings with { Multiplication = new OperatorSettings(weight, operandRange, resultRange) };
         return this;
     }
 
-    public ExpressionSettingsBuilder WithMultiplications(bool allow, double weight)
+    public ExpressionSettingsBuilder WithDivisions(double weight, NumericRange operandRange, NumericRange? resultRange = null)
     {
-        settings = settings with { Multiplication = new OperatorSettings(allow ? weight : 0d) };
-
+        settings = settings with { Division = new OperatorSettings(weight, operandRange, resultRange) };
         return this;
     }
 
-    public ExpressionSettingsBuilder WithDivisions(bool allow, double weight)
+    public ExpressionSettingsBuilder WithModulos(double weight, NumericRange operandRange, NumericRange? resultRange = null)
     {
-        settings = settings with { Division = new OperatorSettings(allow ? weight : 0d) };
-
+        settings = settings with { Modulo = new OperatorSettings(weight, operandRange, resultRange) };
         return this;
     }
 
-    public ExpressionSettingsBuilder WithModulos(bool allow, double weight)
+    public ExpressionSettingsBuilder WithPowers(double weight, NumericRange operandRange, NumericRange? resultRange = null)
     {
-        settings = settings with { Modulo = new OperatorSettings(allow ? weight : 0d) };
-
+        settings = settings with { Power = new OperatorSettings(weight, operandRange, resultRange) };
         return this;
     }
 
-    public ExpressionSettingsBuilder WithPowers(bool allow, double weight)
+    public ExpressionSettingsBuilder WithNegations(double weight, NumericRange operandRange, NumericRange? resultRange = null)
     {
-        settings = settings with { Power = new OperatorSettings(allow ? weight : 0d) };
-
+        settings = settings with { Negation = new OperatorSettings(weight, operandRange, resultRange) };
         return this;
     }
 
-    public ExpressionSettingsBuilder WithNegations(bool allow, double weight)
+    public ExpressionSettingsBuilder WithAbsoluteValues(double weight, NumericRange operandRange, NumericRange? resultRange = null)
     {
-        settings = settings with { Negation = new OperatorSettings(allow ? weight : 0d) };
-
+        settings = settings with { AbsoluteValue = new OperatorSettings(weight, operandRange, resultRange) };
         return this;
     }
 
-    public ExpressionSettingsBuilder WithAbsoluteValues(bool allow, double weight)
+    public ExpressionSettingsBuilder WithFactorials(double weight, NumericRange operandRange, NumericRange? resultRange = null)
     {
-        settings = settings with { AbsoluteValue = new OperatorSettings(allow ? weight : 0d) };
-
+        settings = settings with { Factorial = new OperatorSettings(weight, operandRange, resultRange) };
         return this;
     }
 
-    public ExpressionSettingsBuilder WithFactorials(bool allow, double weight)
+    public ExpressionSettingsBuilder WithSquareRoots(double weight, NumericRange operandRange, NumericRange? resultRange = null)
     {
-        settings = settings with { Factorial = new OperatorSettings(allow ? weight : 0d) };
-
-        return this;
-    }
-
-    public ExpressionSettingsBuilder WithSquareRoots(bool allow, double weight)
-    {
-        settings = settings with { SquareRoot = new OperatorSettings(allow ? weight : 0d) };
-
+        settings = settings with { SquareRoot = new OperatorSettings(weight, operandRange, resultRange) };
         return this;
     }
 

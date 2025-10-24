@@ -1,17 +1,36 @@
 namespace Duel.Modules.Engine.Games.Muffs;
 
-public readonly record struct OperatorSettings(double Weight)
+public readonly record struct NumericRange(int Start, int End)
 {
-    public readonly bool IsAllowed => Weight > 0d;
+    public static implicit operator NumericRange(Range range)
+    {
+        return new NumericRange(range.Start.Value, range.End.Value);
+    }
+}
+
+public readonly record struct OperatorSettings
+{
+    public double Weight { get; init; }
+    
+    public NumericRange Operand { get; init; }
+    
+    public NumericRange? Result { get; init; }
+    
+    public bool IsAllowed => Weight > 0d;
+
+    public OperatorSettings(double weight, NumericRange operand, NumericRange? result = null)
+    {
+        Weight = weight;
+        Operand = operand;
+        Result = result;
+    }
 }
 
 public record struct ExpressionSettings
 {
     public Range Depth { get; set; }
 
-    public Range Budget { get; set; }
-
-    public Range Number { get; set; }
+    public Range Length { get; set; }
 
     public OperatorSettings Addition { get; set; }
 

@@ -7,20 +7,32 @@ namespace Duel.Modules.Engine.Games.Muffs;
 public sealed class ExpressionContext(ExpressionSettings settings)
 {
     private readonly MuffsCache _cache = new(settings);
+    
+    public ExpressionSettings Settings => settings;
 
     public int GetDepth(Random rng)
     {
         return settings.Depth.Random(rng);
     }
 
-    public int GetBudget(Random rng)
+    public int GetLength(Random rng)
     {
-        return settings.Budget.Random(rng);
+        return settings.Length.Random(rng);
     }
 
-    public int GetNumber(Random rng)
+    public Number GetNumber(int value)
     {
-        return settings.Number.Random(rng);
+        return _cache.GetNumber(value);
+    }
+
+    public int[] GetDivisors(int dividend)
+    {
+        return _cache.GetDivisors(dividend);
+    }
+
+    public Composition[] GetCompositions(int value)
+    {
+        return _cache.GetCompositions(value);
     }
 
     public OperatorType GetOperatorType(Random rng)
@@ -84,20 +96,5 @@ public sealed class ExpressionContext(ExpressionSettings settings)
         }
 
         return OperatorType.Modulo;
-    }
-
-    public Number GetNumber(int value)
-    {
-        return _cache.GetNumber(value);
-    }
-
-    public int[] GetDivisors(int dividend)
-    {
-        return _cache.GetDivisors(dividend);
-    }
-
-    public Composition[] GetCompositions(int value)
-    {
-        return _cache.GetCompositions(value);
     }
 }
