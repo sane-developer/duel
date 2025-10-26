@@ -1,7 +1,5 @@
-using Duel.Modules.Engine.Games.Muffs;
-using Duel.Modules.Engine.Games.Muffs.AST;
-using Duel.Modules.Engine.Games.Muffs.AST.Literals;
-using NUnit.Framework;
+using Duel.Modules.Engine.Games.Muffs.Expressions;
+using Duel.Modules.Engine.Games.Muffs.Glyphs.Literals;
 
 namespace Duel.Modules.Engine.Tests.Muffs;
 
