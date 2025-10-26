@@ -1,5 +1,4 @@
 using Duel.Modules.Engine.Games.Muffs.Expressions;
-using NUnit.Framework;
 
 namespace Duel.Modules.Engine.Tests.Muffs;
 

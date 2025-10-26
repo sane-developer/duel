@@ -1,7 +1,6 @@
 using Duel.Modules.Engine.Games.Muffs;
 using Duel.Modules.Engine.Games.Muffs.Expressions;
 using Duel.Modules.Engine.Games.Muffs.Glyphs;
-using NUnit.Framework;
 
 namespace Duel.Modules.Engine.Tests.Muffs;
 

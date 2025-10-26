@@ -1,5 +1,3 @@
-using Duel.Shared.Extensions;
-
 namespace Duel.Modules.Engine.Games.Muffs.Expressions;
 
 public readonly record struct OperatorSettings

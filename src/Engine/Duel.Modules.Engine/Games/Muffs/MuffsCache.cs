@@ -1,7 +1,6 @@
 using Duel.Modules.Engine.Games.Muffs.Expressions;
 using Duel.Modules.Engine.Games.Muffs.Glyphs;
 using Duel.Modules.Engine.Games.Muffs.Glyphs.Literals;
-using Duel.Shared.Extensions;
 using System.Collections.Frozen;
 
 namespace Duel.Modules.Engine.Games.Muffs;
