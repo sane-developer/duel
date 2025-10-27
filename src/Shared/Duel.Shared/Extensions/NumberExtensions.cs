@@ -2,27 +2,36 @@ namespace Duel.Shared.Extensions;
 
 public static class NumberExtensions
 {
-    public static bool IsPerfectSquare(this int number)
+    /// <summary>
+    /// Checks if a number is divisible by another, with zero-divisor guard.
+    /// </summary>
+    public static bool IsDivisibleBy(this int number, int divisor)
     {
-        return Math.Sqrt(number) % 1 is 0;
+        return divisor != 0 && number % divisor == 0;
     }
 
+    /// <summary>
+    /// Checks if a number is a perfect square (has an integer square root).
+    /// </summary>
+    public static bool IsPerfectSquare(this int number)
+    {
+        return Math.Sqrt(number) % 1 == 0;
+    }
+
+    /// <summary>
+    /// Checks if a power operation will produce a result within int bounds.
+    /// Prevents overflow by validating before computation.
+    /// </summary>
     public static bool IsSafePower(this int @base, int exponent)
     {
         if (exponent < 0)
-        {
             return false;
-        }
-
-        if (exponent is 0)
-        {
+        
+        if (exponent == 0)
             return true;
-        }
-
+        
         if (@base is 0 or 1 or -1)
-        {
             return true;
-        }
 
         try
         {
@@ -34,55 +43,18 @@ public static class NumberExtensions
         }
     }
 
-    public static int Power(this int @base, int exponent)
-    {
-        return (int) Math.Pow(@base, exponent);
-    }
-
-    public static int Negate(this int number)
-    {
-        return -number;
-    }
-
-    public static int Absolute(this int number)
-    {
-        return Math.Abs(number);
-    }
-
-    public static int SquareRoot(this int number)
-    {
-        return (int) Math.Sqrt(number);
-    }
-
+    /// <summary>
+    /// Calculates factorial (n!). Assumes valid input (0-12 typically).
+    /// </summary>
     public static int Factorial(this int number)
     {
         var result = 1;
-
+        
         for (var i = 2; i <= number; i++)
         {
             result *= i;
         }
-
+        
         return result;
-    }
-
-    public static IEnumerable<int> Divisors(this int number)
-    {
-        var abs = Math.Abs(number);
-
-        var limit = (int) Math.Sqrt(abs);
-
-        for (var i = 1; i <= limit; i++)
-        {
-            if (abs % i is 0)
-            {
-                yield return i;
-
-                if (i != abs / i)
-                {    
-                    yield return abs / i;
-                }
-            }
-        }
     }
 }

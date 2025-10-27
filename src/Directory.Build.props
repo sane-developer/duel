@@ -11,6 +11,7 @@
     <Using Include="System.Diagnostics.CodeAnalysis" />
     <Using Include="Duel.Shared.Extensions" />
     <Using Include="Duel.Shared.Exceptions" />
+    <Using Include="Duel.Shared.Ranges" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -1,4 +1,6 @@
-using Duel.Modules.Engine.Games.Muffs.Expressions;
+using Duel.Modules.Engine.Games.Muffs.Evaluation;
+using Duel.Modules.Engine.Games.Muffs.Generation;
+using Duel.Modules.Engine.Games.Muffs.Knowledge;
 
 namespace Duel.Modules.Engine.Tests.Muffs;
 
@@ -8,8 +10,7 @@ public class ExpressionSampleTests
     [Test]
     public void ShowEasyExpressions()
     {
-        var context = new ExpressionContext(ExpressionSettingsRegistry.Easy);
-        var generator = new ExpressionGenerator(context);
+        var generator = new ExpressionGenerator(DifficultyPresets.Easy, KnowledgeRegistry.Universal);
         var rng = new Random(42);
 
         Console.WriteLine("=== EASY Expressions ===");
@@ -24,8 +25,7 @@ public class ExpressionSampleTests
     [Test]
     public void ShowMediumExpressions()
     {
-        var context = new ExpressionContext(ExpressionSettingsRegistry.Medium);
-        var generator = new ExpressionGenerator(context);
+        var generator = new ExpressionGenerator(DifficultyPresets.Medium, KnowledgeRegistry.Universal);
         var rng = new Random(42);
 
         Console.WriteLine("=== MEDIUM Expressions ===");
@@ -40,8 +40,7 @@ public class ExpressionSampleTests
     [Test]
     public void ShowHardExpressions()
     {
-        var context = new ExpressionContext(ExpressionSettingsRegistry.Hard);
-        var generator = new ExpressionGenerator(context);
+        var generator = new ExpressionGenerator(DifficultyPresets.Hard, KnowledgeRegistry.Universal);
         var rng = new Random(42);
 
         Console.WriteLine("=== HARD Expressions ===");
