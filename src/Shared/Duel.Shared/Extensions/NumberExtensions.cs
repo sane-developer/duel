@@ -25,13 +25,19 @@ public static class NumberExtensions
     public static bool IsSafePower(this int @base, int exponent)
     {
         if (exponent < 0)
+        {
             return false;
-        
+        }   
+
         if (exponent == 0)
+        {
             return true;
+        }
         
         if (@base is 0 or 1 or -1)
+        {
             return true;
+        }
 
         try
         {

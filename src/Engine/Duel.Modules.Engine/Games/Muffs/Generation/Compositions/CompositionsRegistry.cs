@@ -6,7 +6,7 @@ namespace Duel.Modules.Engine.Games.Muffs.Generation.Compositions;
 
 public sealed class CompositionsRegistry(Difficulty difficulty)
 {
-    private readonly FrozenDictionary<int, FrozenDictionary<OperatorType, Composition[]>> _compositions = Compile(difficulty).ToFrozenDictionary();
+    private readonly FrozenDictionary<int, FrozenDictionary<OperatorType, Composition[]>> _compositions = Compile(difficulty);
 
     public Composition[] GetCompositions(int result, OperatorType type)
     {
@@ -18,13 +18,13 @@ public sealed class CompositionsRegistry(Difficulty difficulty)
         return operators.GetValueOrDefault(type, []);
     }
 
-    private static Dictionary<int, FrozenDictionary<OperatorType, Composition[]>> Compile(Difficulty difficulty)
+    private static FrozenDictionary<int, FrozenDictionary<OperatorType, Composition[]>> Compile(Difficulty difficulty)
     {
         var results = new Dictionary<int, Dictionary<OperatorType, List<Composition>>>();
 
         foreach (var (type, settings) in difficulty.Operators)
         {
-            var compositions = CompositionBuilder.From(type, settings.Result.Minimum, settings.Result.Maximum);
+            var compositions = CompositionBuilder.For(type, settings.Result);
 
             foreach (var composition in compositions)
             {
@@ -35,23 +35,22 @@ public sealed class CompositionsRegistry(Difficulty difficulty)
                     results[composition.Result] = operators;
                 }
 
-                if (!operators.TryGetValue(composition.Type, out var expressions))
+                if (!operators.TryGetValue(composition.Type, out var typeCompositions))
                 {
-                    expressions = [];
+                    typeCompositions = [];
 
-                    operators[composition.Type] = expressions;
+                    operators[composition.Type] = typeCompositions;
                 }
 
-                expressions.Add(composition);
+                typeCompositions.Add(composition);
             }
         }
 
-        return results.ToDictionary(
+        return results.ToFrozenDictionary(
             kvp => kvp.Key,
-            kvp => kvp.Value.ToDictionary(
-                op => op.Key,
-                op => op.Value.ToArray()
-            ).ToFrozenDictionary()
+            kvp => kvp.Value
+                .ToDictionary(op => op.Key, op => op.Value.ToArray())
+                .ToFrozenDictionary()
         );
     }
 }

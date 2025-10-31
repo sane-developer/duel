@@ -4,212 +4,180 @@ namespace Duel.Modules.Engine.Games.Muffs.Generation.Compositions;
 
 public static class CompositionBuilder
 {
-    public static IEnumerable<Composition> From(OperatorType type, int minResult, int maxResult)
+    public static IEnumerable<Composition> For(OperatorType type, IntegerRange result)
     {
         return type switch
         {
-            OperatorType.Addition => FromAddition(minResult, maxResult),
-            OperatorType.Subtraction => FromSubtraction(minResult, maxResult),
-            OperatorType.Multiplication => FromMultiplication(minResult, maxResult),
-            OperatorType.Division => FromDivision(minResult, maxResult),
-            OperatorType.Modulo => FromModulo(minResult, maxResult),
-            OperatorType.Power => FromPower(minResult, maxResult),
-            OperatorType.Negation => FromNegation(minResult, maxResult),
-            OperatorType.Absolute => FromAbsolute(minResult, maxResult),
-            OperatorType.Factorial => FromFactorial(minResult, maxResult),
-            OperatorType.SquareRoot => FromSquareRoot(minResult, maxResult),
+            OperatorType.Addition => FromAddition(result),
+            OperatorType.Subtraction => FromSubtraction(result),
+            OperatorType.Multiplication => FromMultiplication(result),
+            OperatorType.Division => FromDivision(result),
+            OperatorType.Modulo => FromModulo(result),
+            OperatorType.Power => FromPower(result),
+            OperatorType.Negation => FromNegation(result),
+            OperatorType.Absolute => FromAbsolute(result),
+            OperatorType.Factorial => FromFactorial(result),
+            OperatorType.SquareRoot => FromSquareRoot(result),
             _ => Situation.Unreachable<IEnumerable<Composition>>(),
         };
     }
 
-    private static IEnumerable<BinaryComposition> FromAddition(int minResult, int maxResult)
+    private static IEnumerable<BinaryComposition> FromAddition(IntegerRange result)
     {
-        var searchMin = Math.Min(minResult, minResult / 2);
-
-        var searchMax = maxResult;
-        
-        for (var lhs = searchMin; lhs <= searchMax; lhs++)
+        for (var x = -200; x <= 200; x++)
         {
-            for (var rhs = searchMin; rhs <= searchMax; rhs++)
+            for (var y = -200; y <= 200; y++)
             {
-                var result = lhs + rhs;
+                var output = x + y;
 
-                if (result >= minResult && result <= maxResult)
+                if (output >= result.Minimum && output <= result.Maximum)
                 {
-                    yield return new BinaryComposition(OperatorType.Addition, lhs, rhs, result);
+                    yield return new BinaryComposition(OperatorType.Addition, x, y, output);
                 }
             }
         }
     }
 
-    private static IEnumerable<BinaryComposition> FromSubtraction(int minResult, int maxResult)
+    private static IEnumerable<BinaryComposition> FromSubtraction(IntegerRange result)
     {
-        var searchMin = minResult;
-
-        var searchMax = maxResult + Math.Abs(minResult);
-        
-        for (var lhs = searchMin; lhs <= searchMax; lhs++)
+        for (var x = -200; x <= 200; x++)
         {
-            for (var rhs = 0; rhs <= searchMax - searchMin; rhs++)
+            for (var y = -200; y <= 200; y++)
             {
-                var result = lhs - rhs;
+                var output = x - y;
 
-                if (result >= minResult && result <= maxResult)
+                if (output >= result.Minimum && output <= result.Maximum)
                 {
-                    yield return new BinaryComposition(OperatorType.Subtraction, lhs, rhs, result);
+                    yield return new BinaryComposition(OperatorType.Subtraction, x, y, output);
                 }
             }
         }
     }
 
-    private static IEnumerable<BinaryComposition> FromMultiplication(int minResult, int maxResult)
+    private static IEnumerable<BinaryComposition> FromMultiplication(IntegerRange result)
     {
-        var searchMin = Math.Min(minResult, 0);
-
-        var searchMax = Math.Max(maxResult, Math.Abs(minResult));
-        
-        for (var lhs = searchMin; lhs <= searchMax; lhs++)
+        for (var x = -30; x <= 30; x++)
         {
-            for (var rhs = searchMin; rhs <= searchMax; rhs++)
+            for (var y = -30; y <= 30; y++)
             {
-                var result = lhs * rhs;
+                var output = x * y;
 
-                if (result >= minResult && result <= maxResult)
+                if (output >= result.Minimum && output <= result.Maximum)
                 {
-                    yield return new BinaryComposition(OperatorType.Multiplication, lhs, rhs, result);
+                    yield return new BinaryComposition(OperatorType.Multiplication, x, y, output);
                 }
             }
         }
     }
 
-    private static IEnumerable<BinaryComposition> FromDivision(int minResult, int maxResult)
+    private static IEnumerable<BinaryComposition> FromDivision(IntegerRange result)
     {
-        var searchMax = Math.Max(Math.Abs(minResult), Math.Abs(maxResult)) * 10;
-
-        var searchMin = -searchMax;
-        
-        for (var lhs = searchMin; lhs <= searchMax; lhs++)
+        for (var x = -200; x <= 200; x++)
         {
-            for (var rhs = -maxResult; rhs <= maxResult; rhs++)
+            for (var y = -2; y <= 15; y++)
             {
-                if (lhs.IsDivisibleBy(rhs))
+                if (x.IsDivisibleBy(y))
                 {
-                    var result = lhs / rhs;
+                    var output = x / y;
 
-                    if (result >= minResult && result <= maxResult)
+                    if (output >= result.Minimum && output <= result.Maximum)
                     {
-                        yield return new BinaryComposition(OperatorType.Division, lhs, rhs, result);
+                        yield return new BinaryComposition(OperatorType.Division, x, y, output);
                     }
                 }
             }
         }
     }
 
-    private static IEnumerable<BinaryComposition> FromModulo(int minResult, int maxResult)
+    private static IEnumerable<BinaryComposition> FromModulo(IntegerRange result)
     {
-        var searchMax = Math.Max(maxResult * 2, 100);
-        
-        for (var lhs = 0; lhs <= searchMax; lhs++)
+        for (var x = -200; x <= 200; x++)
         {
-            for (var rhs = 1; rhs <= searchMax; rhs++)
+            for (var y = 2; y <= 25; y++)
             {
-                var result = lhs % rhs;
-                
-                if (result >= minResult && result <= maxResult)
+                var output = x % y;
+
+                if (output >= result.Minimum && output <= result.Maximum)
                 {
-                    yield return new BinaryComposition(OperatorType.Modulo, lhs, rhs, result);
+                    yield return new BinaryComposition(OperatorType.Modulo, x, y, output);
                 }
             }
         }
     }
 
-    private static IEnumerable<BinaryComposition> FromPower(int minResult, int maxResult)
+    private static IEnumerable<BinaryComposition> FromPower(IntegerRange result)
     {
-        var baseMax = (int) Math.Ceiling(Math.Pow(maxResult, 0.5)) + 5;
-        
-        var baseMin = -baseMax;
-        
-        for (var lhs = baseMin; lhs <= baseMax; lhs++)
+        for (var lhs = -12; lhs <= 12; lhs++)
         {
-            for (var rhs = 0; rhs <= 10; rhs++)
+            for (var rhs = 2; rhs <= 4; rhs++)
             {
                 if (lhs.IsSafePower(rhs))
                 {
-                    var result = (int)Math.Pow(lhs, rhs);
+                    var output = (int) Math.Pow(lhs, rhs);
 
-                    if (result >= minResult && result <= maxResult)
+                    if (output >= result.Minimum && output <= result.Maximum)
                     {
-                        yield return new BinaryComposition(OperatorType.Power, lhs, rhs, result);
+                        yield return new BinaryComposition(OperatorType.Power, lhs, rhs, output);
                     }
                 }
             }
         }
     }
 
-    private static IEnumerable<UnaryComposition> FromNegation(int minResult, int maxResult)
+    private static IEnumerable<UnaryComposition> FromNegation(IntegerRange result)
     {
-        for (var operand = -maxResult; operand <= -minResult; operand++)
+        for (var x = -200; x <= 200; x++)
         {
-            var result = -operand;
-            
-            if (result >= minResult && result <= maxResult)
+            var output = -x;
+
+            if (output >= result.Minimum && output <= result.Maximum)
             {
-                yield return new UnaryComposition(OperatorType.Negation, operand, result);
+                yield return new UnaryComposition(OperatorType.Negation, x, output);
             }
         }
     }
 
-    private static IEnumerable<UnaryComposition> FromAbsolute(int minResult, int maxResult)
+    private static IEnumerable<UnaryComposition> FromAbsolute(IntegerRange result)
     {
-        for (var operand = -maxResult; operand <= maxResult; operand++)
+        for (var x = -200; x <= 200; x++)
         {
-            var result = Math.Abs(operand);
+            var output = Math.Abs(x);
             
-            if (result >= minResult && result <= maxResult)
+            if (output >= result.Minimum && output <= result.Maximum)
             {
-                yield return new UnaryComposition(OperatorType.Absolute, operand, result);
+                yield return new UnaryComposition(OperatorType.Absolute, x, output);
             }
         }
     }
 
-    private static IEnumerable<UnaryComposition> FromFactorial(int minResult, int maxResult)
+    private static IEnumerable<UnaryComposition> FromFactorial(IntegerRange result)
     {
-        const int maxSafeFactorial = 12;
+        for (var operand = 0; operand <= 6; operand++)
+        {
+            var output = operand.Factorial();
+
+            if (output >= result.Minimum && output <= result.Maximum)
+            {
+                yield return new UnaryComposition(OperatorType.Factorial, operand, output);
+            }
+        }
+    }
+
+    private static IEnumerable<UnaryComposition> FromSquareRoot(IntegerRange result)
+    {
+        var maximum = result.Maximum * result.Maximum;
         
-        for (var operand = 0; operand <= maxSafeFactorial; operand++)
+        for (var x = 0; x <= maximum; x++)
         {
-            var result = operand.Factorial();
-            
-            if (result >= minResult && result <= maxResult)
+            if (x.IsPerfectSquare())
             {
-                yield return new UnaryComposition(OperatorType.Factorial, operand, result);
-            }
-            
-            if (result > maxResult)
-            {
-                break;
-            }
-        }
-    }
+                var output = (int) Math.Sqrt(x);
 
-    private static IEnumerable<UnaryComposition> FromSquareRoot(int minResult, int maxResult)
-    {
-        var operandMin = minResult * minResult;
-
-        var operandMax = maxResult * maxResult;
-        
-        for (var operand = operandMin; operand <= operandMax; operand++)
-        {
-            if (operand.IsPerfectSquare())
-            {
-                var result = (int) Math.Sqrt(operand);
-                
-                if (result >= minResult && result <= maxResult)
+                if (output >= result.Minimum && output <= result.Maximum)
                 {
-                    yield return new UnaryComposition(OperatorType.SquareRoot, operand, result);
+                    yield return new UnaryComposition(OperatorType.SquareRoot, x, output);
                 }
             }
         }
     }
 }
-
