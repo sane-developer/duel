@@ -76,9 +76,9 @@ public sealed class DifficultyBuilder(Difficulty difficulty)
         return this;
     }
 
-    public DifficultyBuilder WithAbsoluteValues(double weight, IntegerRange operands)
+    public DifficultyBuilder WithAbsolute(double weight, IntegerRange operands)
     {
-        _operators[OperatorType.AbsoluteValue] = new OperatorSettings(weight, operands);
+        _operators[OperatorType.Absolute] = new OperatorSettings(weight, operands);
         
         return this;
     }

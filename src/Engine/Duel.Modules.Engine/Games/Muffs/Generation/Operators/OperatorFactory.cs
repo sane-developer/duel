@@ -23,7 +23,7 @@ public static class OperatorFactory
         return type switch
         {
             OperatorType.Negation => new Negate(operand),
-            OperatorType.AbsoluteValue => new Absolute(operand),
+            OperatorType.Absolute => new Absolute(operand),
             OperatorType.Factorial => new Factorial(operand),
             OperatorType.SquareRoot => new SquareRoot(operand),
             _ => Situation.Unreachable<Operator>()

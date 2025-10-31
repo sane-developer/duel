@@ -9,7 +9,7 @@ public enum OperatorType : byte
     Modulo,
     Power,
     Negation,
-    AbsoluteValue,
+    Absolute,
     Factorial,
     SquareRoot
 }

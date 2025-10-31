@@ -82,7 +82,7 @@ public sealed class OperatorSelector(Difficulty difficulty)
     private static bool IsUnary(OperatorType type)
     {
         return type is OperatorType.Negation 
-            or OperatorType.AbsoluteValue 
+            or OperatorType.Absolute 
             or OperatorType.Factorial 
             or OperatorType.SquareRoot;
     }

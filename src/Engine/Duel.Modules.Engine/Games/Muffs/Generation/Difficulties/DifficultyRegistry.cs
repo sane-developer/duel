@@ -31,7 +31,7 @@ public static class DifficultyRegistry
         .WithModulos(weight: 0.8, operands: 1..30)
         .WithPowers(weight: 0.5, operands: 1..5)
         .WithNegations(weight: 0.8, operands: -50..50)
-        .WithAbsoluteValues(weight: 0.8, operands: -50..0)
+        .WithAbsolute(weight: 0.8, operands: -50..0)
         .WithFactorials(weight: 0.3, operands: 0..5)
         .WithSquareRoots(weight: 0.3, operands: 0..100)
         .Build();

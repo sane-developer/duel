@@ -2,7 +2,7 @@ using Duel.Modules.Engine.Games.Muffs.Representation;
 
 namespace Duel.Modules.Engine.Games.Muffs.Evaluation;
 
-public sealed class ExpressionEvaluator
+public static class ExpressionEvaluator
 {
     public static int Evaluate(Glyph root)
     {

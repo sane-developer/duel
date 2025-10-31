@@ -15,7 +15,7 @@ public static class CompositionBuilder
             OperatorType.Modulo => FromModulo(minResult, maxResult),
             OperatorType.Power => FromPower(minResult, maxResult),
             OperatorType.Negation => FromNegation(minResult, maxResult),
-            OperatorType.AbsoluteValue => FromAbsolute(minResult, maxResult),
+            OperatorType.Absolute => FromAbsolute(minResult, maxResult),
             OperatorType.Factorial => FromFactorial(minResult, maxResult),
             OperatorType.SquareRoot => FromSquareRoot(minResult, maxResult),
             _ => Situation.Unreachable<IEnumerable<Composition>>(),
@@ -167,7 +167,7 @@ public static class CompositionBuilder
             
             if (result >= minResult && result <= maxResult)
             {
-                yield return new UnaryComposition(OperatorType.AbsoluteValue, operand, result);
+                yield return new UnaryComposition(OperatorType.Absolute, operand, result);
             }
         }
     }
