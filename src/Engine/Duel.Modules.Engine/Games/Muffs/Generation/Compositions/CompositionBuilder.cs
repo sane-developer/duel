@@ -1,14 +1,28 @@
-using Duel.Modules.Engine.Games.Muffs.Representation;
+using Duel.Modules.Engine.Games.Muffs.Generation.Operators;
 
-namespace Duel.Modules.Engine.Games.Muffs.Knowledge;
+namespace Duel.Modules.Engine.Games.Muffs.Generation.Compositions;
 
-/// <summary>
-/// Generates all valid compositions that produce results within specified ranges.
-/// Uses result-based filtering: searches reasonable operand ranges and filters by result.
-/// </summary>
 public static class CompositionBuilder
 {
-    public static IEnumerable<BinaryComposition> FromAddition(int minResult, int maxResult)
+    public static IEnumerable<Composition> From(OperatorType type, int minResult, int maxResult)
+    {
+        return type switch
+        {
+            OperatorType.Addition => FromAddition(minResult, maxResult),
+            OperatorType.Subtraction => FromSubtraction(minResult, maxResult),
+            OperatorType.Multiplication => FromMultiplication(minResult, maxResult),
+            OperatorType.Division => FromDivision(minResult, maxResult),
+            OperatorType.Modulo => FromModulo(minResult, maxResult),
+            OperatorType.Power => FromPower(minResult, maxResult),
+            OperatorType.Negation => FromNegation(minResult, maxResult),
+            OperatorType.AbsoluteValue => FromAbsolute(minResult, maxResult),
+            OperatorType.Factorial => FromFactorial(minResult, maxResult),
+            OperatorType.SquareRoot => FromSquareRoot(minResult, maxResult),
+            _ => Situation.Unreachable<IEnumerable<Composition>>(),
+        };
+    }
+
+    private static IEnumerable<BinaryComposition> FromAddition(int minResult, int maxResult)
     {
         var searchMin = Math.Min(minResult, minResult / 2);
 
@@ -28,7 +42,7 @@ public static class CompositionBuilder
         }
     }
 
-    public static IEnumerable<BinaryComposition> FromSubtraction(int minResult, int maxResult)
+    private static IEnumerable<BinaryComposition> FromSubtraction(int minResult, int maxResult)
     {
         var searchMin = minResult;
 
@@ -48,7 +62,7 @@ public static class CompositionBuilder
         }
     }
 
-    public static IEnumerable<BinaryComposition> FromMultiplication(int minResult, int maxResult)
+    private static IEnumerable<BinaryComposition> FromMultiplication(int minResult, int maxResult)
     {
         var searchMin = Math.Min(minResult, 0);
 
@@ -68,7 +82,7 @@ public static class CompositionBuilder
         }
     }
 
-    public static IEnumerable<BinaryComposition> FromDivision(int minResult, int maxResult)
+    private static IEnumerable<BinaryComposition> FromDivision(int minResult, int maxResult)
     {
         var searchMax = Math.Max(Math.Abs(minResult), Math.Abs(maxResult)) * 10;
 
@@ -91,7 +105,7 @@ public static class CompositionBuilder
         }
     }
 
-    public static IEnumerable<BinaryComposition> FromModulo(int minResult, int maxResult)
+    private static IEnumerable<BinaryComposition> FromModulo(int minResult, int maxResult)
     {
         var searchMax = Math.Max(maxResult * 2, 100);
         
@@ -109,7 +123,7 @@ public static class CompositionBuilder
         }
     }
 
-    public static IEnumerable<BinaryComposition> FromPower(int minResult, int maxResult)
+    private static IEnumerable<BinaryComposition> FromPower(int minResult, int maxResult)
     {
         var baseMax = (int) Math.Ceiling(Math.Pow(maxResult, 0.5)) + 5;
         
@@ -132,7 +146,7 @@ public static class CompositionBuilder
         }
     }
 
-    public static IEnumerable<UnaryComposition> FromNegation(int minResult, int maxResult)
+    private static IEnumerable<UnaryComposition> FromNegation(int minResult, int maxResult)
     {
         for (var operand = -maxResult; operand <= -minResult; operand++)
         {
@@ -145,7 +159,7 @@ public static class CompositionBuilder
         }
     }
 
-    public static IEnumerable<UnaryComposition> FromAbsolute(int minResult, int maxResult)
+    private static IEnumerable<UnaryComposition> FromAbsolute(int minResult, int maxResult)
     {
         for (var operand = -maxResult; operand <= maxResult; operand++)
         {
@@ -158,7 +172,7 @@ public static class CompositionBuilder
         }
     }
 
-    public static IEnumerable<UnaryComposition> FromFactorial(int minResult, int maxResult)
+    private static IEnumerable<UnaryComposition> FromFactorial(int minResult, int maxResult)
     {
         const int maxSafeFactorial = 12;
         
@@ -178,7 +192,7 @@ public static class CompositionBuilder
         }
     }
 
-    public static IEnumerable<UnaryComposition> FromSquareRoot(int minResult, int maxResult)
+    private static IEnumerable<UnaryComposition> FromSquareRoot(int minResult, int maxResult)
     {
         var operandMin = minResult * minResult;
 

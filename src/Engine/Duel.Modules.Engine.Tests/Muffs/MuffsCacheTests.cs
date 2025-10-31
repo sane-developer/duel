@@ -11,7 +11,7 @@ public class MuffsCacheTests
     public void Cache_SquareRoot_OnlyStoresPerfectSquares()
     {
         // Arrange
-        var settings = new GeneratorSettings
+        var settings = new Difficulty
         {
             SquareRoot = new OperatorSettings(1.0, 0..10)
         };
@@ -37,7 +37,7 @@ public class MuffsCacheTests
     public void Cache_Factorial_OnlyCapsAt5()
     {
         // Arrange - result range includes factorials up to 5! (120)
-        var settings = new GeneratorSettings
+        var settings = new Difficulty
         {
             Factorial = new OperatorSettings(1.0, 1..120)
         };
@@ -57,7 +57,7 @@ public class MuffsCacheTests
     public void Cache_Division_ExcludesZeroDivisor()
     {
         // Arrange
-        var settings = new GeneratorSettings
+        var settings = new Difficulty
         {
             Division = new OperatorSettings(1.0, 0..10)
         };
@@ -91,7 +91,7 @@ public class MuffsCacheTests
     public void Cache_Modulo_ExcludesZeroDivisor()
     {
         // Arrange
-        var settings = new GeneratorSettings
+        var settings = new Difficulty
         {
             Modulo = new OperatorSettings(1.0, 0..10)
         };
@@ -125,7 +125,7 @@ public class MuffsCacheTests
     public void Cache_Power_PreventsMassiveValues()
     {
         // Arrange
-        var settings = new GeneratorSettings
+        var settings = new Difficulty
         {
             Power = new OperatorSettings(1.0, 1..10)
         };
@@ -161,7 +161,7 @@ public class MuffsCacheTests
     public void Cache_CompositionLookup_ReturnsAllWaysToMakeNumber()
     {
         // Arrange - result range 1..10 to include result 6
-        var settings = new GeneratorSettings
+        var settings = new Difficulty
         {
             Addition = new OperatorSettings(1.0, 1..10),
             Multiplication = new OperatorSettings(1.0, 1..10)

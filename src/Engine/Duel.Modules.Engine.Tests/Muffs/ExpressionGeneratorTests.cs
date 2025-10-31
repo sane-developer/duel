@@ -12,7 +12,7 @@ public class ExpressionGeneratorTests
     public void Generate_WithDepth0_ReturnsNumber()
     {
         // Arrange
-        var settings = new GeneratorSettings
+        var settings = new Difficulty
         {
             Depth = new Range(0, 0),
             Addition = new OperatorSettings(1.0, 1..10)

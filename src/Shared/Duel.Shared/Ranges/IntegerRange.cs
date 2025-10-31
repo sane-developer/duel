@@ -1,6 +1,6 @@
 namespace Duel.Shared.Ranges;
 
-public readonly record struct IntegerRange(int Start, int End)
+public readonly record struct IntegerRange(int Minimum, int Maximum)
 {
     public static implicit operator IntegerRange(Range range)
     {
@@ -9,6 +9,6 @@ public readonly record struct IntegerRange(int Start, int End)
 
     public readonly int Random(Random rng)
     {
-        return rng.Next(Start, End + 1);
+        return rng.Next(Minimum, Maximum + 1);
     }
 }
