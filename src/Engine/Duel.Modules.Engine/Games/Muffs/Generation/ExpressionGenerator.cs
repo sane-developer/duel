@@ -18,7 +18,7 @@ public sealed class ExpressionGenerator(Difficulty settings, NumbersRegistry num
         
         var depth = settings.Depth.Random(rng);
         
-        var current = GenerateForResult(result, depth, rng);
+        var current = ForResult(result, depth, rng);
         
         for (var i = 0; i < length; i++)
         {
@@ -28,7 +28,7 @@ public sealed class ExpressionGenerator(Difficulty settings, NumbersRegistry num
         
             depth = settings.Depth.Random(rng);
             
-            var right = GenerateForResult(result, depth, rng);
+            var right = ForResult(result, depth, rng);
             
             current = OperatorFactory.Binary(type, current, right);
         }
@@ -36,14 +36,16 @@ public sealed class ExpressionGenerator(Difficulty settings, NumbersRegistry num
         return current;
     }
 
-    private Glyph GenerateForResult(int result, int depth, Random rng)
+    private Glyph ForResult(int result, int depth, Random rng)
     {
         if (depth == 0)
         {
             return numbers.GetNumber(result);
         }
         
-        var compositions = compositionsRegistry.GetCompositions(result);
+        var type = operatorSelector.Select(rng);
+        
+        var compositions = compositionsRegistry.GetCompositions(result, type);
         
         if (compositions.Length == 0)
         {
@@ -54,16 +56,16 @@ public sealed class ExpressionGenerator(Difficulty settings, NumbersRegistry num
 
         if (composition is BinaryComposition binary)
         {
-            var lhs = GenerateForResult(binary.Lhs, depth - 1, rng);
+            var lhs = ForResult(binary.Lhs, depth - 1, rng);
             
-            var rhs = GenerateForResult(binary.Rhs, depth - 1, rng);
+            var rhs = ForResult(binary.Rhs, depth - 1, rng);
 
             return OperatorFactory.Binary(binary.Type, lhs, rhs);
         }
         
         if (composition is UnaryComposition unary)
         {
-            var operand = GenerateForResult(unary.Operand, depth - 1, rng);
+            var operand = ForResult(unary.Operand, depth - 1, rng);
 
             return OperatorFactory.Unary(unary.Type, operand);
         }
@@ -71,4 +73,3 @@ public sealed class ExpressionGenerator(Difficulty settings, NumbersRegistry num
         return numbers.GetNumber(result);
     }
 }
-
