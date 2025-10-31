@@ -1,4 +1,5 @@
 using Duel.Modules.Engine.Games.Muffs.Generation.Difficulties;
+using System.Collections.Frozen;
 
 namespace Duel.Modules.Engine.Games.Muffs.Generation.Operators;
 
@@ -15,13 +16,13 @@ public sealed class OperatorSelector(Difficulty difficulty)
         .Where(o => IsUnary(o.Key))
         .Sum(o => o.Value.Weight);
 
-    private readonly Dictionary<OperatorType, OperatorSettings> _binaryOperators = difficulty.Operators
+    private readonly FrozenDictionary<OperatorType, OperatorSettings> _binaryOperators = difficulty.Operators
         .Where(o => IsBinary(o.Key))
-        .ToDictionary(o => o.Key, o => o.Value);
+        .ToFrozenDictionary(o => o.Key, o => o.Value);
 
-    private readonly Dictionary<OperatorType, OperatorSettings> _unaryOperators = difficulty.Operators
+    private readonly FrozenDictionary<OperatorType, OperatorSettings> _unaryOperators = difficulty.Operators
         .Where(o => IsUnary(o.Key))
-        .ToDictionary(o => o.Key, o => o.Value);
+        .ToFrozenDictionary(o => o.Key, o => o.Value);
 
     public OperatorType Select(Random rng)
     {
