@@ -18,6 +18,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Shared\Duel.Shared\Duel.Shared.csproj" />
+      <ProjectReference Include="..\..\Engine\Duel.Modules.Engine\Duel.Modules.Engine.csproj" />
       <ProjectReference Include="..\Duel.Modules.Lobby\Duel.Modules.Lobby.csproj" />
     </ItemGroup>
 

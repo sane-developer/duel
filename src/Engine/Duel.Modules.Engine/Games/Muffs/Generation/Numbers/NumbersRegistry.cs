@@ -5,20 +5,15 @@ namespace Duel.Modules.Engine.Games.Muffs.Generation.Numbers;
 
 public sealed class NumbersRegistry
 {
-    private readonly FrozenDictionary<int, Number> _numbers;
-
-    public NumbersRegistry()
-    {
-        _numbers = Compile(minimum: -1000, maximum: 1000).ToFrozenDictionary();
-    }
+    private readonly FrozenDictionary<int, Number> _numbers = Compile(minimum: -10000, maximum: 10000);
 
     public Number GetNumber(int value)
     {
         return _numbers[value];
     }
 
-    private static Dictionary<int, Number> Compile(int minimum, int maximum)
+    private static FrozenDictionary<int, Number> Compile(int minimum, int maximum)
     {
-        return Enumerable.Range(minimum, maximum - minimum + 1).ToDictionary(n => n, n => new Number(n));
+        return Enumerable.Range(minimum, maximum - minimum + 1).ToDictionary(n => n, n => new Number(n)).ToFrozenDictionary();
     }
 }

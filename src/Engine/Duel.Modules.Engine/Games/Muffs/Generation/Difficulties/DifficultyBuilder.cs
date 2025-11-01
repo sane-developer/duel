@@ -1,4 +1,5 @@
 using Duel.Modules.Engine.Games.Muffs.Generation.Operators;
+using Duel.Shared.Ranges;
 
 namespace Duel.Modules.Engine.Games.Muffs.Generation.Difficulties;
 
@@ -13,14 +14,14 @@ public sealed class DifficultyBuilder(Difficulty difficulty)
         return new DifficultyBuilder(settings);
     }
 
-    public DifficultyBuilder WithDepth(Range depth)
+    public DifficultyBuilder WithDepth(IntegerRange depth)
     {
         difficulty = difficulty with { Depth = depth };
         
         return this;
     }
 
-    public DifficultyBuilder WithLength(Range length)
+    public DifficultyBuilder WithLength(IntegerRange length)
     {
         difficulty = difficulty with { Length = length };
         
