@@ -1,0 +1,276 @@
+using Duel.Modules.Engine.Muffs.Glyphs;
+
+namespace Duel.Modules.Engine.Muffs.Compositions;
+
+public sealed class CompositionRegistryBuilder
+{
+    private readonly Dictionary<int, List<Composition>> _registries = [];
+
+    private void Populate(IEnumerable<Composition> compositions)
+    {
+        foreach (var composition in compositions)
+        {
+            if (!_registries.TryGetValue(composition.Result, out var collection))
+            {
+                _registries.Add(composition.Result, collection = []);
+            }
+
+            collection.Add(composition);
+        }
+    }
+
+    public CompositionRegistryBuilder WithAdditions(int minimum, int maximum)
+    {
+        var compositions = AdditionCompositionRegistry.From(minimum, maximum);
+
+        Populate(compositions);
+
+        return this;
+    }
+
+    public CompositionRegistryBuilder WithSubtractions(int minimum, int maximum)
+    {
+        var compositions = SubtractionCompositionRegistry.From(minimum, maximum);
+
+        Populate(compositions);
+
+        return this;
+    }
+
+    public CompositionRegistryBuilder WithMultiplications(int minimum, int maximum)
+    {
+        var compositions = MultiplicationCompositionRegistry.From(minimum, maximum);
+
+        Populate(compositions);
+
+        return this;
+    }
+
+    public CompositionRegistryBuilder WithDivisions(int minimum, int maximum)
+    {
+        var compositions = DivisionCompositionRegistry.From(minimum, maximum);
+
+        Populate(compositions);
+
+        return this;
+    }
+
+    public CompositionRegistryBuilder WithModulos(int minimum, int maximum)
+    {
+        var compositions = ModuloCompositionRegistry.From(minimum, maximum);
+
+        Populate(compositions);
+
+        return this;
+    }
+
+    public CompositionRegistryBuilder WithPowers(int minimum, int maximum)
+    {
+        var compositions = PowerCompositionRegistry.From(minimum, maximum);
+
+        Populate(compositions);
+
+        return this;
+    }
+
+    public CompositionRegistryBuilder WithNegations(int minimum, int maximum)
+    {
+        var compositions = NegationCompositionRegistry.From(minimum, maximum);
+
+        Populate(compositions);
+
+        return this;
+    }
+
+    public CompositionRegistryBuilder WithAbsoluteValues(int minimum, int maximum)
+    {
+        var compositions = AbsoluteValueCompositionRegistry.From(minimum, maximum);
+
+        Populate(compositions);
+
+        return this;
+    }
+
+    public CompositionRegistryBuilder WithSquareRoots(int minimum, int maximum)
+    {
+        var compositions = SquareRootCompositionRegistry.From(minimum, maximum);
+
+        Populate(compositions);
+
+        return this;
+    }
+
+    public CompositionRegistryBuilder WithFactorials(int minimum, int maximum)
+    {
+        var compositions = FactorialCompositionRegistry.From(minimum, maximum);
+
+        Populate(compositions);
+
+        return this;
+    }
+
+    public CompositionRegistry Build()
+    {
+        return new CompositionRegistry(_registries);
+    }
+}
+
+file static class AdditionCompositionRegistry
+{
+    public static IEnumerable<Composition> From(int minimum, int maximum)
+    {
+        for (var lhs = minimum; lhs <= maximum; lhs++)
+        {
+            for (var rhs = minimum; rhs <= maximum; rhs++)
+            {
+                yield return CompositionFactory.Binary(GlyphType.Add, lhs, rhs, lhs + rhs);
+            }
+        }
+    }
+}
+
+file static class SubtractionCompositionRegistry
+{
+    public static IEnumerable<Composition> From(int minimum, int maximum)
+    {
+        for (var lhs = minimum; lhs <= maximum; lhs++)
+        {
+            for (var rhs = minimum; rhs <= maximum; rhs++)
+            {
+                yield return CompositionFactory.Binary(GlyphType.Subtract, lhs, rhs, lhs - rhs);
+            }
+        }
+    }
+}
+
+file static class MultiplicationCompositionRegistry
+{
+    public static IEnumerable<Composition> From(int minimum, int maximum)
+    {
+        for (var lhs = minimum; lhs <= maximum; lhs++)
+        {
+            for (var rhs = minimum; rhs <= maximum; rhs++)
+            {
+                yield return CompositionFactory.Binary(GlyphType.Multiply, lhs, rhs, lhs * rhs);
+            }
+        }
+    }
+}
+
+file static class DivisionCompositionRegistry
+{
+    public static IEnumerable<Composition> From(int minimum, int maximum)
+    {
+        for (var lhs = minimum; lhs <= maximum; lhs++)
+        {
+            for (var rhs = minimum; rhs <= maximum; rhs++)
+            {
+                if (rhs is not 0)
+                {
+                    yield return CompositionFactory.Binary(GlyphType.Divide, lhs, rhs, lhs / rhs);
+                }
+            }
+        }
+    }
+}
+
+file static class ModuloCompositionRegistry
+{
+    public static IEnumerable<Composition> From(int minimum, int maximum)
+    {
+        for (var lhs = minimum; lhs <= maximum; lhs++)
+        {
+            for (var rhs = minimum; rhs <= maximum; rhs++)
+            {
+                if (rhs is >= 1)
+                {
+                    yield return CompositionFactory.Binary(GlyphType.Modulo, lhs, rhs, lhs % rhs);
+                }
+            }
+        }
+    }
+}
+
+file static class PowerCompositionRegistry
+{
+    public static IEnumerable<Composition> From(int minimum, int maximum)
+    {
+        for (var lhs = minimum; lhs <= maximum; lhs++)
+        {
+            for (var rhs = minimum; rhs <= maximum; rhs++)
+            {
+                var result = Math.Pow(lhs, rhs);
+
+                if (result is >= int.MinValue and <= int.MaxValue)
+                {
+                    yield return CompositionFactory.Binary(GlyphType.Power, lhs, rhs, (int) result);
+                }
+            }
+        }
+    }
+}
+
+file static class NegationCompositionRegistry
+{
+    public static IEnumerable<Composition> From(int minimum, int maximum)
+    {
+        for (var operand = minimum; operand <= maximum; operand++)
+        {
+            yield return CompositionFactory.Unary(GlyphType.Negate, operand, -operand);
+        }
+    }
+}
+
+file static class AbsoluteValueCompositionRegistry
+{
+    public static IEnumerable<Composition> From(int minimum, int maximum)
+    {
+        for (var operand = minimum; operand <= maximum; operand++)
+        {
+            yield return CompositionFactory.Unary(GlyphType.Absolute, operand, Math.Abs(operand));
+        }
+    }
+}
+
+file static class SquareRootCompositionRegistry
+{
+    public static IEnumerable<Composition> From(int minimum, int maximum)
+    {
+        for (var operand = minimum; operand <= maximum; operand++)
+        {
+            yield return CompositionFactory.Unary(GlyphType.SquareRoot, operand, (int) Math.Sqrt(operand));
+        }
+    }
+}
+
+file static class FactorialCompositionRegistry
+{
+    public static IEnumerable<Composition> From(int minimum = 0, int maximum = 7)
+    {
+        for (var operand = minimum; operand <= maximum; operand++)
+        {
+            yield return CompositionFactory.Unary(GlyphType.Factorial, operand, FactorialFactory.From(operand));
+        }
+    }
+}
+
+file static class FactorialFactory
+{
+    public static int From(int value)
+    {
+        return Enumerable.Range(1, value).Aggregate(1, (acc, x) => acc * x);
+    }
+}
+
+file static class CompositionFactory
+{
+    public static BinaryComposition Binary(GlyphType type, int lhs, int rhs, int result)
+    {
+        return new BinaryComposition(type, lhs, rhs, result);
+    }
+
+    public static UnaryComposition Unary(GlyphType type, int operand, int result)
+    {
+        return new UnaryComposition(type, operand, result);
+    }
+}
