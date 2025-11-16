@@ -3,10 +3,10 @@ using System.Collections.Frozen;
 
 namespace Duel.Modules.Engine.Muffs.Compositions;
 
-public sealed class NumberRegistry(int MinimumValue, int MaximumValue)
+public sealed class NumberRegistry(int minimum, int maximum)
 {    
     private readonly FrozenDictionary<int, Number> _numbers = Enumerable
-        .Range(MinimumValue, count: MaximumValue - MinimumValue + 1)
+        .Range(minimum, count: maximum - minimum + 1)
         .ToFrozenDictionary(n => n, Number.From);
 
     public Number GetNumber(int value)

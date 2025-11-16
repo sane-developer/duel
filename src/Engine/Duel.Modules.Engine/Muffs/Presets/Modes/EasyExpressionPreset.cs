@@ -32,9 +32,9 @@ file static class EasyExpressionPresetConfiguration
     public static readonly NumberRegistry NumberRegistry = new NumberRegistry(-50, 150);
 
     public static readonly CompositionRegistry CompositionRegistry = new CompositionRegistryBuilder()
-        .WithAdditions(1, 10)
-        .WithSubtractions(1, 10)
-        .WithMultiplications(1, 10)
+        .WithAdditions(minimum: 1, maximum: 10)
+        .WithSubtractions(minimum: 1, maximum: 10)
+        .WithMultiplications(minimum: 1, maximum: 10)
         .Build();
 
     private static readonly Dictionary<GlyphType, float> _weights = new()

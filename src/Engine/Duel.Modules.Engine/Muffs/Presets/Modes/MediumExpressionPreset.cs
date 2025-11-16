@@ -32,11 +32,11 @@ file static class MediumExpressionPresetConfiguration
     public static readonly NumberRegistry NumberRegistry = new NumberRegistry(-200, 200);
 
     public static readonly CompositionRegistry CompositionRegistry = new CompositionRegistryBuilder()
-        .WithAdditions(-10, 10)
-        .WithSubtractions(-10, 10)
-        .WithMultiplications(-10, 10)
-        .WithDivisions(-10, 10)
-        .WithModulos(-10, 10)
+        .WithAdditions(minimum: -10, maximum: 10)
+        .WithSubtractions(minimum: -10, maximum: 10)
+        .WithMultiplications(minimum: -10, maximum: 10)
+        .WithDivisions(minimum: -10, maximum: 10)
+        .WithModulos(minimum: -10, maximum: 10)
         .Build();
 
     private static readonly Dictionary<GlyphType, float> _weights = new()

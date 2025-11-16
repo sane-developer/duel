@@ -32,16 +32,16 @@ file static class HardExpressionPresetConfiguration
     public static readonly NumberRegistry NumberRegistry = new NumberRegistry(-500, 500);
 
     public static readonly CompositionRegistry CompositionRegistry = new CompositionRegistryBuilder()
-        .WithAdditions(-20, 20)
-        .WithSubtractions(-20, 20)
-        .WithMultiplications(-20, 20)
-        .WithDivisions(-20, 20)
-        .WithModulos(-20, 20)
-        .WithPowers(-10, 10, 0, 4)
-        .WithNegations(-20, 20)
-        .WithAbsoluteValues(-20, 20)
-        .WithSquareRoots(0, 20)
-        .WithFactorials(0, 7)
+        .WithAdditions(minimum: -20, maximum: 20)
+        .WithSubtractions(minimum: -20, maximum: 20)
+        .WithMultiplications(minimum: -20, maximum: 20)
+        .WithDivisions(minimum: -20, maximum: 20)
+        .WithModulos(minimum: -20, maximum: 20)
+        .WithPowers(baseMinimum: -10, baseMaximum: 10, exponentMinimum: 0, exponentMaximum: 4)
+        .WithNegations(minimum: -20, maximum: 20)
+        .WithAbsoluteValues(minimum: -20, maximum: 20)
+        .WithSquareRoots(minimum: 0, maximum: 20)
+        .WithFactorials(minimum: 0, maximum: 7)
         .Build();
 
     private static readonly Dictionary<GlyphType, float> _weights = new()
