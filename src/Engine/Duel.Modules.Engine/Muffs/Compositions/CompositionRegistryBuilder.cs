@@ -4,20 +4,7 @@ namespace Duel.Modules.Engine.Muffs.Compositions;
 
 public sealed class CompositionRegistryBuilder
 {
-    private readonly Dictionary<int, List<Composition>> _registries = [];
-
-    private void Populate(IEnumerable<Composition> compositions)
-    {
-        foreach (var composition in compositions)
-        {
-            if (!_registries.TryGetValue(composition.Result, out var collection))
-            {
-                _registries.Add(composition.Result, collection = []);
-            }
-
-            collection.Add(composition);
-        }
-    }
+    private readonly List<Composition> _compositions = [];
 
     public CompositionRegistryBuilder WithAdditions(int minimum, int maximum)
     {
@@ -111,7 +98,12 @@ public sealed class CompositionRegistryBuilder
 
     public CompositionRegistry Build()
     {
-        return new CompositionRegistry(_registries);
+        return new CompositionRegistry(_compositions);
+    }
+
+    private void Populate(IEnumerable<Composition> compositions)
+    {
+        _compositions.AddRange(compositions);
     }
 }
 

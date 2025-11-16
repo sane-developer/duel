@@ -1,4 +1,9 @@
-namespace Duel.Modules.Engine.Muffs.Generators.Policies;
+namespace Duel.Modules.Engine.Muffs.Policies.Parameters;
+
+public interface IOperandPolicy
+{
+    int GetNumber(Random rng);
+}
 
 public sealed class LimitedOperandPolicy(int minimum, int maximum) : IOperandPolicy
 {

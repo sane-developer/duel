@@ -1,4 +1,9 @@
-namespace Duel.Modules.Engine.Muffs.Generators.Policies;
+namespace Duel.Modules.Engine.Muffs.Policies.Parameters;
+
+public interface ILengthPolicy
+{
+    int GetLength(Random rng);
+}
 
 public sealed class LimitedLengthPolicy(Range limit) : ILengthPolicy
 {

@@ -1,7 +1,14 @@
 using Duel.Modules.Engine.Muffs.Glyphs;
 using System.Collections.Frozen;
 
-namespace Duel.Modules.Engine.Muffs.Generators.Policies;
+namespace Duel.Modules.Engine.Muffs.Policies.Parameters;
+
+public interface IOperatorPolicy
+{
+    GlyphType GetAny(Random rng);
+
+    GlyphType GetBinary(Random rng);
+}
 
 public sealed class WeightedOperatorPolicy(Dictionary<GlyphType, float> weights) : IOperatorPolicy
 {

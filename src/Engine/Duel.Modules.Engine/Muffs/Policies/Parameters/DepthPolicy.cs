@@ -1,4 +1,9 @@
-namespace Duel.Modules.Engine.Muffs.Generators.Policies;
+namespace Duel.Modules.Engine.Muffs.Policies.Parameters;
+
+public interface IDepthPolicy
+{
+    int GetDepth(Random rng);
+}
 
 public sealed class LimitedDepthPolicy(Range limit) : IDepthPolicy
 {

@@ -2,6 +2,7 @@ namespace Duel.Modules.Engine.Muffs.Glyphs;
 
 public enum GlyphType
 {
+    Null,
     Number,
     Add,
     Subtract,
