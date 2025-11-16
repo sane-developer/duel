@@ -13,5 +13,7 @@ public interface IExpressionPreset
 
     public IOperatorPolicy Operator { get; }
 
+    public NumberRegistry NumberRegistry { get; }
+
     public CompositionRegistry CompositionRegistry { get; }
 }

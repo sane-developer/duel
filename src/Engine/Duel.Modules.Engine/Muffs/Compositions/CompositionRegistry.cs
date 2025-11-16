@@ -3,6 +3,18 @@ using System.Collections.Frozen;
 
 namespace Duel.Modules.Engine.Muffs.Compositions;
 
+public sealed class NumberRegistry(int MinimumValue, int MaximumValue)
+{    
+    private readonly FrozenDictionary<int, Number> _numbers = Enumerable
+        .Range(MinimumValue, count: MaximumValue - MinimumValue + 1)
+        .ToFrozenDictionary(n => n, Number.From);
+
+    public Number GetNumber(int value)
+    {
+        return _numbers.GetValueOrDefault(value, Number.From(value));
+    }
+}
+
 public sealed class CompositionRegistry(List<Composition> compositions)
 {
     private readonly FrozenDictionary<CompositionRegistryKey, FrozenSet<Composition>> _compositions = compositions
@@ -35,7 +47,7 @@ file static class CompositionRegistryFilter
 {
     private static readonly List<ICompositionFilter> _filters =
     [
-        new PerfectSquareFilter(), new NonZeroResultFilter()
+        new PerfectSquareFilter(), new PerfectDivisorFilter(), new NonZeroResultFilter()
     ];
 
     public static bool IsValid(Composition composition)

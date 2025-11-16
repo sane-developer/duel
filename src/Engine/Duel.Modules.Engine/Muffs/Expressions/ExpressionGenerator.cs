@@ -66,14 +66,14 @@ public sealed class ExpressionGenerator(ExpressionGeneratorContext context)
     {
         var operatorType = context.Preset.Operator.GetBinary(context.Rng);
 
-        return new BinaryOperator(operatorType, lhs, rhs);
+        return BinaryOperator.From(operatorType, lhs, rhs);
     }
 
     private Glyph Compose(int result, int depth)
     {
         if (depth == 0)
         {
-            return new Number(result);
+            return context.Preset.NumberRegistry.GetNumber(result);
         }
 
         var operatorType = context.Preset.Operator.GetAny(context.Rng);
@@ -82,7 +82,7 @@ public sealed class ExpressionGenerator(ExpressionGeneratorContext context)
 
         if (composition == Composition.Null)
         {
-            return new Number(result);
+            return context.Preset.NumberRegistry.GetNumber(result);
         }
 
         if (composition is BinaryComposition binary)
@@ -111,17 +111,17 @@ public sealed class ExpressionGenerator(ExpressionGeneratorContext context)
 
     private BinaryOperator ComposeBinary(BinaryComposition composition, int depth)
     {
-        var lhs = Compose(composition.Lhs, depth - 1);
+        var lhs = Compose(composition.Lhs, depth);
 
-        var rhs = Compose(composition.Rhs, depth - 1);
+        var rhs = Compose(composition.Rhs, depth);
 
-        return new BinaryOperator(composition.OperatorType, lhs, rhs);
+        return BinaryOperator.From(composition.OperatorType, lhs, rhs);
     }
 
     private UnaryOperator ComposeUnary(UnaryComposition composition, int depth)
     {
-        var operand = Compose(composition.Operand, depth - 1);
+        var operand = Compose(composition.Operand, depth);
 
-        return new UnaryOperator(composition.OperatorType, operand);
+        return UnaryOperator.From(composition.OperatorType, operand);
     }
 }

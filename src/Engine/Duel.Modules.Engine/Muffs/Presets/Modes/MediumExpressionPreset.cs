@@ -14,18 +14,22 @@ public sealed class MediumExpressionPreset : IExpressionPreset
 
     public IOperatorPolicy Operator => MediumExpressionPresetConfiguration.Operator;
 
+    public NumberRegistry NumberRegistry => MediumExpressionPresetConfiguration.NumberRegistry;
+
     public CompositionRegistry CompositionRegistry => MediumExpressionPresetConfiguration.CompositionRegistry;
 }
 
 file static class MediumExpressionPresetConfiguration
 {
-    public static readonly IDepthPolicy Depth = new LimitedDepthPolicy(1..4);
+    public static readonly IDepthPolicy Depth = new LimitedDepthPolicy(1..3);
 
-    public static readonly ILengthPolicy Length = new LimitedLengthPolicy(1..4);
+    public static readonly ILengthPolicy Length = new LimitedLengthPolicy(2..4);
 
     public static readonly IOperandPolicy Operand = new LimitedOperandPolicy(-10, 10);
 
     public static readonly IOperatorPolicy Operator = new WeightedOperatorPolicy(_weights);
+
+    public static readonly NumberRegistry NumberRegistry = new NumberRegistry(-200, 200);
 
     public static readonly CompositionRegistry CompositionRegistry = new CompositionRegistryBuilder()
         .WithAdditions(-10, 10)
@@ -33,16 +37,14 @@ file static class MediumExpressionPresetConfiguration
         .WithMultiplications(-10, 10)
         .WithDivisions(-10, 10)
         .WithModulos(-10, 10)
-        .WithPowers(-10, 10)
         .Build();
 
     private static readonly Dictionary<GlyphType, float> _weights = new()
     {
-        { GlyphType.Add, 1.0f },
-        { GlyphType.Subtract, 1.0f },
+        { GlyphType.Add, 1.5f },
+        { GlyphType.Subtract, 1.5f },
         { GlyphType.Multiply, 1.0f },
-        { GlyphType.Divide, 1.0f },
-        { GlyphType.Modulo, 1.0f },
-        { GlyphType.Power, 1.0f },
+        { GlyphType.Divide, 0.75f },
+        { GlyphType.Modulo, 0.25f },
     };
 }

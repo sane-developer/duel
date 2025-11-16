@@ -6,106 +6,45 @@ public static class ExpressionEvaluator
 {
     public static int Evaluate(Glyph root)
     {
-        return root.Type switch
+        return root switch
         {
-            GlyphType.Number => Number(root.AsNumber()),
-            GlyphType.Add => Add(root.AsBinary()),
-            GlyphType.Subtract => Subtract(root.AsBinary()),
-            GlyphType.Multiply => Multiply(root.AsBinary()),
-            GlyphType.Divide => Divide(root.AsBinary()),
-            GlyphType.Modulo => Modulo(root.AsBinary()),
-            GlyphType.Power => Power(root.AsBinary()),
-            GlyphType.Negate => Negate(root.AsUnary()),
-            GlyphType.Absolute => Absolute(root.AsUnary()),
-            GlyphType.SquareRoot => SquareRoot(root.AsUnary()),
-            GlyphType.Factorial => Factorial(root.AsUnary()),
+            Number number => number.Value,
+            BinaryOperator binary => EvaluateBinary(binary),
+            UnaryOperator unary => EvaluateUnary(unary),
             _ => Situation.Unreachable<int>()
         };
     }
 
-    private static int Number(Number node)
+    private static int EvaluateBinary(BinaryOperator op)
     {
-        return node.Value;
+        var lhs = Evaluate(op.Lhs);
+
+        var rhs = Evaluate(op.Rhs);
+
+        return op.Type switch
+        {
+            GlyphType.Add => lhs + rhs,
+            GlyphType.Subtract => lhs - rhs,
+            GlyphType.Multiply => lhs * rhs,
+            GlyphType.Divide => lhs / rhs,
+            GlyphType.Modulo => lhs % rhs,
+            GlyphType.Power => (int) Math.Pow(lhs, rhs),
+            _ => Situation.Unreachable<int>()
+        };
     }
 
-    private static int Add(BinaryOperator node)
+    private static int EvaluateUnary(UnaryOperator op)
     {
-        var lhs = Evaluate(node.Lhs);
+        var operand = Evaluate(op.Operand);
 
-        var rhs = Evaluate(node.Rhs);
-
-        return lhs + rhs;
-    }
-
-    private static int Subtract(BinaryOperator node)
-    {
-        var lhs = Evaluate(node.Lhs);
-
-        var rhs = Evaluate(node.Rhs);
-
-        return lhs - rhs;
-    }
-
-    private static int Multiply(BinaryOperator node)
-    {
-        var lhs = Evaluate(node.Lhs);
-
-        var rhs = Evaluate(node.Rhs);
-
-        return lhs * rhs;
-    }
-
-    private static int Divide(BinaryOperator node)
-    {
-        var lhs = Evaluate(node.Lhs);
-
-        var rhs = Evaluate(node.Rhs);
-
-        return lhs / rhs;
-    }
-
-    private static int Modulo(BinaryOperator node)
-    {
-        var lhs = Evaluate(node.Lhs);
-
-        var rhs = Evaluate(node.Rhs);
-
-        return lhs % rhs;
-    }
-
-    private static int Power(BinaryOperator node)
-    {
-        var lhs = Evaluate(node.Lhs);
-
-        var rhs = Evaluate(node.Rhs);
-
-        return (int) Math.Pow(lhs, rhs);
-    }
-
-    private static int Negate(UnaryOperator node)
-    {
-        return -Evaluate(node.Operand);
-    }
-
-    private static int Absolute(UnaryOperator node)
-    {
-        var operand = Evaluate(node.Operand);
-
-        return Math.Abs(operand);
-    }
-
-    private static int SquareRoot(UnaryOperator node)
-    {
-        var operand = Evaluate(node.Operand);
-
-        return (int) Math.Sqrt(operand);
-    }
-
-    private static int Factorial(UnaryOperator node)
-    {
-        var operand = Evaluate(node.Operand);
-
-        return FactorialFactory.From(operand);
+        return op.Type switch
+        {
+            GlyphType.Negate => -operand,
+            GlyphType.Absolute => Math.Abs(operand),
+            GlyphType.SquareRoot => (int) Math.Sqrt(operand),
+            GlyphType.Factorial => FactorialFactory.From(operand),
+            _ => Situation.Unreachable<int>()
+        };
     }
 }
 

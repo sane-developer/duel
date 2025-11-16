@@ -51,9 +51,9 @@ public sealed class CompositionRegistryBuilder
         return this;
     }
 
-    public CompositionRegistryBuilder WithPowers(int minimum, int maximum)
+    public CompositionRegistryBuilder WithPowers(int baseMinimum, int baseMaximum, int exponentMinimum, int exponentMaximum)
     {
-        var compositions = PowerCompositionRegistry.From(minimum, maximum);
+        var compositions = PowerCompositionRegistry.From(baseMinimum, baseMaximum, exponentMinimum, exponentMaximum);
 
         Populate(compositions);
 
@@ -115,7 +115,7 @@ file static class AdditionCompositionRegistry
         {
             for (var rhs = minimum; rhs <= maximum; rhs++)
             {
-                yield return CompositionFactory.Binary(GlyphType.Add, lhs, rhs, lhs + rhs);
+                yield return BinaryComposition.From(GlyphType.Add, lhs, rhs, lhs + rhs);
             }
         }
     }
@@ -129,7 +129,7 @@ file static class SubtractionCompositionRegistry
         {
             for (var rhs = minimum; rhs <= maximum; rhs++)
             {
-                yield return CompositionFactory.Binary(GlyphType.Subtract, lhs, rhs, lhs - rhs);
+                yield return BinaryComposition.From(GlyphType.Subtract, lhs, rhs, lhs - rhs);
             }
         }
     }
@@ -143,7 +143,7 @@ file static class MultiplicationCompositionRegistry
         {
             for (var rhs = minimum; rhs <= maximum; rhs++)
             {
-                yield return CompositionFactory.Binary(GlyphType.Multiply, lhs, rhs, lhs * rhs);
+                yield return BinaryComposition.From(GlyphType.Multiply, lhs, rhs, lhs * rhs);
             }
         }
     }
@@ -159,7 +159,7 @@ file static class DivisionCompositionRegistry
             {
                 if (rhs is not 0)
                 {
-                    yield return CompositionFactory.Binary(GlyphType.Divide, lhs, rhs, lhs / rhs);
+                    yield return BinaryComposition.From(GlyphType.Divide, lhs, rhs, lhs / rhs);
                 }
             }
         }
@@ -176,7 +176,7 @@ file static class ModuloCompositionRegistry
             {
                 if (rhs is >= 1)
                 {
-                    yield return CompositionFactory.Binary(GlyphType.Modulo, lhs, rhs, lhs % rhs);
+                    yield return BinaryComposition.From(GlyphType.Modulo, lhs, rhs, lhs % rhs);
                 }
             }
         }
@@ -185,17 +185,17 @@ file static class ModuloCompositionRegistry
 
 file static class PowerCompositionRegistry
 {
-    public static IEnumerable<Composition> From(int minimum, int maximum)
+    public static IEnumerable<Composition> From(int baseMinimum, int baseMaximum, int exponentMinimum, int exponentMaximum)
     {
-        for (var lhs = minimum; lhs <= maximum; lhs++)
+        for (var lhs = baseMinimum; lhs <= baseMaximum; lhs++)
         {
-            for (var rhs = minimum; rhs <= maximum; rhs++)
+            for (var rhs = exponentMinimum; rhs <= exponentMaximum; rhs++)
             {
                 var result = Math.Pow(lhs, rhs);
 
                 if (result is >= int.MinValue and <= int.MaxValue)
                 {
-                    yield return CompositionFactory.Binary(GlyphType.Power, lhs, rhs, (int) result);
+                    yield return BinaryComposition.From(GlyphType.Power, lhs, rhs, (int) result);
                 }
             }
         }
@@ -208,7 +208,7 @@ file static class NegationCompositionRegistry
     {
         for (var operand = minimum; operand <= maximum; operand++)
         {
-            yield return CompositionFactory.Unary(GlyphType.Negate, operand, -operand);
+            yield return UnaryComposition.From(GlyphType.Negate, operand, -operand);
         }
     }
 }
@@ -219,7 +219,7 @@ file static class AbsoluteValueCompositionRegistry
     {
         for (var operand = minimum; operand <= maximum; operand++)
         {
-            yield return CompositionFactory.Unary(GlyphType.Absolute, operand, Math.Abs(operand));
+            yield return UnaryComposition.From(GlyphType.Absolute, operand, Math.Abs(operand));
         }
     }
 }
@@ -230,7 +230,7 @@ file static class SquareRootCompositionRegistry
     {
         for (var operand = minimum; operand <= maximum; operand++)
         {
-            yield return CompositionFactory.Unary(GlyphType.SquareRoot, operand, (int) Math.Sqrt(operand));
+            yield return UnaryComposition.From(GlyphType.SquareRoot, operand, (int) Math.Sqrt(operand));
         }
     }
 }
@@ -241,7 +241,7 @@ file static class FactorialCompositionRegistry
     {
         for (var operand = minimum; operand <= maximum; operand++)
         {
-            yield return CompositionFactory.Unary(GlyphType.Factorial, operand, FactorialFactory.From(operand));
+            yield return UnaryComposition.From(GlyphType.Factorial, operand, FactorialFactory.From(operand));
         }
     }
 }
@@ -251,18 +251,5 @@ file static class FactorialFactory
     public static int From(int value)
     {
         return Enumerable.Range(1, value).Aggregate(1, (acc, x) => acc * x);
-    }
-}
-
-file static class CompositionFactory
-{
-    public static BinaryComposition Binary(GlyphType type, int lhs, int rhs, int result)
-    {
-        return new BinaryComposition(type, lhs, rhs, result);
-    }
-
-    public static UnaryComposition Unary(GlyphType type, int operand, int result)
-    {
-        return new UnaryComposition(type, operand, result);
     }
 }

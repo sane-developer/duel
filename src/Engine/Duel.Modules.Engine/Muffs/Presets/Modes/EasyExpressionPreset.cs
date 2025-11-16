@@ -14,35 +14,33 @@ public sealed class EasyExpressionPreset : IExpressionPreset
 
     public IOperatorPolicy Operator => EasyExpressionPresetConfiguration.Operator;
 
+    public NumberRegistry NumberRegistry => EasyExpressionPresetConfiguration.NumberRegistry;
+
     public CompositionRegistry CompositionRegistry => EasyExpressionPresetConfiguration.CompositionRegistry;
 }
 
 file static class EasyExpressionPresetConfiguration
 {
-    public static readonly IDepthPolicy Depth = new LimitedDepthPolicy(1..4);
+    public static readonly IDepthPolicy Depth = new LimitedDepthPolicy(0..2);
 
-    public static readonly ILengthPolicy Length = new LimitedLengthPolicy(1..4);
+    public static readonly ILengthPolicy Length = new LimitedLengthPolicy(2..3);
 
-    public static readonly IOperandPolicy Operand = new LimitedOperandPolicy(-10, 10);
+    public static readonly IOperandPolicy Operand = new LimitedOperandPolicy(1, 10);
 
     public static readonly IOperatorPolicy Operator = new WeightedOperatorPolicy(_weights);
 
+    public static readonly NumberRegistry NumberRegistry = new NumberRegistry(-50, 150);
+
     public static readonly CompositionRegistry CompositionRegistry = new CompositionRegistryBuilder()
-        .WithAdditions(-10, 10)
-        .WithSubtractions(-10, 10)
-        .WithMultiplications(-10, 10)
-        .WithDivisions(-10, 10)
-        .WithModulos(-10, 10)
-        .WithPowers(-10, 10)
+        .WithAdditions(1, 10)
+        .WithSubtractions(1, 10)
+        .WithMultiplications(1, 10)
         .Build();
 
     private static readonly Dictionary<GlyphType, float> _weights = new()
     {
-        { GlyphType.Add, 1.0f },
-        { GlyphType.Subtract, 1.0f },
-        { GlyphType.Multiply, 1.0f },
-        { GlyphType.Divide, 1.0f },
-        { GlyphType.Modulo, 1.0f },
-        { GlyphType.Power, 1.0f },
+        { GlyphType.Add, 3.0f },
+        { GlyphType.Subtract, 1.5f },
+        { GlyphType.Multiply, 1.5f },
     };
 }
