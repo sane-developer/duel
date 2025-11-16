@@ -1,7 +1,7 @@
 using Duel.Modules.Engine.Muffs.Glyphs;
 using System.Collections.Frozen;
 
-namespace Duel.Modules.Engine.Muffs.Policies.Parameters;
+namespace Duel.Modules.Engine.Muffs.Policies;
 
 public interface IOperatorPolicy
 {

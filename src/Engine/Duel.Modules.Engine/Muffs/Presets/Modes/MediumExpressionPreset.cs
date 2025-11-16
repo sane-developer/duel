@@ -1,8 +1,8 @@
-using Duel.Modules.Engine.Muffs.Policies.Parameters;
-using Duel.Modules.Engine.Muffs.Glyphs;
 using Duel.Modules.Engine.Muffs.Compositions;
+using Duel.Modules.Engine.Muffs.Glyphs;
+using Duel.Modules.Engine.Muffs.Policies;
 
-namespace Duel.Modules.Engine.Muffs.Policies.Presets;
+namespace Duel.Modules.Engine.Muffs.Presets.Modes;
 
 public sealed class MediumExpressionPreset : IExpressionPreset
 {

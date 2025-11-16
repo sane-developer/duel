@@ -1,16 +1,16 @@
 using Duel.Modules.Engine.Muffs.Compositions;
 using Duel.Modules.Engine.Muffs.Glyphs;
-using Duel.Modules.Engine.Muffs.Policies;
+using Duel.Modules.Engine.Muffs.Presets;
 
 namespace Duel.Modules.Engine.Muffs.Expressions;
 
-public readonly record struct ExpressionGeneratorContext(Random Rng, IExpressionPreset Policy);
+public readonly record struct ExpressionGeneratorContext(Random Rng, IExpressionPreset Preset);
 
 public sealed class ExpressionGenerator(ExpressionGeneratorContext context)
 {
     public Glyph Generate()
     {
-        var length = context.Policy.Length.GetLength(context.Rng);
+        var length = context.Preset.Length.GetLength(context.Rng);
 
         var operands = GenerateOperands(length);
 
@@ -23,9 +23,9 @@ public sealed class ExpressionGenerator(ExpressionGeneratorContext context)
 
         for (var i = 0; i < length; i++)
         {
-            var value = context.Policy.Operand.GetNumber(context.Rng);
+            var value = context.Preset.Operand.GetNumber(context.Rng);
             
-            var depth = context.Policy.Depth.GetDepth(context.Rng);
+            var depth = context.Preset.Depth.GetDepth(context.Rng);
 
             var operand = Compose(value, depth);
 
@@ -64,7 +64,7 @@ public sealed class ExpressionGenerator(ExpressionGeneratorContext context)
 
     private BinaryOperator MergeOperands(Glyph lhs, Glyph rhs)
     {
-        var operatorType = context.Policy.Operator.GetBinary(context.Rng);
+        var operatorType = context.Preset.Operator.GetBinary(context.Rng);
 
         return new BinaryOperator(operatorType)
         {
@@ -79,7 +79,7 @@ public sealed class ExpressionGenerator(ExpressionGeneratorContext context)
             return new Number(result);
         }
 
-        var operatorType = context.Policy.Operator.GetAny(context.Rng);
+        var operatorType = context.Preset.Operator.GetAny(context.Rng);
 
         var composition = GetComposition(result, operatorType);
 
@@ -100,7 +100,7 @@ public sealed class ExpressionGenerator(ExpressionGeneratorContext context)
 
     private Composition GetComposition(int result, GlyphType operatorType)
     {
-        var compositions = context.Policy.CompositionRegistry.GetCompositions(result, operatorType);
+        var compositions = context.Preset.CompositionRegistry.GetCompositions(result, operatorType);
 
         if (compositions.Count == 0)
         {

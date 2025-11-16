@@ -1,4 +1,4 @@
-namespace Duel.Modules.Engine.Muffs.Policies.Parameters;
+namespace Duel.Modules.Engine.Muffs.Policies;
 
 public interface IOperandPolicy
 {

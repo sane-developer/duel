@@ -1,7 +1,7 @@
 using Duel.Modules.Engine.Muffs.Compositions;
-using Duel.Modules.Engine.Muffs.Policies.Parameters;
+using Duel.Modules.Engine.Muffs.Policies;
 
-namespace Duel.Modules.Engine.Muffs.Policies;
+namespace Duel.Modules.Engine.Muffs.Presets;
 
 public interface IExpressionPreset
 {
