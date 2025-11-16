@@ -53,6 +53,19 @@ file sealed class PerfectSquareFilter : ICompositionFilter
             return true;
         }
 
+        return composition is UnaryComposition unary && Math.Sqrt(unary.Operand) % 1 == 0;
+    }
+}
+
+file sealed class PerfectDivisorFilter : ICompositionFilter
+{
+    public bool IsSatisfied(Composition composition)
+    {
+        if (composition.OperatorType is not GlyphType.Divide)
+        {
+            return true;
+        }
+
         return composition is BinaryComposition binary && binary.Lhs % binary.Rhs == 0;
     }
 }

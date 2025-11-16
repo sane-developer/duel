@@ -9,16 +9,8 @@ public abstract record Glyph(GlyphType Type)
     public Number AsNumber() => (Number) this;
 };
 
-public sealed record BinaryOperator(GlyphType Type) : Glyph(Type)
-{
-    public Glyph Lhs { get; set; }
+public sealed record BinaryOperator(GlyphType Type, Glyph Lhs, Glyph Rhs) : Glyph(Type);
 
-    public Glyph Rhs { get; set; }
-}
-
-public sealed record UnaryOperator(GlyphType Type) : Glyph(Type)
-{
-    public Glyph Operand { get; set; }
-}
+public sealed record UnaryOperator(GlyphType Type, Glyph Operand) : Glyph(Type);
 
 public sealed record Number(int Value) : Glyph(GlyphType.Number);

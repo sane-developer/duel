@@ -12,13 +12,17 @@ public interface IOperatorPolicy
 
 public sealed class WeightedOperatorPolicy(Dictionary<GlyphType, float> weights) : IOperatorPolicy
 {
+    private readonly FrozenDictionary<GlyphType, float> _binaryOperators = OperatorsFilter.Apply(weights).ToFrozenDictionary();
+    
+    private readonly float _binaryOperatorsWeight = OperatorsFilter.Apply(weights).Values.Sum();
+
     private readonly FrozenDictionary<GlyphType, float> _allOperators = weights.ToFrozenDictionary();
 
-    private readonly FrozenDictionary<GlyphType, float> _binaryOperators = OperatorsFilter.Apply(weights).ToFrozenDictionary();
+    private readonly float _allOperatorsWeight = weights.Values.Sum();
 
     public GlyphType GetAny(Random rng)
     {
-        var remaining = rng.NextDouble() * _allOperators.Values.Sum();
+        var remaining = rng.NextDouble() * _allOperatorsWeight;
         
         foreach (var (glyph, weight) in _allOperators)
         {
@@ -35,7 +39,7 @@ public sealed class WeightedOperatorPolicy(Dictionary<GlyphType, float> weights)
 
     public GlyphType GetBinary(Random rng)
     {
-        var remaining = rng.NextDouble() * _binaryOperators.Values.Sum();
+        var remaining = rng.NextDouble() * _binaryOperatorsWeight;
         
         foreach (var (glyph, weight) in _binaryOperators)
         {
