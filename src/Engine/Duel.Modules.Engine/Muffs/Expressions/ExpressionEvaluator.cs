@@ -52,6 +52,11 @@ file static class FactorialFactory
 {
     public static int From(int value)
     {
+        if (value is < 0)
+        {
+            return Situation.InvalidArgument<int>();
+        }
+
         return Enumerable.Range(1, value).Aggregate(1, (acc, x) => acc * x);
     }
 }

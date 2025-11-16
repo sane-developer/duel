@@ -174,7 +174,7 @@ file static class ModuloCompositionRegistry
         {
             for (var rhs = minimum; rhs <= maximum; rhs++)
             {
-                if (rhs is >= 1)
+                if (rhs is not 0)
                 {
                     yield return BinaryComposition.From(GlyphType.Modulo, lhs, rhs, lhs % rhs);
                 }
@@ -250,6 +250,11 @@ file static class FactorialFactory
 {
     public static int From(int value)
     {
+        if (value is < 0)
+        {
+            return Situation.InvalidArgument<int>();
+        }
+
         return Enumerable.Range(1, value).Aggregate(1, (acc, x) => acc * x);
     }
 }

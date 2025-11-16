@@ -1,13 +1,6 @@
 namespace Duel.Modules.Engine.Muffs.Glyphs;
 
-public abstract record Glyph(GlyphType Type)
-{
-    public BinaryOperator AsBinary() => (BinaryOperator) this;
-
-    public UnaryOperator AsUnary() => (UnaryOperator) this;
-
-    public Number AsNumber() => (Number) this;
-};
+public abstract record Glyph(GlyphType Type);
 
 public sealed record BinaryOperator(GlyphType Type, Glyph Lhs, Glyph Rhs) : Glyph(Type)
 {

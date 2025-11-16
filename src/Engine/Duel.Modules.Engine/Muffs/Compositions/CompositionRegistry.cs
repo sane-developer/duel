@@ -1,5 +1,6 @@
 using Duel.Modules.Engine.Muffs.Glyphs;
 using System.Collections.Frozen;
+using System.Collections.Immutable;
 
 namespace Duel.Modules.Engine.Muffs.Compositions;
 
@@ -17,16 +18,16 @@ public sealed class NumberRegistry(int minimum, int maximum)
 
 public sealed class CompositionRegistry(List<Composition> compositions)
 {
-    private readonly FrozenDictionary<CompositionRegistryKey, FrozenSet<Composition>> _compositions = compositions
+    private readonly FrozenDictionary<CompositionRegistryKey, ImmutableArray<Composition>> _compositions = compositions
         .Where(CompositionRegistryFilter.IsValid)
         .GroupBy(CompositionRegistryKey.From)
-        .ToFrozenDictionary(g => g.Key, g => g.ToFrozenSet());
+        .ToFrozenDictionary(g => g.Key, g => g.ToImmutableArray());
 
-    public FrozenSet<Composition> GetCompositions(int result, GlyphType operatorType)
+    public ImmutableArray<Composition> GetCompositions(int result, GlyphType operatorType)
     {
         var key = CompositionRegistryKey.From(result, operatorType);
 
-        return _compositions.TryGetValue(key, out var compositions) ? compositions : FrozenSet<Composition>.Empty;
+        return _compositions.TryGetValue(key, out var compositions) ? compositions : ImmutableArray<Composition>.Empty;
     }
 
     private readonly record struct CompositionRegistryKey(int Result, GlyphType OperatorType)
@@ -65,7 +66,14 @@ file sealed class PerfectSquareFilter : ICompositionFilter
             return true;
         }
 
-        return composition is UnaryComposition unary && Math.Sqrt(unary.Operand) % 1 == 0;
+        if (composition is not UnaryComposition unary)
+        {
+            return Situation.Unreachable<bool>();
+        }
+
+        var result = (int) Math.Sqrt(unary.Operand);
+
+        return result * result == unary.Operand;
     }
 }
 

@@ -90,23 +90,26 @@ public sealed class ExpressionGenerator(ExpressionGeneratorContext context)
             return ComposeBinary(binary, depth - 1);
         }
 
-        var unary = (UnaryComposition) composition;
+        if (composition is UnaryComposition unary)
+        {
+            return ComposeUnary(unary, depth - 1);
+        }
 
-        return ComposeUnary(unary, depth - 1);
+        return Situation.Unreachable<Glyph>();
     }
 
     private Composition GetComposition(int result, GlyphType operatorType)
     {
         var compositions = context.Preset.CompositionRegistry.GetCompositions(result, operatorType);
 
-        if (compositions.Count == 0)
+        if (compositions.IsEmpty)
         {
             return Composition.Null;
         }
 
-        var index = context.Rng.Next(0, compositions.Count);
+        var index = context.Rng.Next(0, compositions.Length);
 
-        return compositions.Items[index];
+        return compositions[index];
     }
 
     private BinaryOperator ComposeBinary(BinaryComposition composition, int depth)
