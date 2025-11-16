@@ -110,7 +110,7 @@ public sealed class ExpressionGenerator(ExpressionGeneratorContext context)
 
     private Composition GetComposition(int result, GlyphType operatorType)
     {
-        var compositions = _compositionRegistry.For(result, operatorType);
+        var compositions = _compositionRegistry.GetCompositions(result, operatorType);
 
         if (compositions.Count == 0)
         {
@@ -119,7 +119,7 @@ public sealed class ExpressionGenerator(ExpressionGeneratorContext context)
 
         var index = _rng.Next(0, compositions.Count);
 
-        return compositions[index];
+        return compositions.Items[index];
     }
 
     private BinaryOperator ComposeBinary(BinaryComposition composition, int depth)

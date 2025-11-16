@@ -5,15 +5,16 @@ namespace Duel.Modules.Engine.Muffs.Compositions;
 
 public sealed class CompositionRegistry(List<Composition> compositions)
 {
-    private readonly FrozenSet<CompositionRegistryItem> _compositions = compositions
-        .Where(CompositionRegistryPolicy.IsValid)
-        .GroupBy(x => CompositionRegistryKey.From(x.Result, x.OperatorType))
-        .Select(x => CompositionRegistryItem.From(x.Key.Result, x.Key.OperatorType, [.. x]))
-        .ToFrozenSet();
+    private readonly FrozenDictionary<CompositionRegistryKey, FrozenSet<Composition>> _compositions = compositions
+        .Where(CompositionRegistryFilter.IsValid)
+        .GroupBy(CompositionRegistryKey.From)
+        .ToFrozenDictionary(g => g.Key, g => g.ToFrozenSet());
 
-    public List<Composition> For(int result, GlyphType operatorType)
+    public FrozenSet<Composition> GetCompositions(int result, GlyphType operatorType)
     {
-        return _compositions.First(x => x.Key.Result == result && x.Key.OperatorType == operatorType).Compositions;
+        var key = CompositionRegistryKey.From(result, operatorType);
+
+        return _compositions.TryGetValue(key, out var compositions) ? compositions : FrozenSet<Composition>.Empty;
     }
 
     private readonly record struct CompositionRegistryKey(int Result, GlyphType OperatorType)
@@ -22,41 +23,41 @@ public sealed class CompositionRegistry(List<Composition> compositions)
         {
             return new CompositionRegistryKey(result, operatorType);
         }
-    }
 
-    private readonly record struct CompositionRegistryItem(CompositionRegistryKey Key, List<Composition> Compositions)
-    {
-        public static CompositionRegistryItem From(int result, GlyphType operatorType, List<Composition> compositions)
+        public static CompositionRegistryKey From(Composition composition)
         {
-            var key = CompositionRegistryKey.From(result, operatorType);
-
-            return new CompositionRegistryItem(key, compositions);
+            return new CompositionRegistryKey(composition.Result, composition.OperatorType);
         }
     }
 }
 
-file static class CompositionRegistryPolicy
+file static class CompositionRegistryFilter
 {
-    private static readonly List<ICompositionPolicy> _policy =
+    private static readonly List<ICompositionFilter> _filters =
     [
-        new PerfectSquarePolicy(), new NonZeroResultPolicy()
+        new PerfectSquareFilter(), new NonZeroResultFilter()
     ];
 
     public static bool IsValid(Composition composition)
     {
-        return _policy.All(restriction => restriction.IsSatisfied(composition));
+        return _filters.All(restriction => restriction.IsSatisfied(composition));
     }
 }
 
-file sealed class PerfectSquarePolicy : ICompositionPolicy
+file sealed class PerfectSquareFilter : ICompositionFilter
 {
     public bool IsSatisfied(Composition composition)
     {
-        return composition.OperatorType is GlyphType.SquareRoot && composition is BinaryComposition binary && binary.Lhs % binary.Rhs == 0;
+        if (composition.OperatorType is not GlyphType.SquareRoot)
+        {
+            return true;
+        }
+
+        return composition is BinaryComposition binary && binary.Lhs % binary.Rhs == 0;
     }
 }
 
-file sealed class NonZeroResultPolicy : ICompositionPolicy
+file sealed class NonZeroResultFilter : ICompositionFilter
 {
     public bool IsSatisfied(Composition composition)
     {
@@ -64,7 +65,7 @@ file sealed class NonZeroResultPolicy : ICompositionPolicy
     }
 }
 
-file interface ICompositionPolicy
+file interface ICompositionFilter
 {
     bool IsSatisfied(Composition composition);
 }
