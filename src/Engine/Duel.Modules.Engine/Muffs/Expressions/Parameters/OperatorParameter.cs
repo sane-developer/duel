@@ -1,16 +1,16 @@
 using Duel.Modules.Engine.Muffs.Glyphs;
 using System.Collections.Frozen;
 
-namespace Duel.Modules.Engine.Muffs.Policies;
+namespace Duel.Modules.Engine.Muffs.Expressions.Parameters;
 
-public interface IOperatorPolicy
+public interface IOperatorParameter
 {
     GlyphType GetAny(Random rng);
 
     GlyphType GetBinary(Random rng);
 }
 
-public sealed class WeightedOperatorPolicy(Dictionary<GlyphType, float> weights) : IOperatorPolicy
+public sealed class WeightedOperatorParameter(Dictionary<GlyphType, float> weights) : IOperatorParameter
 {
     private readonly FrozenDictionary<GlyphType, float> _binaryOperators = OperatorsFilter.Apply(weights).ToFrozenDictionary();
     

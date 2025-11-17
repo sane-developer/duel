@@ -1,18 +1,18 @@
 using Duel.Modules.Engine.Muffs.Compositions;
 using Duel.Modules.Engine.Muffs.Glyphs;
-using Duel.Modules.Engine.Muffs.Policies;
+using Duel.Modules.Engine.Muffs.Expressions.Parameters;
 
-namespace Duel.Modules.Engine.Muffs.Presets.Modes;
+namespace Duel.Modules.Engine.Muffs.Expressions.Presets.Modes;
 
 public sealed class MediumExpressionPreset : IExpressionPreset
 {
-    public IDepthPolicy Depth => MediumExpressionPresetConfiguration.Depth;
+    public IDepthParameter Depth => MediumExpressionPresetConfiguration.Depth;
     
-    public ILengthPolicy Length => MediumExpressionPresetConfiguration.Length;
+    public ILengthParameter Length => MediumExpressionPresetConfiguration.Length;
     
-    public IOperandPolicy Operand => MediumExpressionPresetConfiguration.Operand;
+    public IOperandParameter Operand => MediumExpressionPresetConfiguration.Operand;
 
-    public IOperatorPolicy Operator => MediumExpressionPresetConfiguration.Operator;
+    public IOperatorParameter Operator => MediumExpressionPresetConfiguration.Operator;
 
     public NumberRegistry NumberRegistry => MediumExpressionPresetConfiguration.NumberRegistry;
 
@@ -21,13 +21,13 @@ public sealed class MediumExpressionPreset : IExpressionPreset
 
 file static class MediumExpressionPresetConfiguration
 {
-    public static readonly IDepthPolicy Depth = new LimitedDepthPolicy(1..3);
+    public static readonly IDepthParameter Depth = new BoundedDepthParameter(1..3);
 
-    public static readonly ILengthPolicy Length = new LimitedLengthPolicy(2..4);
+    public static readonly ILengthParameter Length = new BoundedLengthParameter(2..4);
 
-    public static readonly IOperandPolicy Operand = new LimitedOperandPolicy(-10, 10);
+    public static readonly IOperandParameter Operand = new BoundedOperandParameter(-10, 10);
 
-    public static readonly IOperatorPolicy Operator = new WeightedOperatorPolicy(_weights);
+    public static readonly IOperatorParameter Operator = new WeightedOperatorParameter(_weights);
 
     public static readonly NumberRegistry NumberRegistry = new NumberRegistry(-200, 200);
 

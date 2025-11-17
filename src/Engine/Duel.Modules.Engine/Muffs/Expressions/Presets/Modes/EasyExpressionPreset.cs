@@ -1,18 +1,18 @@
 using Duel.Modules.Engine.Muffs.Glyphs;
 using Duel.Modules.Engine.Muffs.Compositions;
-using Duel.Modules.Engine.Muffs.Policies;
+using Duel.Modules.Engine.Muffs.Expressions.Parameters;
 
-namespace Duel.Modules.Engine.Muffs.Presets.Modes;
+namespace Duel.Modules.Engine.Muffs.Expressions.Presets.Modes;
 
 public sealed class EasyExpressionPreset : IExpressionPreset
 {
-    public IDepthPolicy Depth => EasyExpressionPresetConfiguration.Depth;
+    public IDepthParameter Depth => EasyExpressionPresetConfiguration.Depth;
     
-    public ILengthPolicy Length => EasyExpressionPresetConfiguration.Length;
+    public ILengthParameter Length => EasyExpressionPresetConfiguration.Length;
     
-    public IOperandPolicy Operand => EasyExpressionPresetConfiguration.Operand;
+    public IOperandParameter Operand => EasyExpressionPresetConfiguration.Operand;
 
-    public IOperatorPolicy Operator => EasyExpressionPresetConfiguration.Operator;
+    public IOperatorParameter Operator => EasyExpressionPresetConfiguration.Operator;
 
     public NumberRegistry NumberRegistry => EasyExpressionPresetConfiguration.NumberRegistry;
 
@@ -21,13 +21,13 @@ public sealed class EasyExpressionPreset : IExpressionPreset
 
 file static class EasyExpressionPresetConfiguration
 {
-    public static readonly IDepthPolicy Depth = new LimitedDepthPolicy(0..2);
+    public static readonly IDepthParameter Depth = new BoundedDepthParameter(0..2);
 
-    public static readonly ILengthPolicy Length = new LimitedLengthPolicy(2..3);
+    public static readonly ILengthParameter Length = new BoundedLengthParameter(2..3);
 
-    public static readonly IOperandPolicy Operand = new LimitedOperandPolicy(1, 10);
+    public static readonly IOperandParameter Operand = new BoundedOperandParameter(1, 10);
 
-    public static readonly IOperatorPolicy Operator = new WeightedOperatorPolicy(_weights);
+    public static readonly IOperatorParameter Operator = new WeightedOperatorParameter(_weights);
 
     public static readonly NumberRegistry NumberRegistry = new NumberRegistry(-50, 150);
 

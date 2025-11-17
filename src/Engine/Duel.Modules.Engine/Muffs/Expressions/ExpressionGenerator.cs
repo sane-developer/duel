@@ -1,6 +1,6 @@
 using Duel.Modules.Engine.Muffs.Compositions;
 using Duel.Modules.Engine.Muffs.Glyphs;
-using Duel.Modules.Engine.Muffs.Presets;
+using Duel.Modules.Engine.Muffs.Expressions.Presets;
 
 namespace Duel.Modules.Engine.Muffs.Expressions;
 

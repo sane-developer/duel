@@ -1,18 +1,18 @@
 using Duel.Modules.Engine.Muffs.Glyphs;
 using Duel.Modules.Engine.Muffs.Compositions;
-using Duel.Modules.Engine.Muffs.Policies;
+using Duel.Modules.Engine.Muffs.Expressions.Parameters;
 
-namespace Duel.Modules.Engine.Muffs.Presets.Modes;
+namespace Duel.Modules.Engine.Muffs.Expressions.Presets.Modes;
 
 public sealed class HardExpressionPreset : IExpressionPreset
 {
-    public IDepthPolicy Depth => HardExpressionPresetConfiguration.Depth;
+    public IDepthParameter Depth => HardExpressionPresetConfiguration.Depth;
     
-    public ILengthPolicy Length => HardExpressionPresetConfiguration.Length;
+    public ILengthParameter Length => HardExpressionPresetConfiguration.Length;
     
-    public IOperandPolicy Operand => HardExpressionPresetConfiguration.Operand;
+    public IOperandParameter Operand => HardExpressionPresetConfiguration.Operand;
 
-    public IOperatorPolicy Operator => HardExpressionPresetConfiguration.Operator;
+    public IOperatorParameter Operator => HardExpressionPresetConfiguration.Operator;
 
     public NumberRegistry NumberRegistry => HardExpressionPresetConfiguration.NumberRegistry;
 
@@ -21,13 +21,13 @@ public sealed class HardExpressionPreset : IExpressionPreset
 
 file static class HardExpressionPresetConfiguration
 {
-    public static readonly IDepthPolicy Depth = new LimitedDepthPolicy(2..5);
+    public static readonly IDepthParameter Depth = new BoundedDepthParameter(2..5);
 
-    public static readonly ILengthPolicy Length = new LimitedLengthPolicy(3..6);
+    public static readonly ILengthParameter Length = new BoundedLengthParameter(3..6);
 
-    public static readonly IOperandPolicy Operand = new LimitedOperandPolicy(-20, 20);
+    public static readonly IOperandParameter Operand = new BoundedOperandParameter(-20, 20);
 
-    public static readonly IOperatorPolicy Operator = new WeightedOperatorPolicy(_weights);
+    public static readonly IOperatorParameter Operator = new WeightedOperatorParameter(_weights);
 
     public static readonly NumberRegistry NumberRegistry = new NumberRegistry(-500, 500);
 
