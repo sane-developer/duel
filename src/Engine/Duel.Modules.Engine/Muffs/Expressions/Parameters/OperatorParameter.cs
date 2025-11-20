@@ -14,17 +14,17 @@ public interface IOperatorParameter
 
 public sealed class WeightedOperatorParameter(Dictionary<GlyphType, float> weights) : IOperatorParameter
 {
-    private readonly FrozenDictionary<GlyphType, float> _binaryOperators = OperatorsFilter.Apply(weights).ToFrozenDictionary();
-    
-    private readonly float _binaryOperatorsWeight = OperatorsFilter.Apply(weights).Values.Sum();
-
-    private readonly FrozenDictionary<GlyphType, float> _binarySafeOperators = SafeOperatorsFilter.Apply(weights).ToFrozenDictionary();
-    
-    private readonly float _binarySafeOperatorsWeight = SafeOperatorsFilter.Apply(weights).Values.Sum();
-
     private readonly FrozenDictionary<GlyphType, float> _allOperators = weights.ToFrozenDictionary();
 
     private readonly float _allOperatorsWeight = weights.Values.Sum();
+
+    private readonly FrozenDictionary<GlyphType, float> _binaryOperators = OperatorsFilter.ToFrozen(weights);
+    
+    private readonly float _binaryOperatorsWeight = OperatorsFilter.GetWeight(weights);
+
+    private readonly FrozenDictionary<GlyphType, float> _binarySafeOperators = SafeOperatorsFilter.ToFrozen(weights);
+    
+    private readonly float _binarySafeOperatorsWeight = SafeOperatorsFilter.GetWeight(weights);
 
     public GlyphType GetAny(Random rng)
     {
@@ -80,9 +80,14 @@ public sealed class WeightedOperatorParameter(Dictionary<GlyphType, float> weigh
 
 file static class OperatorsFilter
 {
-    public static IDictionary<GlyphType, float> Apply(IDictionary<GlyphType, float> operators)
+    public static float GetWeight(IDictionary<GlyphType, float> operators)
     {
-        return operators.Where(IsBinary).ToDictionary(w => w.Key, w => w.Value);
+        return ToFrozen(operators).Values.Sum();
+    }
+
+    public static FrozenDictionary<GlyphType, float> ToFrozen(IDictionary<GlyphType, float> operators)
+    {
+        return operators.Where(IsBinary).ToFrozenDictionary(w => w.Key, w => w.Value);
     }
 
     private static bool IsBinary(KeyValuePair<GlyphType, float> metadata)
@@ -99,9 +104,14 @@ file static class OperatorsFilter
 
 file static class SafeOperatorsFilter
 {
-    public static IDictionary<GlyphType, float> Apply(IDictionary<GlyphType, float> operators)
+    public static float GetWeight(IDictionary<GlyphType, float> operators)
     {
-        return operators.Where(IsBinarySafe).ToDictionary(w => w.Key, w => w.Value);
+        return ToFrozen(operators).Values.Sum();
+    }
+
+    public static FrozenDictionary<GlyphType, float> ToFrozen(IDictionary<GlyphType, float> operators)
+    {
+        return operators.Where(IsBinarySafe).ToFrozenDictionary(w => w.Key, w => w.Value);
     }
 
     private static bool IsBinarySafe(KeyValuePair<GlyphType, float> metadata)

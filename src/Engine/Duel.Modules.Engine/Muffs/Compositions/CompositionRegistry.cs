@@ -7,7 +7,7 @@ namespace Duel.Modules.Engine.Muffs.Compositions;
 public sealed class NumberRegistry(int minimum, int maximum)
 {    
     private readonly FrozenDictionary<int, Number> _numbers = Enumerable
-        .Range(minimum, count: maximum - minimum + 1)
+        .Range(start: minimum, count: maximum - minimum + 1)
         .ToFrozenDictionary(n => n, Number.From);
 
     public Number GetNumber(int value)
@@ -96,17 +96,17 @@ file sealed class NonZeroDivisorFilter : ICompositionFilter
 {
     public bool IsSatisfied(Composition composition)
     {
-        if (composition.OperatorType is GlyphType.Divide or GlyphType.Modulo)
+        if (composition.OperatorType is not GlyphType.Divide and not GlyphType.Modulo)
         {
-            if (composition is not BinaryComposition binary)
-            {
-                return Situation.Unreachable<bool>();
-            }
-
-            return binary.Lhs != 0 && binary.Rhs != 0;
+            return true;
         }
 
-        return true;
+        if (composition is not BinaryComposition binary)
+        {
+            return Situation.Unreachable<bool>();
+        }
+
+        return binary.Lhs != 0 && binary.Rhs != 0;
     }
 }
 
