@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Duel.Modules.Engine", "Engi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Duel.Modules.Identity", "Identity\Duel.Modules.Identity\Duel.Modules.Identity.csproj", "{A4444444-4444-4444-4444-444444444444}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Duel.Modules.Engine.Diagnostics", "Engine\Duel.Modules.Engine.Diagnostics\Duel.Modules.Engine.Diagnostics.csproj", "{53F4A599-AB94-4A1C-80FA-025F7827D0DA}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Duel.Modules.Engine.Tests", "Engine\Duel.Modules.Engine.Tests\Duel.Modules.Engine.Tests.csproj", "{A5555555-5555-5555-5555-555555555555}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{D8346970-57AF-4769-86FE-69D3CDC7DDC9}"
@@ -28,8 +30,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Duel.Modules.Identity.Tests", "Identity\Duel.Modules.Identity.Tests\Duel.Modules.Identity.Tests.csproj", "{789361CA-3A8B-4F93-88B3-875543E57D1F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{BD6F0926-0BCF-4543-8058-5CAD6D9F8FE2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Duel.Modules.Engine.Diagnostics", "Engine\Duel.Modules.Engine.Diagnostics\Duel.Modules.Engine.Diagnostics.csproj", "{53F4A599-AB94-4A1C-80FA-025F7827D0DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
