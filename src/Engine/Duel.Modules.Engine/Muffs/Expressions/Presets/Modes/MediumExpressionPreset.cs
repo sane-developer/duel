@@ -21,6 +21,15 @@ public sealed class MediumExpressionPreset : IExpressionPreset
 
 file static class MediumExpressionPresetConfiguration
 {
+    private static readonly Dictionary<GlyphType, float> _weights = new()
+    {
+        { GlyphType.Add, 1.5f },
+        { GlyphType.Subtract, 1.5f },
+        { GlyphType.Multiply, 1.0f },
+        { GlyphType.Divide, 0.75f },
+        { GlyphType.Modulo, 0.25f },
+    };
+
     public static readonly IDepthParameter Depth = new BoundedDepthParameter(1..3);
 
     public static readonly ILengthParameter Length = new BoundedLengthParameter(2..4);
@@ -38,13 +47,4 @@ file static class MediumExpressionPresetConfiguration
         .WithDivisions(minimum: -10, maximum: 10)
         .WithModulos(minimum: -10, maximum: 10)
         .Build();
-
-    private static readonly Dictionary<GlyphType, float> _weights = new()
-    {
-        { GlyphType.Add, 1.5f },
-        { GlyphType.Subtract, 1.5f },
-        { GlyphType.Multiply, 1.0f },
-        { GlyphType.Divide, 0.75f },
-        { GlyphType.Modulo, 0.25f },
-    };
 }

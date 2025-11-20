@@ -21,6 +21,13 @@ public sealed class EasyExpressionPreset : IExpressionPreset
 
 file static class EasyExpressionPresetConfiguration
 {
+    private static readonly Dictionary<GlyphType, float> _weights = new()
+    {
+        { GlyphType.Add, 3.0f },
+        { GlyphType.Subtract, 1.5f },
+        { GlyphType.Multiply, 1.5f },
+    };
+
     public static readonly IDepthParameter Depth = new BoundedDepthParameter(0..2);
 
     public static readonly ILengthParameter Length = new BoundedLengthParameter(2..3);
@@ -36,11 +43,4 @@ file static class EasyExpressionPresetConfiguration
         .WithSubtractions(minimum: 1, maximum: 10)
         .WithMultiplications(minimum: 1, maximum: 10)
         .Build();
-
-    private static readonly Dictionary<GlyphType, float> _weights = new()
-    {
-        { GlyphType.Add, 3.0f },
-        { GlyphType.Subtract, 1.5f },
-        { GlyphType.Multiply, 1.5f },
-    };
 }

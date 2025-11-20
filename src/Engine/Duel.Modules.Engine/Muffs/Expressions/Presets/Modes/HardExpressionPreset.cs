@@ -21,6 +21,20 @@ public sealed class HardExpressionPreset : IExpressionPreset
 
 file static class HardExpressionPresetConfiguration
 {
+    private static readonly Dictionary<GlyphType, float> _weights = new()
+    {
+        { GlyphType.Add, 1.0f },
+        { GlyphType.Subtract, 1.0f },
+        { GlyphType.Multiply, 1.0f },
+        { GlyphType.Divide, 0.75f },
+        { GlyphType.Modulo, 0.5f },
+        { GlyphType.Power, 0.25f },
+        { GlyphType.Negate, 0.5f },
+        { GlyphType.Absolute, 0.5f },
+        { GlyphType.SquareRoot, 0.25f },
+        { GlyphType.Factorial, 0.1f },
+    };
+
     public static readonly IDepthParameter Depth = new BoundedDepthParameter(2..5);
 
     public static readonly ILengthParameter Length = new BoundedLengthParameter(3..6);
@@ -43,18 +57,4 @@ file static class HardExpressionPresetConfiguration
         .WithSquareRoots(minimum: 0, maximum: 20)
         .WithFactorials(minimum: 0, maximum: 7)
         .Build();
-
-    private static readonly Dictionary<GlyphType, float> _weights = new()
-    {
-        { GlyphType.Add, 1.0f },
-        { GlyphType.Subtract, 1.0f },
-        { GlyphType.Multiply, 1.0f },
-        { GlyphType.Divide, 0.75f },
-        { GlyphType.Modulo, 0.5f },
-        { GlyphType.Power, 0.25f },
-        { GlyphType.Negate, 0.5f },
-        { GlyphType.Absolute, 0.5f },
-        { GlyphType.SquareRoot, 0.25f },
-        { GlyphType.Factorial, 0.1f },
-    };
 }
