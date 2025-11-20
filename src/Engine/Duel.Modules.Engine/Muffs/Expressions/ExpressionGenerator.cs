@@ -49,24 +49,24 @@ public sealed class ExpressionGenerator(ExpressionGeneratorContext context)
 
         if (operands.Count == 2)
         {
-            return MergeOperands(operands.Pop(), operands.Pop());
+            return MergeOperandsSafely(operands.Pop(), operands.Pop());
         }
 
-        var tail = MergeOperands(operands.Pop(), operands.Pop());
+        var tail = MergeOperandsSafely(operands.Pop(), operands.Pop());
 
         while (operands.Count > 1)
         {
-            tail = MergeOperands(operands.Pop(), tail);
+            tail = MergeOperandsSafely(operands.Pop(), tail);
         }
 
-        return MergeOperands(operands.Pop(), tail);
+        return MergeOperandsSafely(operands.Pop(), tail);
     }
 
-    private BinaryOperator MergeOperands(Glyph lhs, Glyph rhs)
+    private BinaryOperator MergeOperandsSafely(Glyph lhs, Glyph rhs)
     {
-        var operatorType = context.Preset.Operator.GetBinary(context.Rng);
+        var safeOperatorType = context.Preset.Operator.GetBinarySafe(context.Rng);
 
-        return BinaryOperator.From(operatorType, lhs, rhs);
+        return BinaryOperator.From(safeOperatorType, lhs, rhs);
     }
 
     private Glyph Compose(int result, int depth)

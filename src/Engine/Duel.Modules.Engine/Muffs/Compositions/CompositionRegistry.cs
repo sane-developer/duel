@@ -48,7 +48,9 @@ file static class CompositionRegistryFilter
 {
     private static readonly List<ICompositionFilter> _filters =
     [
-        new PerfectSquareFilter(), new PerfectDivisorFilter(), new NonZeroResultFilter()
+        new PerfectSquareFilter(), 
+        new PerfectDivisorFilter(), 
+        new NonZeroDivisorFilter()
     ];
 
     public static bool IsValid(Composition composition)
@@ -90,11 +92,21 @@ file sealed class PerfectDivisorFilter : ICompositionFilter
     }
 }
 
-file sealed class NonZeroResultFilter : ICompositionFilter
+file sealed class NonZeroDivisorFilter : ICompositionFilter
 {
     public bool IsSatisfied(Composition composition)
     {
-        return composition.Result != 0;
+        if (composition.OperatorType is GlyphType.Divide or GlyphType.Modulo)
+        {
+            if (composition is not BinaryComposition binary)
+            {
+                return Situation.Unreachable<bool>();
+            }
+
+            return binary.Lhs != 0 && binary.Rhs != 0;
+        }
+
+        return true;
     }
 }
 

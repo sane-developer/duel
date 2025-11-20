@@ -8,6 +8,8 @@ public interface IOperatorParameter
     GlyphType GetAny(Random rng);
 
     GlyphType GetBinary(Random rng);
+
+    GlyphType GetBinarySafe(Random rng);
 }
 
 public sealed class WeightedOperatorParameter(Dictionary<GlyphType, float> weights) : IOperatorParameter
@@ -15,6 +17,10 @@ public sealed class WeightedOperatorParameter(Dictionary<GlyphType, float> weigh
     private readonly FrozenDictionary<GlyphType, float> _binaryOperators = OperatorsFilter.Apply(weights).ToFrozenDictionary();
     
     private readonly float _binaryOperatorsWeight = OperatorsFilter.Apply(weights).Values.Sum();
+
+    private readonly FrozenDictionary<GlyphType, float> _binarySafeOperators = SafeOperatorsFilter.Apply(weights).ToFrozenDictionary();
+    
+    private readonly float _binarySafeOperatorsWeight = SafeOperatorsFilter.Apply(weights).Values.Sum();
 
     private readonly FrozenDictionary<GlyphType, float> _allOperators = weights.ToFrozenDictionary();
 
@@ -50,7 +56,24 @@ public sealed class WeightedOperatorParameter(Dictionary<GlyphType, float> weigh
 
             remaining -= weight;
         }
+        
+        return Situation.Unreachable<GlyphType>();
+    }
 
+    public GlyphType GetBinarySafe(Random rng)
+    {
+        var remaining = rng.NextDouble() * _binarySafeOperatorsWeight;
+        
+        foreach (var (glyph, weight) in _binarySafeOperators)
+        {
+            if (remaining < weight)
+            {
+                return glyph;
+            }
+
+            remaining -= weight;
+        }
+        
         return Situation.Unreachable<GlyphType>();
     }
 }
@@ -70,6 +93,23 @@ file static class OperatorsFilter
             or GlyphType.Multiply 
             or GlyphType.Divide 
             or GlyphType.Modulo
+            or GlyphType.Power;
+    }
+}
+
+file static class SafeOperatorsFilter
+{
+    public static IDictionary<GlyphType, float> Apply(IDictionary<GlyphType, float> operators)
+    {
+        return operators.Where(IsBinarySafe).ToDictionary(w => w.Key, w => w.Value);
+    }
+
+    private static bool IsBinarySafe(KeyValuePair<GlyphType, float> metadata)
+    {
+        return metadata.Key 
+            is GlyphType.Add 
+            or GlyphType.Subtract 
+            or GlyphType.Multiply 
             or GlyphType.Power;
     }
 }

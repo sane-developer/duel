@@ -1,13 +1,13 @@
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
 
-var assemblyLocation = typeof(Program).Assembly.Location;
+var location = typeof(Program).Assembly.Location;
 
-var projectDir = Path.GetDirectoryName(assemblyLocation)!;
+var directory = Path.GetDirectoryName(location)!;
 
-var solutionRoot = Path.GetFullPath(Path.Combine(projectDir, "..", "..", "..", "..", ".."));
+var root = Path.GetFullPath(Path.Combine(directory, "..", "..", "..", "..", ".."));
 
-var artifactsPath = Path.Combine(solutionRoot, "build", "BenchmarkDotNet.Artifacts");
+var artifactsPath = Path.Combine(root, "build", "BenchmarkDotNet.Artifacts");
 
 var config = DefaultConfig.Instance.WithArtifactsPath(artifactsPath);
 
